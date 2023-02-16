@@ -12,3 +12,7 @@ class string(str):
     def pre(self, value):
         self = string(value + getattr(self, 'delim', "")  + self)
         return self
+    def pres(self, *args):
+        for arg in args:
+            self = self.pre(arg)
+        return self
