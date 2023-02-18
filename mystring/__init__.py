@@ -16,3 +16,7 @@ class string(str):
         for arg in args:
             self = self.pre(arg)
         return self
+    def empty(self):
+        return self is None or self.strip() == '' or self.strip().lower() == 'nan'
+    def format(numstyle='06'):
+        return format(int(self),numstyle)
