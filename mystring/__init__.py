@@ -3,6 +3,11 @@ class string(str):
         self = string(self.replace(substring,''))
         return self
 
+    def repsies(self,*args):
+        for arg in args:
+            self = self.rep(arg)
+        return self
+
     def isempty(self):
         return self.strip() == ''
 
