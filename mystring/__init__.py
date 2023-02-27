@@ -8,9 +8,6 @@ class string(str):
             self = self.rep(arg)
         return self
 
-    def isempty(self):
-        return self.strip() == ''
-
     def ad(self, value):
         self = string(self + getattr(self, 'delim', "")  + value)
         return self
@@ -29,6 +26,9 @@ class string(str):
 
     def empty(self):
         return self is None or self.strip() == '' or self.strip().lower() == 'nan'
+
+    def notempty(self):
+        return not self.empty()
 
     def format(self, numstyle='06'):
         return format(int(self),numstyle)
