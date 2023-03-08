@@ -30,7 +30,7 @@ class string(str):
 
     @property
     def notempty(self):
-        return not self.empty()
+        return not self.empty
 
     def format(self, numstyle='06'):
         return format(int(self),numstyle)
