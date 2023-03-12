@@ -74,7 +74,7 @@ class frame(pd.DataFrame):
     def col_no_exists(self,column):
         return not(self.col_exists(column))
 
-    def column_decimal_to_percent(column):
+    def column_decimal_to_percent(self,column):
         self[column] = round(round(
             (self[column]),2
         ) * 100,0).astype(int).astype(str).replace('.0','') + "%"
@@ -87,10 +87,10 @@ class frame(pd.DataFrame):
         self = frame(self[colz])
     
     def rename_column(self, columnfrom, columnto):
-        if self.col_no_exists(column):
+        if self.col_no_exists(columnfrom):
             return
-       self.rename(columns={columnfrom: columnto},inplace=True)
-    
+        self.rename(columns={columnfrom: columnto},inplace=True)
+
     def rename_value_in_column(self, column, fromname, fromto):
         if self.col_no_exists(column):
             return
@@ -100,8 +100,7 @@ class frame(pd.DataFrame):
         self_arr = self.to_dict('records')
         return self_arr
 
-    def add_confusion_matrix(TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN', use_percent:bool=False):
-        div = lambda x,y:x/y if y else 0
+    def add_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN', use_percent:bool=False):
         prep = lambda x:frame.percent(x, 100) if use_percent else x
 
         self['Precision_PPV'] = prep(self[TP]/(self[TP]+self[FP]))
