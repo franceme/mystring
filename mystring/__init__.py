@@ -61,3 +61,125 @@ class string(str):
     def frombase64(string, encoding='utf-8'):
         import base64
         return base64.b64decode(string.encode(encoding)).decode(encoding)
+
+import pandas as pd
+class frame(pd.DataFrame):
+    def __init__(self, *args, **kwargs):
+        super(frame, self).__init__(*args, **kwargs)
+        self.rolling_arr = self.rolling_arr(self)
+
+    def col_exists(self,column):
+        return column in self.columns
+
+    def col_no_exists(self,column):
+        return not(self.col_exists(column))
+
+    def column_decimal_to_percent(column):
+        self[column] = round(round(
+            (self[column]),2
+        ) * 100,0).astype(int).astype(str).replace('.0','') + "%"
+    
+    def move_column(self, column, position):
+        if self.col_no_exists(column):
+            return
+        colz = [col for col in self.columns if col != column]
+        colz.insert(position, column)
+        self = frame(self[colz])
+    
+    def rename_column(self, columnfrom, columnto):
+        if self.col_no_exists(column):
+            return
+       self.rename(columns={columnfrom: columnto},inplace=True)
+    
+    def rename_value_in_column(self, column, fromname, fromto):
+        if self.col_no_exists(column):
+            return
+        self[column] = self[column].str.replace(fromname, fromto)
+    
+    def arr(self):
+        self_arr = self.to_dict('records')
+        return self_arr
+
+    def add_confusion_matrix(TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN', use_percent:bool=False):
+        div = lambda x,y:x/y if y else 0
+        prep = lambda x:frame.percent(x, 100) if use_percent else x
+
+        self['Precision_PPV'] = prep(self[TP]/(self[TP]+self[FP]))
+        self['Recall'] = prep(self[TP]/(self[TP]+self[FN]))
+        self['Specificity_TNR'] = prep(self[TN]/(self[TN]+self[FP]))
+        self['FNR'] = prep(self[FN]/(self[FN]+self[TP]))
+        self['FPR'] = prep(self[FP]/(self[FP]+self[TN]))
+        self['FDR'] = prep(self[FP]/(self[FP]+self[TP]))
+        self['FOR'] = prep(self[FN]/(self[FN]+self[TN]))
+        self['TS'] = prep(self[TP]/(self[TP]+self[FP]+self[FN]))
+        self['Accuracy'] = prep((self[TP]+self[TN])/(self[TP]+self[FP]+self[TN]+self[FN]))
+        self['PPCR'] = prep((self[TP]+self[FP])/(self[TP]+self[FP]+self[TN]+self[FN]))
+        self['F1'] = prep(2 * ((self['Precision_PPV'] * self['Recall'])/(self['Precision_PPV'] + self['Recall'])))
+
+        return self
+
+    def __iter__(self):
+        self.current_index = 0
+        self.rowz = self.itterrows()
+        return self
+    
+    def __next__(self):
+        if self.current_index < len(self.rowz):
+            x = self.rowz[self.current_index]
+            self.current_index += 1
+            return x
+        self.rowz = None
+        raise StopIteration
+
+    @staticmethod
+    def percent(x,y):
+        return ("{0:.2f}").format(100 * (x / float(y)))
+
+    @staticmethod
+    def from_arr(arr):
+        def dictionaries_to_pandas_helper(raw_dyct,deepcopy:bool=True):
+            from copy import deepcopy as dc
+            dyct = dc(raw_dyct) if deepcopy else raw_dyct
+            for key in list(raw_dyct.keys()):
+                dyct[key] = [dyct[key]]
+            return pd.DataFrame.from_dict(dyct)
+
+        return frame(
+            pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
+        )
+
+    class rolling_arr(object):
+        #https://blog.finxter.com/python-__iter__-magic-method/
+        def __enter__(self,dataframe):
+            self.parent = dataframe
+            self.arr = dataframe.arr()
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            self.parent = frame.from_arr(self.arr)
+
+        def __iter__(self):
+            self.current_index = 0
+            return self
+        
+        def __next__(self):
+            if self.current_index < len(self.arr):
+                x = self.arr[self.current_index]
+                self.current_index += 1
+                return x
+            raise StopIteration
+
+        def __iadd__(self, item):
+            self.arr += [item]
+            return self
+
+        def __getitem__(self,num):
+            return self.arr[num]
+
+        def __setitem__(self,key,value):
+            self.arr[key] = value
+
+        def __delitem__(self,item):
+            return self.arr.pop(item)
+
+        def __len__(self):
+            return len(self.arr)
