@@ -66,7 +66,7 @@ import pandas as pd
 class frame(pd.DataFrame):
     def __init__(self, *args, **kwargs):
         super(frame, self).__init__(*args, **kwargs)
-        self.rolling = self.rolling_arr(self)
+        self.rolling = self.rolling_arr(dataframe=self)
 
     def col_exists(self,column):
         return column in self.columns
