@@ -151,7 +151,7 @@ class frame(pd.DataFrame):
             self.parent = dataframe
 
         #https://blog.finxter.com/python-__iter__-magic-method/
-        def __enter__(self,dataframe):
+        def __enter__(self):
             self.arr = self.parent.arr()
 
         def __exit__(self, exc_type, exc_val, exc_tb):
