@@ -150,7 +150,6 @@ class frame(pd.DataFrame):
     class rolling_arr(object):
         def __init__(self, dataframe):
             self.parent = dataframe
-            pass
 
         #https://blog.finxter.com/python-__iter__-magic-method/
         def __enter__(self,dataframe):
