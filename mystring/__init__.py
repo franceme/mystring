@@ -66,6 +66,7 @@ import pandas as pd
 class frame(pd.DataFrame):
     def __init__(self, *args, **kwargs):
         super(frame, self).__init__(*args, **kwargs)
+        self.current_index = 0
 
     def col_exists(self,column):
         return column in self.columns
@@ -116,19 +117,6 @@ class frame(pd.DataFrame):
 
         return self
 
-    def __iter__(self):
-        self.current_index = 0
-        self.rowz = self.itterrows()
-        return self
-    
-    def __next__(self):
-        if self.current_index < len(self.rowz):
-            x = self.rowz[self.current_index]
-            self.current_index += 1
-            return x
-        self.rowz = None
-        raise StopIteration
-
     @staticmethod
     def percent(x,y):
         return ("{0:.2f}").format(100 * (x / float(y)))
@@ -146,44 +134,23 @@ class frame(pd.DataFrame):
             pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
         )
 
-    class rolling_arr(object):
-        def __init__(self, dataframe):
-            self.parent = dataframe
+    def __iter__(self):
+        self.current_index = 0
+        return self
 
-        #https://blog.finxter.com/python-__iter__-magic-method/
-        def __enter__(self):
+    def __next__(self):
+        if self.current_index < len(self.arr):
+            x = self.arr[self.current_index]
+            self.current_index += 1
+            return x
+        raise StopIteration
+
+    #https://blog.finxter.com/python-__iter__-magic-method/
+    def __enter__(self, use_arr=True):
+        if use_arr:
             self.arr = self.parent.arr()
+        else:
+            self.arr = next(self.iterrows())
 
-        def __exit__(self, exc_type, exc_val, exc_tb):
-            self.parent = frame.from_arr(self.arr)
-
-        def __iter__(self):
-            self.current_index = 0
-            return self
-        
-        def __next__(self):
-            if self.current_index < len(self.arr):
-                x = self.arr[self.current_index]
-                self.current_index += 1
-                return x
-            raise StopIteration
-
-        def __iadd__(self, item):
-            self.arr += [item]
-            return self
-
-        def __getitem__(self,num):
-            return self.arr[num]
-
-        def __setitem__(self,key,value):
-            self.arr[key] = value
-
-        def __delitem__(self,item):
-            return self.arr.pop(item)
-
-        def __len__(self):
-            return len(self.arr)
-    
-    @property
-    def rolling(self):
-        return self.rolling_arr(dataframe=self)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.parent = frame.from_arr(self.arr)
