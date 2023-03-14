@@ -64,10 +64,8 @@ class string(str):
 
 import pandas as pd
 class frame(pd.DataFrame):
-    def __init__(self, *args, **kwargs):
-        super(frame, self).__init__(*args, **kwargs)
-        self.current_index = 0
-
+    def __init__(self,*args,**kwargs):
+        super(frame,self).__init__(*args,**kwargs)
     def col_exists(self,column):
         return column in self.columns
 
@@ -78,14 +76,14 @@ class frame(pd.DataFrame):
         self[column] = round(round(
             (self[column]),2
         ) * 100,0).astype(int).astype(str).replace('.0','') + "%"
-    
+
     def move_column(self, column, position):
         if self.col_no_exists(column):
             return
         colz = [col for col in self.columns if col != column]
         colz.insert(position, column)
         self = frame(self[colz])
-    
+
     def rename_column(self, columnfrom, columnto):
         if self.col_no_exists(columnfrom):
             return
@@ -95,7 +93,7 @@ class frame(pd.DataFrame):
         if self.col_no_exists(column):
             return
         self[column] = self[column].str.replace(fromname, fromto)
-    
+ 
     def arr(self):
         self_arr = self.to_dict('records')
         return self_arr
@@ -122,6 +120,10 @@ class frame(pd.DataFrame):
         return ("{0:.2f}").format(100 * (x / float(y)))
 
     @staticmethod
+    def from_json(string):
+        return frame(pd.read_json(string))
+
+    @staticmethod
     def from_arr(arr):
         def dictionaries_to_pandas_helper(raw_dyct,deepcopy:bool=True):
             from copy import deepcopy as dc
@@ -134,23 +136,19 @@ class frame(pd.DataFrame):
             pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
         )
 
-    def __iter__(self):
-        self.current_index = 0
-        return self
-
-    def __next__(self):
-        if self.current_index < len(self.arr):
-            x = self.arr[self.current_index]
+    @property
+    def roll(self):
+        self.current_index=0
+        while self.current_index < self.shape[0]:
+            x = self.iloc[self.current_index]
             self.current_index += 1
-            return x
-        raise StopIteration
+            yield x
 
-    #https://blog.finxter.com/python-__iter__-magic-method/
-    def __enter__(self, use_arr=True):
-        if use_arr:
-            self.arr = self.parent.arr()
-        else:
-            self.arr = next(self.iterrows())
+    def tobase64(self, encoding='utf-8'):
+        import base64
+        return base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.parent = frame.from_arr(self.arr)
+    @staticmethod
+    def frombase64(string, encoding='utf-8'):
+        import base64
+        return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
