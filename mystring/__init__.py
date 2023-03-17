@@ -138,9 +138,20 @@ class frame(pd.DataFrame):
 
     @property
     def roll(self):
+        class SubSeries(pd.Series):
+            def setindexdata(self, index, data):
+                self.custom__index = index
+                self.custom__data = data
+                return self
+
+            def __setitem__(self, key, value):
+                super(SubSeries, self).__setitem__(key, value)
+                self.custom__data.at[self.custom__index,key] = value
+
         self.current_index=0
         while self.current_index < self.shape[0]:
-            x = self.iloc[self.current_index]
+            x = SubSeries(self.iloc[self.current_index]).setindexdata(self.current_index, self)
+
             self.current_index += 1
             yield x
 
