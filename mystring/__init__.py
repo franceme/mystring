@@ -163,3 +163,43 @@ class frame(pd.DataFrame):
     def frombase64(string, encoding='utf-8'):
         import base64
         return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
+    
+    def heatmap(self, columns):
+        import seaborn as sns
+        sns.set()
+        SMALL_SIZE = 15
+        MEDIUM_SIZE = 20
+        BIGGER_SIZE = 25
+
+        plt.rc('font', size=MEDIUM_SIZE)          # controls default text sizes
+        plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+        plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+        plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+        plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+        plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+        temp_frame = self.copy()
+        mask = temp_frame.columns.isin(columns)
+
+        temp_frame.loc[:, ~mask] = 0
+        vmin, vmax = 0,0
+
+        for col in columns:
+            vmax = max(vmax, self[col].max())
+
+        sns.heatmap(temp_frame, annot=True, fmt="d", vmin=vmin, vmax=vmax, cmap="Blues")
+        plt.xlabel(x_label) 
+        plt.ylabel(y_label) 
+
+        # displaying the title
+        plt.title(title)
+        plt.rcParams["figure.figsize"] = (40,30)
+
+        if False:
+            plt.savefig(
+                'get_size.png',
+                format='png',
+                dpi=height/fig.get_size_inches()[1]
+            )
+        plt.show()
