@@ -1,5 +1,11 @@
 import re
 class string(str):
+    def equals(self,*args):
+        for arg in args:
+            if self == arg:
+                return True
+        return False
+
     def replace(self,x,y):
         return string(super().replace(x,y))
 
