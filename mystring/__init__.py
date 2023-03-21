@@ -25,6 +25,13 @@ class string(str):
         return self
 
     @property
+    def trim(self):
+        self = string(self.strip())
+        if self == '':
+            self = None
+        return self
+
+    @property
     def empty(self):
         return self is None or self.strip() == '' or self.strip().lower() == 'nan'
 
