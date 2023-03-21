@@ -8,6 +8,11 @@ class string(str):
             self = self.rep(arg)
         return self
 
+    def commonrepsies(self):
+        for arg in ['.','(',')','[',']','-']:
+            self = self.rep(arg)
+        return self
+
     def ad(self, value):
         self = string(self + getattr(self, 'delim', "")  + value)
         return self
@@ -127,6 +132,14 @@ class frame(pd.DataFrame):
         self['F1'] = prep(2 * ((self['Precision_PPV'] * self['Recall'])/(self['Precision_PPV'] + self['Recall'])))
 
         return self
+    
+    def verify_confusion_matrix_bool(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+        return len(self.arr) == sum(self[TP].sum(),self[TN].sum(),self[FN].sum())  
+
+    def verify_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+        return "Total Cases {0} sum(TP,TN,FN)".format(
+            "===" if self.verify_confusion_matrix_bool(TP,FP,TN,FN) else "=/="
+        ) 
 
     @staticmethod
     def percent(x,y):
