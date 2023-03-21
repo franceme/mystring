@@ -1,6 +1,9 @@
 class string(str):
+    def replace(self,x,y):
+        return string(super(str, self).replace(x,y))
+
     def rep(self,substring):
-        self = string(self.replace(substring,''))
+        self = self.replace(substring,'')
         return self
 
     def repsies(self,*args):
@@ -9,7 +12,7 @@ class string(str):
         return self
 
     def commonrepsies(self):
-        for arg in ['.','(',')','[',']','-']:
+        for arg in ['.','(',')','[',']','-',',']:
             self = self.rep(arg)
         return self
 
