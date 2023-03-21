@@ -1,3 +1,4 @@
+import re
 class string(str):
     def replace(self,x,y):
         return string(super().replace(x,y))
@@ -11,9 +12,11 @@ class string(str):
             self = self.rep(arg)
         return self
 
-    def commonrepsies(self):
-        for arg in ['.','(',')','[',']','-',',']:
-            self = self.rep(arg)
+    @property
+    def irregularstrip(self):
+        #for arg in ['.','(',')','[',']','-',',','/','"',"'","’","#",]:
+        #    self = self.rep(arg)
+        self = string(re.sub(r'\W+', '', self))
         return self
 
     def ad(self, value):
