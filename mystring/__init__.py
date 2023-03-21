@@ -73,6 +73,7 @@ import pandas as pd
 class frame(pd.DataFrame):
     def __init__(self,*args,**kwargs):
         super(frame,self).__init__(*args,**kwargs)
+
     def col_exists(self,column):
         return column in self.columns
 
@@ -95,6 +96,11 @@ class frame(pd.DataFrame):
         if self.col_no_exists(columnfrom):
             return
         self.rename(columns={columnfrom: columnto},inplace=True)
+
+    def rename_columns(self, dyct):
+        for key,value in dyct.items():
+            if self.col_exists(key):
+                self.rename(columns={key: value},inplace=True)
 
     def rename_value_in_column(self, column, fromname, fromto):
         if self.col_no_exists(column):
