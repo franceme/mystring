@@ -1,6 +1,6 @@
 class string(str):
     def replace(self,x,y):
-        return string(super(str, self).replace(x,y))
+        return string(super().replace(x,y))
 
     def rep(self,substring):
         self = self.replace(substring,'')
