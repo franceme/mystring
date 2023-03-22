@@ -136,10 +136,12 @@ class frame(pd.DataFrame):
         self[column] = self[column].str.replace(fromname, fromto)
         return self
 
-    def drop_value_in_column(self, column, value):
+    def drop_value_in_column(self, column, value,isstring=True):
         if self.col_no_exists(column):
             return
-        self = frame(self.query("{0} != '{1}'".format(column, value)))
+        self = frame(self.query("{0} != {1}".format(column, 
+            "'" + value + "'" if isstring else value
+        )))
         return self
 
     def cast_column(self, column, klass):
