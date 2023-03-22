@@ -157,12 +157,15 @@ class frame(pd.DataFrame):
 
         return self
     
+    def confusion_matrix_sum(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+        return (self[TP].sum() + self[TN].sum() + self[FN].sum())  
+
     def verify_confusion_matrix_bool(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-        return len(self.arr()) == (self[TP].sum() + self[TN].sum() + self[FN].sum())  
+        return len(self.arr()) == self.confusion_matrix_sum(TP=TP,FP=FP,TN=TN,FN=FN)
 
     def verify_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
         return "Total Cases {0} sum(TP,TN,FN)".format(
-            "===" if self.verify_confusion_matrix_bool(TP,FP,TN,FN) else "=/="
+            "===" if self.verify_confusion_matrix_bool(TP=TP,FP=FP,TN=TN,FN=FN) else "=/="
         ) 
 
     @staticmethod
