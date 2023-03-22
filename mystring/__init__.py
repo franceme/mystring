@@ -211,6 +211,7 @@ class frame(pd.DataFrame):
     
     def heatmap(self, columns):
         import seaborn as sns
+        import matplotlib.pyplot as plt
         sns.set()
         SMALL_SIZE = 15
         MEDIUM_SIZE = 20
