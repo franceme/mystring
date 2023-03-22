@@ -209,7 +209,7 @@ class frame(pd.DataFrame):
         import base64
         return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
     
-    def heatmap(self, columns):
+    def heatmap(self, columns,x_label='',y_label='',title=''):
         import seaborn as sns
         import matplotlib.pyplot as plt
         sns.set()
