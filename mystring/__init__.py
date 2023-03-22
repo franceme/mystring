@@ -108,6 +108,7 @@ class frame(pd.DataFrame):
         self[column] = round(round(
             (self[column]),2
         ) * 100,0).astype(int).astype(str).replace('.0','') + "%"
+        return self
 
     def move_column(self, column, position):
         if self.col_no_exists(column):
@@ -115,26 +116,37 @@ class frame(pd.DataFrame):
         colz = [col for col in self.columns if col != column]
         colz.insert(position, column)
         self = frame(self[colz])
+        return self
 
     def rename_column(self, columnfrom, columnto):
         if self.col_no_exists(columnfrom):
             return
         self.rename(columns={columnfrom: columnto},inplace=True)
+        return self
 
     def rename_columns(self, dyct):
         for key,value in dyct.items():
             if self.col_exists(key):
                 self.rename(columns={key: value},inplace=True)
+        return self
 
     def rename_value_in_column(self, column, fromname, fromto):
         if self.col_no_exists(column):
             return
         self[column] = self[column].str.replace(fromname, fromto)
+        return self
+
+    def drop_value_in_column(self, column, value):
+        if self.col_no_exists(column):
+            return
+        self = frame(self.query("{0} != '{1}'".format(column, value)))
+        return self
 
     def cast_column(self, column, klass):
         if self.col_no_exists(column):
             return
         self[column] = self[column].astype(klass)
+        return self
  
     def arr(self):
         self_arr = self.to_dict('records')
