@@ -158,7 +158,7 @@ class frame(pd.DataFrame):
         return self
     
     def verify_confusion_matrix_bool(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-        return len(self.arr()) == sum(self[TP].sum(),self[TN].sum(),self[FN].sum())  
+        return len(self.arr()) == (self[TP].sum() + self[TN].sum() + self[FN].sum())  
 
     def verify_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
         return "Total Cases {0} sum(TP,TN,FN)".format(
