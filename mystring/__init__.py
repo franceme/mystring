@@ -130,6 +130,11 @@ class frame(pd.DataFrame):
         if self.col_no_exists(column):
             return
         self[column] = self[column].str.replace(fromname, fromto)
+
+    def cast_column(self, column, klass):
+        if self.col_no_exists(column):
+            return
+        self[column] = self[column].astype(klass)
  
     def arr(self):
         self_arr = self.to_dict('records')
