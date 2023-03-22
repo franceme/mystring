@@ -24,6 +24,13 @@ class string(str):
         #    self = self.rep(arg)
         self = string(re.sub(r'\W+', '', self))
         return self
+    
+    @property
+    def deplete(self):
+        self = self.trim.irregularstrip.trim
+        if self.empty or self.equals("None", "none", "Null", "null", "NaN", "nan"):
+            self = None
+        return self
 
     def ad(self, value):
         self = string(self + getattr(self, 'delim', "")  + value)
