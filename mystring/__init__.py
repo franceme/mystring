@@ -214,6 +214,9 @@ class frame(pd.DataFrame):
         import base64
         return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
     
+    def quick_heatmap(self,cmap ='viridis',properties={'font-size': '20px'}):
+        return self.style.background_gradient(cmap=cmap).set_properties(**properties) 
+
     def heatmap(self, columns,x_label='',y_label='',title=''):
         import seaborn as sns
         import matplotlib.pyplot as plt
