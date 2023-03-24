@@ -277,4 +277,4 @@ class frame(pd.DataFrame):
     
     def dup(self):
         from copy import deepcopy as dc
-        return myframe(dc(self))
+        return frame(dc(self))
