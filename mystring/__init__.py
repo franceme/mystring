@@ -274,3 +274,7 @@ class frame(pd.DataFrame):
                 dpi=height/fig.get_size_inches()[1]
             )
         plt.show()
+    
+    def dup(self):
+        from copy import deepcopy as dc
+        return myframe(dc(self))
