@@ -48,6 +48,12 @@ class string(str):
             self = self.pre(arg)
         return self
 
+    def startswiths(self, *args):
+        for arg in args:
+            if self.startswith(arg):
+                return True
+        return False
+
     @property
     def trim(self):
         self = string(self.strip())
@@ -57,7 +63,7 @@ class string(str):
 
     @property
     def empty(self):
-        return self is None or self.strip() == '' or self.strip().lower() == 'nan'
+        return self is None or self.strip() == '' or self.strip().lower() == 'nan' or self.strip().lower() == 'none'
 
     @property
     def notempty(self):
