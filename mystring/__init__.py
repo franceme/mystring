@@ -296,7 +296,7 @@ class frame(pd.DataFrame):
     
     @property
     def kolz(self):
-        return self.columns.tolist()
+        return lyst(self.columns.tolist())
 
 
 class lyst(list):
