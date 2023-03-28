@@ -286,6 +286,6 @@ class frame(pd.DataFrame):
         return frame(dc(self))
     
     @staticmethod
-    def dupof(frame):
+    def dupof(dataframe):
         from copy import deepcopy as dc
-        return frame(dc(frame))
+        return frame(dc(dataframe))
