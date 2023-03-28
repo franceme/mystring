@@ -293,6 +293,10 @@ class frame(pd.DataFrame):
     @property
     def dummies(self):
         return pd.get_dummies(data = self)
+    
+    @property
+    def kolz(self):
+        return self.columns.tolist()
 
 
 class lyst(list):
