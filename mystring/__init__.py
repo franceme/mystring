@@ -289,6 +289,10 @@ class frame(pd.DataFrame):
     def dupof(dataframe):
         from copy import deepcopy as dc
         return frame(dc(dataframe))
+    
+    @property
+    def dummies(self):
+        return pd.get_dummies(data = self)
 
 
 class lyst(list):
