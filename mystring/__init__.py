@@ -284,3 +284,8 @@ class frame(pd.DataFrame):
     def dup(self):
         from copy import deepcopy as dc
         return frame(dc(self))
+    
+    @staticmethod
+    def dupof(frame):
+        from copy import deepcopy as dc
+        return frame(dc(frame))
