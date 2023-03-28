@@ -289,3 +289,25 @@ class frame(pd.DataFrame):
     def dupof(dataframe):
         from copy import deepcopy as dc
         return frame(dc(dataframe))
+
+
+class lyst(list):
+    def __init__(self,*args,**kwargs):
+        super(lyst,self).__init__(*args,**kwargs)
+    
+    def trims(self, filterlambda=None):
+        to_drop = []
+
+        for x_itr,x in enumerate(self):
+            if (filterlambda and filterlambda(x)) or x == None:
+                to_drop += [x_itr]
+        
+        to_drop.reverse()
+        for to_drop_itr in to_drop:
+            self.pop(to_drop_itr)
+        
+        return self
+    
+    @property
+    def length(self):
+        return len(self)
