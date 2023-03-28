@@ -323,13 +323,3 @@ class lyst(list):
     @property
     def length(self):
         return len(self)
-
-class foil(TextIOWrapper):
-    def __init__(self,*args,**kwargs):
-        super(foil,self).__init__(*args,**kwargs)
-    
-    def addr(self,x):
-        self.write("{0}\n".format(x))
-    
-    def add(self,x):
-        self.write("{0}".format(x))
