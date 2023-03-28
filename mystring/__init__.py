@@ -307,7 +307,11 @@ class lyst(list):
         to_drop = []
 
         for x_itr,x in enumerate(self):
-            if (filterlambda and filterlambda(x)) or x == None:
+            if(
+                (filterlambda != None and filterlambda(x))
+                or
+                (filterlambda == None and x == None)
+            ):
                 to_drop += [x_itr]
         
         to_drop.reverse()
@@ -319,3 +323,13 @@ class lyst(list):
     @property
     def length(self):
         return len(self)
+
+class foil(TextIOWrapper):
+    def __init__(self,*args,**kwargs):
+        super(foil,self).__init__(*args,**kwargs)
+    
+    def addr(self,x):
+        self.write("{0}\n".format(x))
+    
+    def add(self,x):
+        self.write("{0}".format(x))
