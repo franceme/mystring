@@ -331,7 +331,8 @@ class lyst(list):
 
     def roll(self, kast=None,filter_lambda = None):
         for item in self:
+            if kast:
+                item = kast(item)
+
             if filter_lambda==None or filter_lambda(item):
-                if kast:
-                    item = kast(item)
                 yield item
