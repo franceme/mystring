@@ -281,6 +281,11 @@ class frame(pd.DataFrame):
             )
         plt.show()
     
+    @property
+    def df(self):
+        from copy import deepcopy as dc
+        return pd.DataFrame(dc(self))
+    
     def dup(self):
         from copy import deepcopy as dc
         return frame(dc(self))
