@@ -328,3 +328,10 @@ class lyst(list):
     @property
     def length(self):
         return len(self)
+
+    def roll(self, kast=None,filter_lambda = None):
+        for item in roll:
+            if filter_lambda==None or filter_lambda(item):
+                if kast:
+                    item = kast(item)
+                yield item
