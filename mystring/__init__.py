@@ -156,9 +156,8 @@ class frame(pd.DataFrame):
         self[column] = self[column].astype(klass)
         return self
  
-    def rquery(self, string):
-        return self
-        return frame(super(frame,self).query(string))
+    def search(self, string):
+        return frame(self.query(string))
  
     def arr(self):
         self_arr = self.to_dict('records')
