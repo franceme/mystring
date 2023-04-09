@@ -340,7 +340,7 @@ class frame(pd.DataFrame):
                     ktr = ktr + 1
                     nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
 
-                with open(nu_file,"w+") as writer:
+                with open(nu_file,"a+" if os.path.exists(nu_file) else "w+") as writer:
                     writer.write("\n")
                     writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
                     writer.write("\n")
