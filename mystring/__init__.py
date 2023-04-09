@@ -310,7 +310,7 @@ class frame(pd.DataFrame):
     def kolz(self):
         return lyst(self.columns.tolist())
 
-    def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False):
+    def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
         working = self.dup()
 
         if number_columnz:
@@ -318,13 +318,32 @@ class frame(pd.DataFrame):
             for column_itr, column in enumerate(columns):
                 working.rename_column(column, str(column_itr)+"_"+column)
 
-        #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
-        with open(file,"w+") as writer:
-            writer.write(pd.io.sql.get_schema(working.reset_index(), name))
-            writer.write("\n\n")
+        if every_x_rows is None or every_x_rows == -1:
+            #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
+            with open(file,"w+") as writer:
+                writer.write(pd.io.sql.get_schema(working.reset_index(), name))
+                writer.write("\n\n")
+                for index, row in working.iterrows():
+                    writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
+                    writer.write("\n")
+        else:
+            #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
+            ktr = 0
+            nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
+
+            with open(nu_file,"w+") as writer:
+                writer.write(pd.io.sql.get_schema(working.reset_index(), name))
+                writer.write("\n\n")
+
             for index, row in working.iterrows():
-                writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
-                writer.write("\n")
+                if index % every_x_rows == 0:
+                    ktr = ktr + 1
+                    nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
+
+                with open(nu_file,"w+") as writer:
+                    writer.write("\n")
+                    writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
+                    writer.write("\n")
 
 
 class lyst(list):
