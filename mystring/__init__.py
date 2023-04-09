@@ -310,6 +310,15 @@ class frame(pd.DataFrame):
     def kolz(self):
         return lyst(self.columns.tolist())
 
+    def to_sqlcreate(self, file="out.sql", name="temp"):
+        #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
+        with open(file,"w+") as writer:
+            writer.write(pd.io.sql.get_schema(self.reset_index(), name))
+            writer.write("\n\n")
+            for index, row in self.iterrows():
+                writer.write('INSERT INTO '+TARGET+' ('+ str(', '.join(SOURCE.columns))+ ') VALUES '+ str(tuple(row.values)))
+                writer.write("\n")
+
 
 class lyst(list):
     def __init__(self,*args,**kwargs):
@@ -343,12 +352,3 @@ class lyst(list):
 
             if filter_lambda==None or filter_lambda(item):
                 yield item
-    
-    def sqlcreate(self, file="out.sql", name="temp"):
-        #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
-        with open(file,"w+") as writer:
-            writer.write(pd.io.sql.get_schema(self.reset_index(), name))
-            writer.write("\n\n")
-            for index, row in self.iterrows():
-                writer.write('INSERT INTO '+TARGET+' ('+ str(', '.join(SOURCE.columns))+ ') VALUES '+ str(tuple(row.values)))
-                writer.write("\n")
