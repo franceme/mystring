@@ -1,4 +1,4 @@
-import re
+import os,sys,re
 class string(str):
     def equals(self,*args):
         for arg in args:
