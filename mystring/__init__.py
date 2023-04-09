@@ -344,7 +344,7 @@ class lyst(list):
             if filter_lambda==None or filter_lambda(item):
                 yield item
     
-    def to_sqlcreate(self, file="out.sql", name="temp"):
+    def sqlcreate(self, file="out.sql", name="temp"):
         #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
         with open(file,"w+") as writer:
             writer.write(pd.io.sql.get_schema(self.reset_index(), name))
