@@ -316,7 +316,7 @@ class frame(pd.DataFrame):
             writer.write(pd.io.sql.get_schema(self.reset_index(), name))
             writer.write("\n\n")
             for index, row in self.iterrows():
-                writer.write('INSERT INTO '+TARGET+' ('+ str(', '.join(SOURCE.columns))+ ') VALUES '+ str(tuple(row.values)))
+                writer.write('INSERT INTO '+name+' ('+ str(', '.join(self.columns))+ ') VALUES '+ str(tuple(row.values)))
                 writer.write("\n")
 
 
