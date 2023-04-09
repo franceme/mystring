@@ -197,7 +197,7 @@ class frame(pd.DataFrame):
 
     @staticmethod
     def from_csv(string):
-        return frame(pd.read_csv(string))
+        return frame(pd.read_csv(string, low_memory=False))
 
     @staticmethod
     def from_json(string):
@@ -310,13 +310,20 @@ class frame(pd.DataFrame):
     def kolz(self):
         return lyst(self.columns.tolist())
 
-    def to_sqlcreate(self, file="out.sql", name="temp"):
+    def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False):
+        working = self.dup()
+
+        if number_columnz:
+            columns = working.kolz
+            for column_itr, column in enumerate(columns):
+                working.rename_column(column, str(column_itr)+"_"+column)
+
         #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
         with open(file,"w+") as writer:
-            writer.write(pd.io.sql.get_schema(self.reset_index(), name))
+            writer.write(pd.io.sql.get_schema(working.reset_index(), name))
             writer.write("\n\n")
-            for index, row in self.iterrows():
-                writer.write('INSERT INTO '+name+' ('+ str(', '.join(self.columns))+ ') VALUES '+ str(tuple(row.values)))
+            for index, row in working.iterrows():
+                writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
                 writer.write("\n")
 
 
