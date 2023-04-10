@@ -305,18 +305,24 @@ class frame(pd.DataFrame):
     @property
     def dummies(self):
         return pd.get_dummies(data = self)
-    
+
     @property
     def kolz(self):
         return lyst(self.columns.tolist())
+    
+    def enumerate_kol(self):
+        for column_itr, column in enumerate(self.kolz):
+            self.rename_column(column, str(column_itr)+"_"+column)
+        return self
 
     def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
         working = self.dup()
 
         if number_columnz:
-            columns = working.kolz
-            for column_itr, column in enumerate(columns):
-                working.rename_column(column, str(column_itr)+"_"+column)
+            working.enumerate_kol()
+            #columns = working.kolz
+            #for column_itr, column in enumerate(columns):
+            #    working.rename_column(column, str(column_itr)+"_"+column)
 
         if every_x_rows is None or every_x_rows == -1:
             #https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
