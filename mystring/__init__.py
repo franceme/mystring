@@ -351,7 +351,6 @@ class frame(pd.DataFrame):
                     writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
                     writer.write("\n")
 
-
 class lyst(list):
     def __init__(self,*args,**kwargs):
         super(lyst,self).__init__(*args,**kwargs)
@@ -384,3 +383,67 @@ class lyst(list):
 
             if filter_lambda==None or filter_lambda(item):
                 yield item
+    
+    def joins(self,on=","):
+        return on.join(self)
+
+import hashlib,base64,json
+from fileinput import FileInput as finput
+class foil(object):
+    def __init__(self, path, preload=False):
+        self.path = path
+        if preload:
+            with open(path, "r") as reader:
+                self._content = lyst([string(x) for x in reader.readlines()])
+        else:
+            self._content = lyst([])
+
+    def __enter__(self, append=False):
+        self._content = lyst([])
+        yield finput(self.path, inplace=True)
+    
+    def __exit__(self,type, value, traceback):
+        return
+    
+    @property
+    def content(self):
+        if self._content.length == 0:
+            with open(path, "r") as reader:
+                self._content = lyst([string(x) for x in reader.readlines()])
+        return self._content
+    
+    def reload(self):
+        self._content = lyst([])
+        return self.content
+
+    def hash_content(self,hashtype="sha512", encoding="utf-8"):
+        hashr = getattr(hashlib, hashtype)(bytes(self._content.joins("\n"), encoding))
+        return hashr.hexdigest()
+
+    def b64_content(self, encoding="utf-8"):
+        return base64.b64encode(self._content.joins("\n").encode(encoding)).decode(encoding)
+
+    def structured(self):
+        return str(json.dumps({
+            'header':False,
+            'file':self.path,
+            'hash':self.hash_content(),
+            'base64':self.b64_content()
+        }))
+    
+    @staticmethod
+    def is_bin(foil):
+        #https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python
+        textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
+        is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+        return is_binary_string(open(foil, 'rb').read(1024))
+
+class foldentre(object):
+    def __init__(self,ini_path = os.path.abspath(os.curdir)):
+        self.ini_path = ini_path
+    
+    def __enter__(self, new_path):
+        os.chdir(new_path)
+    
+    def __exit__(self,type, value, traceback):
+        os.chdir(ini_path)
