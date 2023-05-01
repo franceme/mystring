@@ -447,3 +447,12 @@ class foldentre(object):
     
     def __exit__(self,type, value, traceback):
         os.chdir(ini_path)
+
+def from_b64(contents,file=None):
+    string_contents = string.frombase64(contents)
+    if file:
+        with open(file,'w+') as writer:
+            writer.write(string_contents)
+        return foil(file)
+    else:
+        return string_contents
