@@ -18,6 +18,50 @@ class string(str):
             self = self.rep(arg)
         return self
 
+    def rep_end(self, substring):
+        if self.endswith(substring):
+            self = string(self[:-1 * len(substring)])
+        return self
+    
+    def repsies_end(self,*args):
+        for arg in args:
+            self = self.rep_end(arg)
+        return self
+    
+    def rep_fromend(self, substring):
+        #From https://stackoverflow.com/questions/3675318/how-to-replace-some-characters-from-the-end-of-a-string
+        head, _sep, tail = self.rpartition(substring)
+        self = string(head + tail)
+        return self
+    
+    def repsies_fromend(self,*args):
+        for arg in args:
+            self = self.rep_fromend(arg)
+        return self
+    
+    def exec(self, display=True, lines=False):
+        import subprocess
+
+        output_contents = ""
+        if display:
+            print(cmd)
+        process = subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=1,encoding='utf-8', universal_newlines=True, close_fds=True)
+        while True:
+            out = process.stdout.readline()
+            if out == '' and process.poll() != None:
+                break
+            if out != '':
+                if display:
+                    sys.stdout.write(out)
+                output_contents += out
+                sys.stdout.flush()
+        
+        if not lines:
+            return output_contents
+        else:
+            return [x for x in output_contents.split('\n') if x.strip() != '']
+
+
     @property
     def irregularstrip(self):
         #for arg in ['.','(',')','[',']','-',',','/','"',"'","’","#",]:
