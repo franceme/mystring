@@ -537,11 +537,15 @@ class MyThreads(object):
 		obj.start()
 		return self
 	
+    @property
+    def complete(self):
+        return all([not x.isAlive() for x in self.threads])
+
 	def wait_until_done(self, printout=False):
 		if printout:
 			print("[",end='',flush=True)
 
-		while any([x.isAlive() for x in self.threads]):
+		while not self.complete:
 			time.sleep(1)
 			if printout:
 				print(".",end='',flush=True)
