@@ -500,3 +500,51 @@ def from_b64(contents,file=None):
         return foil(file)
     else:
         return string_contents
+
+import threading, queue, time
+from typing import Dict, List, Union, Callable
+class MyThread(threading.Thread):
+	def __init__(self, func, threadLimiter, group=None, target=None, name=None,args=(), kwargs=None):
+		super(MyThread,self).__init__(group=group, target=target, name=name)
+		self.func = func
+		self.threadLimiter = threadLimiter
+		self.args = args
+		self.kwargs = kwargs
+		return
+
+	def run(self): 
+		self.threadLimiter.acquire() 
+		try: 
+			self.func() 
+		finally: 
+			self.threadLimiter.release() 
+
+class MyThreads(object):
+	def __init__(self, num_threads):
+		self.num_threads = num_threads
+		self.threadLimiter = threading.BoundedSemaphore(self.num_threads)
+		self.threads = queue.Queue()
+
+	def __iadd__(self, obj: Union[Callable]):
+		if isinstance(obj, Callable):
+			obj = MyThread(obj, self.threadLimiter)
+		
+		if not isinstance(obj, MyThread):
+			print("Cannot add a-none function")
+			return self
+		
+		self.threads.put(obj)
+		obj.start()
+		return self
+	
+	def wait_until_done(self, printout=False):
+		if printout:
+			print("[",end='',flush=True)
+
+		while any([x.isAlive() for x in self.threads]):
+			time.sleep(1)
+			if printout:
+				print(".",end='',flush=True)
+
+		if printout:
+			print("]",flush=True)
