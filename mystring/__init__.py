@@ -483,14 +483,17 @@ class foil(object):
         return is_binary_string(open(foil, 'rb').read(1024))
 
 class foldentre(object):
-    def __init__(self,ini_path = os.path.abspath(os.curdir)):
+    def __init__(self,new_path=new_path,ini_path = os.path.abspath(os.curdir)):
         self.ini_path = ini_path
+        self.new_path = new_path
     
-    def __enter__(self, new_path):
-        os.chdir(new_path)
+    def __enter__(self):
+        os.chdir(self.new_path)
+        return self
     
     def __exit__(self,type, value, traceback):
         os.chdir(ini_path)
+        return self
 
 def from_b64(contents,file=None):
     string_contents = string.frombase64(contents)
