@@ -61,6 +61,20 @@ class string(str):
         else:
             return [x for x in output_contents.split('\n') if x.strip() != '']
 
+    @property
+    def isvalidpy(self):
+        import ast
+        output = False
+        try:
+            ast.parse(self)
+            output = True
+        except:
+            pass
+        return output
+
+    def eval(self):
+        if self.isvalidpy:
+            eval(self)
 
     @property
     def irregularstrip(self):
