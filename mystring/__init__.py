@@ -497,7 +497,7 @@ class foil(object):
 		return is_binary_string(open(foil, 'rb').read(1024))
 
 class foldentre(object):
-	def __init__(self,new_path=new_path,ini_path = os.path.abspath(os.curdir)):
+	def __init__(self,new_path:str,ini_path:str = os.path.abspath(os.curdir)):
 		self.ini_path = ini_path
 		self.new_path = new_path
 	
