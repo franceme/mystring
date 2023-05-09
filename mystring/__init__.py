@@ -556,7 +556,7 @@ class MyThreads(object):
 	
 	@property
 	def complete(self):
-		return all([not x.isAlive() for x in self.threads])
+		return all([not x.isAlive() for x in list(self.threads.queue)])
 
 	def wait_until_done(self, printout=False):
 		if printout:
