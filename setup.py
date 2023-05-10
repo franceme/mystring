@@ -121,7 +121,9 @@ setup(
 	},
 	install_requires=[
 		"pandas",
-		"seaborn"
+		"seaborn",
+		"ephfile",
+		"pydbhub"
 	],
 	include_package_data=True,
 	classifiers=[

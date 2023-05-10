@@ -273,6 +273,32 @@ class frame(pd.DataFrame):
 		return frame(
 			pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
 		)
+	
+	@staticmethod
+	def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+		with ephfile("config.ini") as eph:
+			eph += f"""[dbhub]
+		api_key = {api_key}
+		db_owner = {db_owner}
+		db_name = {db_name}
+		"""
+			try:
+				db = dbhub.Dbhub(config_file=eph())
+
+				r, err = db.Query(
+					db_owner,
+					db_name,
+					'''
+					SELECT * 
+					FROM {0}
+					'''.format(table_name)
+				)
+				if err is not None:
+					print(f"[ERROR] {err}")
+					sys.exit(1)
+				return frame.from_arr(r)
+			except Exception as e:
+				print(e)
 
 	@property
 	def roll(self):
