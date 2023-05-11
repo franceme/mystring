@@ -479,10 +479,7 @@ class timeout(object):
 	def __init__(self, number_of_seconds, func, *args, **kwargs):
 		self.queue = multiprocessing.Queue()
 		self.num_sec = number_of_seconds
-		try:
-			self.proc = multprocessing.Process(target=self._wrapper, args=[func, self.queue, args, kwargs])
-		except Exception as e:
-			self.proc = None
+		self.proc = multiprocessing.Process(target=self._wrapper, args=[func, self.queue, args, kwargs])
 		
 		self.exe = False
 		self.timeout = False
