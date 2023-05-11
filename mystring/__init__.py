@@ -471,6 +471,47 @@ class lyst(list):
 	def joins(self,on=","):
 		return on.join(self)
 
+import multiprocessing
+import time
+class timeout(object): 
+	#https://stackoverflow.com/questions/10415028/how-to-get-the-return-value-of-a-function-passed-to-multiprocessing-process/10415215#10415215
+	#https://stackoverflow.com/questions/492519/timeout-on-a-function-call
+	def __init__(self, number_of_seconds=60, func, *args, **kwargs)
+		self.queue = multiprocessing.Queue()
+		self.num_sec = number_of_seconds
+		
+		self.proc = multprocessing.Process(target=self._wrapper, args=[func, self.queue, args, kwargs])
+		
+		self.exe = False
+		self.timeout = False
+		self.return = None
+
+	@staticmethod
+	def _wrapper(func, queue, args, kwargs):
+		ret = func(*args, **kwargs)
+		queue.put(ret)
+	
+	def run(self):
+		if not self.exe:
+			print("Processing")
+			self.exe = True
+			self.proc.start()
+			self.proc.join(self.num_sec)
+			self.timeout = self.proc.is_alive()
+
+			if self.timeout:
+				# or self.proc.terminate() for safely killing thread
+				self.proc.kill()
+				self.proc.join()
+			else:
+				self.return = self.queue.get()
+	
+	def __enter__(self):
+		self.run()
+	
+	def __exit__(self, type, value, traceback):
+		pass
+
 import hashlib,base64,json
 from fileinput import FileInput as finput
 class foil(object):
