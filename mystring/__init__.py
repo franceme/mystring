@@ -476,7 +476,7 @@ import time
 class timeout(object): 
 	#https://stackoverflow.com/questions/10415028/how-to-get-the-return-value-of-a-function-passed-to-multiprocessing-process/10415215#10415215
 	#https://stackoverflow.com/questions/492519/timeout-on-a-function-call
-	def __init__(self, number_of_seconds, func, *args, **kwargs)
+	def __init__(self, number_of_seconds, func, *args, **kwargs):
 		self.queue = multiprocessing.Queue()
 		self.num_sec = number_of_seconds
 		
