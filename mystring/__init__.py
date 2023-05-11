@@ -484,7 +484,7 @@ class timeout(object):
 		
 		self.exe = False
 		self.timeout = False
-		self.return = None
+		self.output = None
 
 	@staticmethod
 	def _wrapper(func, queue, args, kwargs):
@@ -504,7 +504,7 @@ class timeout(object):
 				self.proc.kill()
 				self.proc.join()
 			else:
-				self.return = self.queue.get()
+				self.output = self.queue.get()
 	
 	def __enter__(self):
 		self.run()
