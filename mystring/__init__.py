@@ -507,9 +507,10 @@ class timeout(object):
 	
 	def __enter__(self):
 		self.run()
+		return
 	
 	def __exit__(self, type, value, traceback):
-		pass
+		return
 
 import hashlib,base64,json
 from fileinput import FileInput as finput
