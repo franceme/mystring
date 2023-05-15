@@ -504,6 +504,12 @@ class timeout(object):
 				self.proc.join()
 			else:
 				self.output = self.queue.get()
+				if isinstance(self.output, pd.DataFrame):
+					self.output = frame(self.output)
+				elif isinstance(self.output, list):
+					self.output = lyst(self.output)
+				elif isinstance(self.output, str):
+					self.output = string(self.output)
 	
 	def __enter__(self):
 		self.run()
