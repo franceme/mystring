@@ -507,7 +507,7 @@ class timeout(object):
 	
 	def __enter__(self):
 		self.run()
-		return
+		return self
 	
 	def __exit__(self, type, value, traceback):
 		return
