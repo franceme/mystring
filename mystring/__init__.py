@@ -66,7 +66,7 @@ class string(str):
 		import ast
 		output = False
 		try:
-			ast.parse(self)
+			ast.parse(str(self))
 			output = True
 		except:
 			pass
