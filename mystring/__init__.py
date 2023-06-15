@@ -629,9 +629,10 @@ class MyThreads(object):
 	
 	@property
 	def complete(self):
-		for tread in iter(self.threads.get, None):
-			if tread != None and tread.isAlive():
-				return False
+		if self.threads.qsize() > 0:
+			for tread in iter(self.threads.get, None):
+				if tread != None and tread.isAlive():
+					return False
 		return True
 
 	def wait_until_done(self, printout=False):
