@@ -629,7 +629,7 @@ class MyThreads(object):
 	
 	@property
 	def complete(self):
-		for tread in iter(self.threads.queue.get, None):
+		for tread in iter(self.threads.get, None):
 			if tread != None and tread.isAlive():
 				return False
 		return True
