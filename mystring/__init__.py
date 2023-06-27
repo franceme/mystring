@@ -157,6 +157,17 @@ class string(str):
 		import base64
 		return base64.b64decode(string.encode(encoding)).decode(encoding)
 
+	def matches(regex:str, at_most:int=-1) -> bool:
+		try:
+			regex = re.compile(regex)
+			grps = [
+				match.group() for idx,match in enumerate(regex.finditer(str(self)))
+			]
+			return (at_most > -1 and len(grps) <= at_most) or (at_most == -1 and len(grps) > 0)
+		except Exception as e:
+			print("Error grabbing regex: {0}".format(e))
+			return False
+
 import pandas as pd
 class frame(pd.DataFrame):
 	def __init__(self,*args,**kwargs):
