@@ -168,6 +168,24 @@ class string(str):
 			print("Error grabbing regex: {0}".format(e))
 			return False
 
+	@property
+	def isfile(self):
+		return os.path.isfile(self)
+
+	@property
+	def isdir(self):
+		return os.path.isdir(self)
+
+	@property
+	def filedir_name(self):
+		file_name, file_ext = os.path.splitext(self)
+		return file_name
+
+	@property
+	def ext(self):
+		file_name, file_ext = os.path.splitext(self)
+		return file_ext
+
 import pandas as pd
 class frame(pd.DataFrame):
 	def __init__(self,*args,**kwargs):
