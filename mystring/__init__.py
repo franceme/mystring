@@ -427,6 +427,11 @@ class frame(pd.DataFrame):
 		for column_itr, column in enumerate(self.kolz):
 			self.rename_column(column, str(column_itr)+"_"+column)
 		return self
+	
+	def to_sqlite(self, file="out.sqlite", table_name="default"):
+		from sqlalchemy import create_engine
+		with create_engine('sqlite://{0}'.format(file), echo=False).begin() as connection:
+			self.to_sql(table_name, con=connection, if_exists='replace')
 
 	def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
 		working = self.dup()
