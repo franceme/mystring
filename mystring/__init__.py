@@ -432,6 +432,7 @@ class frame(pd.DataFrame):
 		from sqlalchemy import create_engine
 		with create_engine('sqlite://{0}'.format(file), echo=False).begin() as connection:
 			self.to_sql(table_name, con=connection, if_exists='replace')
+		return file
 
 	def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
 		working = self.dup()
