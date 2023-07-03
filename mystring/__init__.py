@@ -157,7 +157,7 @@ class string(str):
 		import base64
 		return base64.b64decode(string.encode(encoding)).decode(encoding)
 
-	def matches(regex:str, at_most:int=-1) -> bool:
+	def matches(self, regex:str, at_most:int=-1) -> bool:
 		try:
 			regex = re.compile(regex)
 			grps = [
