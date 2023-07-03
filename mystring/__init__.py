@@ -159,7 +159,6 @@ class string(str):
 
 	def matches(self, regex:str, at_most:int=-1) -> bool:
 		try:
-			regex = re.compile(regex)
 			grps = [
 				match.group() for idx,match in enumerate(regex.finditer(str(self)))
 			]
