@@ -304,6 +304,7 @@ class frame(pd.DataFrame):
 	
 	@staticmethod
 	def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+		from ephfile import ephfile
 		with ephfile("config.ini") as eph:
 			eph += f"""[dbhub]
 		api_key = {api_key}
@@ -694,8 +695,16 @@ class grading(object):
 
 
 	def __iadd__(self, value:str):
+		if value.endswith(".py"):
+			import py2nb, ephfile.ephfile
+			with ephfile(value.replace(".py",".ipynb")) as eph:
+				py2nb.convert(value)
+				studentImpl = pybryt.StudentImplementation(eph())
+		else:
+			studentImpl = pybryt.StudentImplementation(value)
+
 		self.subs[f"Sub_{len(self.subs.keys())}"] = {
-			"Implementation":pybryt.StudentImplementation(value)
+			"Implementation":studentImpl
 		}
 		return self
 
