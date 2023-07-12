@@ -707,8 +707,19 @@ class grading(object):
 			results += [value['Result']]
 		return results
 
+
 	def __enter__(self):
 		return self
 
+
 	def __exit__(self, type, value, traceback):
 		return
+
+
+	def val(self, value:object, on_success:str, on_failure:str):
+		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
+
+
+	@staticmethod
+	def value(value:object, on_success:str, on_failure:str):
+		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
