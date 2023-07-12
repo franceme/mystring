@@ -710,11 +710,16 @@ class grading(object):
 		return self
 
 
-	def __call__(self, *args, **kwargs):
+	def grade(self):
 		results = []
 		for key, value in self.subs.items():
 			value['Result'] = value["Implementation"].check(self.ref)
 			results += [value['Result']]
+		return results
+
+
+	def __call__(self, *args, **kwargs):
+		self.grade()
 		return results
 
 
