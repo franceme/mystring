@@ -696,7 +696,8 @@ class grading(object):
 
 	def __iadd__(self, value:str):
 		if value.endswith(".py"):
-			import py2nb, ephfile.ephfile
+			from . import py2nb
+			import ephfile.ephfile
 			with ephfile(value.replace(".py",".ipynb")) as eph:
 				py2nb.convert(value)
 				studentImpl = pybryt.StudentImplementation(eph())
