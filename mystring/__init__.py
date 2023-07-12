@@ -680,3 +680,35 @@ class MyThreads(object):
 
 		if printout:
 			print("]",flush=True)
+
+import pybryt
+class grading(object):
+	"""
+	https://github.com/microsoft/pybryt/tree/1e87fbe06e3e190bab075dab1064cfe275044f75
+	https://github.com/microsoft/pybryt/
+	advance: http://aka.ms/advancedpybryt
+	"""
+	def __init__(self, reference:str):
+		self.ref = pybryt.ReferenceImplementation.compile(reference)
+		self.subs = {}
+
+
+	def __iadd__(self, value:str):
+		self.subs[f"Sub_{len(self.subs.keys())}"] = {
+			"Implementation":pybryt.StudentImplementation(value)
+		}
+		return self
+
+
+	def __call__(self, *args, **kwargs):
+		results = []
+		for key, value in self.subs.items():
+			value['Result'] = value["Implementation"].check(self.ref)
+			results += [value['Result']]
+		return results
+
+	def __enter__(self):
+		return self
+
+	def __exit__(self, type, value, traceback):
+		return
