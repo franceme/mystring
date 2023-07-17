@@ -57,9 +57,9 @@ class string(str):
 				sys.stdout.flush()
 		
 		if not lines:
-			return output_contents
+			return mystring(output_contents)
 		else:
-			return lyst([string(x) for x in output_contents.split('\n') if not x.empty])
+			return lyst([string(x) for x in output_contents.split('\n') if not string(x).empty])
 
 	@property
 	def isvalidpy(self):
