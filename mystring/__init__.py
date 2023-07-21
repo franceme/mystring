@@ -185,290 +185,293 @@ class string(str):
 		file_name, file_ext = os.path.splitext(self)
 		return file_ext
 
+try:
 import pandas as pd
-class frame(pd.DataFrame):
-	def __init__(self,*args,**kwargs):
-		super(frame,self).__init__(*args,**kwargs)
+	class frame(pd.DataFrame):
+		def __init__(self,*args,**kwargs):
+			super(frame,self).__init__(*args,**kwargs)
 
-	def col_exists(self,column):
-		return column in self.columns
+		def col_exists(self,column):
+			return column in self.columns
 
-	def col_no_exists(self,column):
-		return not(self.col_exists(column))
+		def col_no_exists(self,column):
+			return not(self.col_exists(column))
 
-	def column_decimal_to_percent(self,column):
-		self[column] = round(round(
-			(self[column]),2
-		) * 100,0).astype(int).astype(str).replace('.0','') + "%"
-		return self
+		def column_decimal_to_percent(self,column):
+			self[column] = round(round(
+				(self[column]),2
+			) * 100,0).astype(int).astype(str).replace('.0','') + "%"
+			return self
 
-	def move_column(self, column, position):
-		if self.col_no_exists(column):
-			return
-		colz = [col for col in self.columns if col != column]
-		colz.insert(position, column)
-		self = frame(self[colz])
-		return self
+		def move_column(self, column, position):
+			if self.col_no_exists(column):
+				return
+			colz = [col for col in self.columns if col != column]
+			colz.insert(position, column)
+			self = frame(self[colz])
+			return self
 
-	def rename_column(self, columnfrom, columnto):
-		if self.col_no_exists(columnfrom):
-			return
-		self.rename(columns={columnfrom: columnto},inplace=True)
-		return self
+		def rename_column(self, columnfrom, columnto):
+			if self.col_no_exists(columnfrom):
+				return
+			self.rename(columns={columnfrom: columnto},inplace=True)
+			return self
 
-	def rename_columns(self, dyct):
-		for key,value in dyct.items():
-			if self.col_exists(key):
-				self.rename(columns={key: value},inplace=True)
-		return self
+		def rename_columns(self, dyct):
+			for key,value in dyct.items():
+				if self.col_exists(key):
+					self.rename(columns={key: value},inplace=True)
+			return self
 
-	def rename_value_in_column(self, column, fromname, fromto):
-		if self.col_no_exists(column):
-			return
-		self[column] = self[column].str.replace(fromname, fromto)
-		return self
+		def rename_value_in_column(self, column, fromname, fromto):
+			if self.col_no_exists(column):
+				return
+			self[column] = self[column].str.replace(fromname, fromto)
+			return self
 
-	def drop_value_in_column(self, column, value,isstring=True):
-		if self.col_no_exists(column):
-			return
-		self = frame(self.query("{0} != {1}".format(column, 
-			"'" + value + "'" if isstring else value
-		)))
-		return self
+		def drop_value_in_column(self, column, value,isstring=True):
+			if self.col_no_exists(column):
+				return
+			self = frame(self.query("{0} != {1}".format(column, 
+				"'" + value + "'" if isstring else value
+			)))
+			return self
 
-	def cast_column(self, column, klass):
-		if self.col_no_exists(column):
-			return
-		self[column] = self[column].astype(klass)
-		return self
- 
-	def search(self, string):
-		return frame(self.query(string))
- 
-	def arr(self):
-		self_arr = self.to_dict('records')
-		return self_arr
-
-	def add_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN', use_percent:bool=False):
-		prep = lambda x:frame.percent(x, 100) if use_percent else x
-
-		self['Precision_PPV'] = prep(self[TP]/(self[TP]+self[FP]))
-		self['Recall'] = prep(self[TP]/(self[TP]+self[FN]))
-		self['Specificity_TNR'] = prep(self[TN]/(self[TN]+self[FP]))
-		self['FNR'] = prep(self[FN]/(self[FN]+self[TP]))
-		self['FPR'] = prep(self[FP]/(self[FP]+self[TN]))
-		self['FDR'] = prep(self[FP]/(self[FP]+self[TP]))
-		self['FOR'] = prep(self[FN]/(self[FN]+self[TN]))
-		self['TS'] = prep(self[TP]/(self[TP]+self[FP]+self[FN]))
-		self['Accuracy'] = prep((self[TP]+self[TN])/(self[TP]+self[FP]+self[TN]+self[FN]))
-		self['PPCR'] = prep((self[TP]+self[FP])/(self[TP]+self[FP]+self[TN]+self[FN]))
-		self['F1'] = prep(2 * ((self['Precision_PPV'] * self['Recall'])/(self['Precision_PPV'] + self['Recall'])))
-
-		return self
+		def cast_column(self, column, klass):
+			if self.col_no_exists(column):
+				return
+			self[column] = self[column].astype(klass)
+			return self
 	
-	def confusion_matrix_sum(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-		return (self[TP].sum() + self[TN].sum() + self[FN].sum())  
-
-	def verify_confusion_matrix_bool(self,TotalCases:int=0,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-		return TotalCases == self.confusion_matrix_sum(TP=TP,FP=FP,TN=TN,FN=FN)
-
-	def verify_confusion_matrix(self,TotalCases:int=0, TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-		return "Total Cases {0} sum(TP,TN,FN)".format(
-			"===" if self.verify_confusion_matrix_bool(TotalCases=TotalCases,TP=TP,FP=FP,TN=TN,FN=FN) else "=/="
-		) 
-
-	@staticmethod
-	def percent(x,y):
-		return ("{0:.2f}").format(100 * (x / float(y)))
-
-	@staticmethod
-	def from_csv(string):
-		return frame(pd.read_csv(string, low_memory=False))
-
-	@staticmethod
-	def from_json(string):
-		return frame(pd.read_json(string))
-
-	@staticmethod
-	def from_arr(arr):
-		def dictionaries_to_pandas_helper(raw_dyct,deepcopy:bool=True):
-			from copy import deepcopy as dc
-			dyct = dc(raw_dyct) if deepcopy else raw_dyct
-			for key in list(raw_dyct.keys()):
-				dyct[key] = [dyct[key]]
-			return pd.DataFrame.from_dict(dyct)
-
-		return frame(
-			pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
-		)
+		def search(self, string):
+			return frame(self.query(string))
 	
-	@staticmethod
-	def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
-		from ephfile import ephfile
-		with ephfile.ephfile("config.ini") as eph:
-			eph += f"""[dbhub]
-		api_key = {api_key}
-		db_owner = {db_owner}
-		db_name = {db_name}
-		"""
-			try:
-				db = dbhub.Dbhub(config_file=eph())
+		def arr(self):
+			self_arr = self.to_dict('records')
+			return self_arr
 
-				r, err = db.Query(
-					db_owner,
-					db_name,
-					'''
-					SELECT * 
-					FROM {0}
-					'''.format(table_name)
-				)
-				if err is not None:
-					print(f"[ERROR] {err}")
-					sys.exit(1)
-				return frame.from_arr(r)
-			except Exception as e:
-				print(e)
+		def add_confusion_matrix(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN', use_percent:bool=False):
+			prep = lambda x:frame.percent(x, 100) if use_percent else x
 
-	@property
-	def roll(self):
-		class SubSeries(pd.Series):
-			def setindexdata(self, index, data):
-				self.custom__index = index
-				self.custom__data = data
-				return self
+			self['Precision_PPV'] = prep(self[TP]/(self[TP]+self[FP]))
+			self['Recall'] = prep(self[TP]/(self[TP]+self[FN]))
+			self['Specificity_TNR'] = prep(self[TN]/(self[TN]+self[FP]))
+			self['FNR'] = prep(self[FN]/(self[FN]+self[TP]))
+			self['FPR'] = prep(self[FP]/(self[FP]+self[TN]))
+			self['FDR'] = prep(self[FP]/(self[FP]+self[TP]))
+			self['FOR'] = prep(self[FN]/(self[FN]+self[TN]))
+			self['TS'] = prep(self[TP]/(self[TP]+self[FP]+self[FN]))
+			self['Accuracy'] = prep((self[TP]+self[TN])/(self[TP]+self[FP]+self[TN]+self[FN]))
+			self['PPCR'] = prep((self[TP]+self[FP])/(self[TP]+self[FP]+self[TN]+self[FN]))
+			self['F1'] = prep(2 * ((self['Precision_PPV'] * self['Recall'])/(self['Precision_PPV'] + self['Recall'])))
 
-			def __setitem__(self, key, value):
-				super(SubSeries, self).__setitem__(key, value)
-				self.custom__data.at[self.custom__index,key] = value
+			return self
+		
+		def confusion_matrix_sum(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+			return (self[TP].sum() + self[TN].sum() + self[FN].sum())  
 
-		self.current_index=0
-		while self.current_index < self.shape[0]:
-			x = SubSeries(self.iloc[self.current_index]).setindexdata(self.current_index, self)
+		def verify_confusion_matrix_bool(self,TotalCases:int=0,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+			return TotalCases == self.confusion_matrix_sum(TP=TP,FP=FP,TN=TN,FN=FN)
 
-			self.current_index += 1
-			yield x
+		def verify_confusion_matrix(self,TotalCases:int=0, TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
+			return "Total Cases {0} sum(TP,TN,FN)".format(
+				"===" if self.verify_confusion_matrix_bool(TotalCases=TotalCases,TP=TP,FP=FP,TN=TN,FN=FN) else "=/="
+			) 
 
-	def tobase64(self, encoding='utf-8'):
-		import base64
-		return base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
+		@staticmethod
+		def percent(x,y):
+			return ("{0:.2f}").format(100 * (x / float(y)))
 
-	@staticmethod
-	def frombase64(string, encoding='utf-8'):
-		import base64
-		return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
-	
-	def quick_heatmap(self,cmap ='viridis',properties={'font-size': '20px'}):
-		return self.style.background_gradient(cmap=cmap).set_properties(**properties) 
+		@staticmethod
+		def from_csv(string):
+			return frame(pd.read_csv(string, low_memory=False))
 
-	def heatmap(self, columns,x_label='',y_label='',title=''):
-		import seaborn as sns
-		import matplotlib.pyplot as plt
-		sns.set()
-		SMALL_SIZE = 15
-		MEDIUM_SIZE = 20
-		BIGGER_SIZE = 25
+		@staticmethod
+		def from_json(string):
+			return frame(pd.read_json(string))
 
-		plt.rc('font', size=MEDIUM_SIZE)		  # controls default text sizes
-		plt.rc('axes', titlesize=MEDIUM_SIZE)	 # fontsize of the axes title
-		plt.rc('axes', labelsize=MEDIUM_SIZE)	# fontsize of the x and y labels
-		plt.rc('xtick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
-		plt.rc('ytick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
-		plt.rc('legend', fontsize=SMALL_SIZE)	# legend fontsize
-		plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+		@staticmethod
+		def from_arr(arr):
+			def dictionaries_to_pandas_helper(raw_dyct,deepcopy:bool=True):
+				from copy import deepcopy as dc
+				dyct = dc(raw_dyct) if deepcopy else raw_dyct
+				for key in list(raw_dyct.keys()):
+					dyct[key] = [dyct[key]]
+				return pd.DataFrame.from_dict(dyct)
 
-		temp_frame = self.copy()
-		mask = temp_frame.columns.isin(columns)
-
-		temp_frame.loc[:, ~mask] = 0
-		vmin, vmax = 0,0
-
-		for col in columns:
-			vmax = max(vmax, self[col].max())
-
-		sns.heatmap(temp_frame, annot=True, fmt="d", vmin=vmin, vmax=vmax, cmap="Blues")
-		plt.xlabel(x_label) 
-		plt.ylabel(y_label) 
-
-		# displaying the title
-		plt.title(title)
-		plt.rcParams["figure.figsize"] = (40,30)
-
-		if False:
-			plt.savefig(
-				'get_size.png',
-				format='png',
-				dpi=height/fig.get_size_inches()[1]
+			return frame(
+				pd.concat( list(map( dictionaries_to_pandas_helper,arr )), ignore_index=True )
 			)
-		plt.show()
-	
-	@property
-	def df(self):
-		from copy import deepcopy as dc
-		return pd.DataFrame(dc(self))
-	
-	def dup(self):
-		from copy import deepcopy as dc
-		return frame(dc(self))
-	
-	@staticmethod
-	def dupof(dataframe):
-		from copy import deepcopy as dc
-		return frame(dc(dataframe))
-	
-	@property
-	def dummies(self):
-		return pd.get_dummies(data = self)
+		
+		@staticmethod
+		def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+			from ephfile import ephfile
+			with ephfile.ephfile("config.ini") as eph:
+				eph += f"""[dbhub]
+			api_key = {api_key}
+			db_owner = {db_owner}
+			db_name = {db_name}
+			"""
+				try:
+					db = dbhub.Dbhub(config_file=eph())
 
-	@property
-	def kolz(self):
-		return lyst(self.columns.tolist())
-	
-	def enumerate_kol(self):
-		for column_itr, column in enumerate(self.kolz):
-			self.rename_column(column, str(column_itr)+"_"+column)
-		return self
-	
-	def to_sqlite(self, file="out.sqlite", table_name="default"):
-		from sqlalchemy import create_engine
-		with create_engine('sqlite://{0}'.format(file), echo=False).begin() as connection:
-			self.to_sql(table_name, con=connection, if_exists='replace')
-		return file
+					r, err = db.Query(
+						db_owner,
+						db_name,
+						'''
+						SELECT * 
+						FROM {0}
+						'''.format(table_name)
+					)
+					if err is not None:
+						print(f"[ERROR] {err}")
+						sys.exit(1)
+					return frame.from_arr(r)
+				except Exception as e:
+					print(e)
 
-	def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
-		working = self.dup()
+		@property
+		def roll(self):
+			class SubSeries(pd.Series):
+				def setindexdata(self, index, data):
+					self.custom__index = index
+					self.custom__data = data
+					return self
 
-		if number_columnz:
-			working.enumerate_kol()
-			#columns = working.kolz
-			#for column_itr, column in enumerate(columns):
-			#	working.rename_column(column, str(column_itr)+"_"+column)
+				def __setitem__(self, key, value):
+					super(SubSeries, self).__setitem__(key, value)
+					self.custom__data.at[self.custom__index,key] = value
 
-		if every_x_rows is None or every_x_rows == -1:
-			#https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
-			with open(file,"w+") as writer:
-				writer.write(pd.io.sql.get_schema(working.reset_index(), name))
-				writer.write("\n\n")
+			self.current_index=0
+			while self.current_index < self.shape[0]:
+				x = SubSeries(self.iloc[self.current_index]).setindexdata(self.current_index, self)
+
+				self.current_index += 1
+				yield x
+
+		def tobase64(self, encoding='utf-8'):
+			import base64
+			return base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
+
+		@staticmethod
+		def frombase64(string, encoding='utf-8'):
+			import base64
+			return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
+		
+		def quick_heatmap(self,cmap ='viridis',properties={'font-size': '20px'}):
+			return self.style.background_gradient(cmap=cmap).set_properties(**properties) 
+
+		def heatmap(self, columns,x_label='',y_label='',title=''):
+			import seaborn as sns
+			import matplotlib.pyplot as plt
+			sns.set()
+			SMALL_SIZE = 15
+			MEDIUM_SIZE = 20
+			BIGGER_SIZE = 25
+
+			plt.rc('font', size=MEDIUM_SIZE)		  # controls default text sizes
+			plt.rc('axes', titlesize=MEDIUM_SIZE)	 # fontsize of the axes title
+			plt.rc('axes', labelsize=MEDIUM_SIZE)	# fontsize of the x and y labels
+			plt.rc('xtick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
+			plt.rc('ytick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
+			plt.rc('legend', fontsize=SMALL_SIZE)	# legend fontsize
+			plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+			temp_frame = self.copy()
+			mask = temp_frame.columns.isin(columns)
+
+			temp_frame.loc[:, ~mask] = 0
+			vmin, vmax = 0,0
+
+			for col in columns:
+				vmax = max(vmax, self[col].max())
+
+			sns.heatmap(temp_frame, annot=True, fmt="d", vmin=vmin, vmax=vmax, cmap="Blues")
+			plt.xlabel(x_label) 
+			plt.ylabel(y_label) 
+
+			# displaying the title
+			plt.title(title)
+			plt.rcParams["figure.figsize"] = (40,30)
+
+			if False:
+				plt.savefig(
+					'get_size.png',
+					format='png',
+					dpi=height/fig.get_size_inches()[1]
+				)
+			plt.show()
+		
+		@property
+		def df(self):
+			from copy import deepcopy as dc
+			return pd.DataFrame(dc(self))
+		
+		def dup(self):
+			from copy import deepcopy as dc
+			return frame(dc(self))
+		
+		@staticmethod
+		def dupof(dataframe):
+			from copy import deepcopy as dc
+			return frame(dc(dataframe))
+		
+		@property
+		def dummies(self):
+			return pd.get_dummies(data = self)
+
+		@property
+		def kolz(self):
+			return lyst(self.columns.tolist())
+		
+		def enumerate_kol(self):
+			for column_itr, column in enumerate(self.kolz):
+				self.rename_column(column, str(column_itr)+"_"+column)
+			return self
+		
+		def to_sqlite(self, file="out.sqlite", table_name="default"):
+			from sqlalchemy import create_engine
+			with create_engine('sqlite://{0}'.format(file), echo=False).begin() as connection:
+				self.to_sql(table_name, con=connection, if_exists='replace')
+			return file
+
+		def to_sqlcreate(self, file="out.sql", name="temp", number_columnz = False, every_x_rows=-1):
+			working = self.dup()
+
+			if number_columnz:
+				working.enumerate_kol()
+				#columns = working.kolz
+				#for column_itr, column in enumerate(columns):
+				#	working.rename_column(column, str(column_itr)+"_"+column)
+
+			if every_x_rows is None or every_x_rows == -1:
+				#https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
+				with open(file,"w+") as writer:
+					writer.write(pd.io.sql.get_schema(working.reset_index(), name))
+					writer.write("\n\n")
+					for index, row in working.iterrows():
+						writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
+						writer.write("\n")
+			else:
+				#https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
+				ktr = 0
+				nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
+
+				with open(nu_file,"w+") as writer:
+					writer.write(pd.io.sql.get_schema(working.reset_index(), name))
+					writer.write("\n\n")
+
 				for index, row in working.iterrows():
-					writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
-					writer.write("\n")
-		else:
-			#https://stackoverflow.com/questions/31071952/generate-sql-statements-from-a-pandas-dataframe
-			ktr = 0
-			nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
+					if index % every_x_rows == 0:
+						ktr = ktr + 1
+						nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
 
-			with open(nu_file,"w+") as writer:
-				writer.write(pd.io.sql.get_schema(working.reset_index(), name))
-				writer.write("\n\n")
-
-			for index, row in working.iterrows():
-				if index % every_x_rows == 0:
-					ktr = ktr + 1
-					nu_file = file.replace('.sql', '_' + str(ktr).zfill(5) + '.sql')
-
-				with open(nu_file,"a+" if os.path.exists(nu_file) else "w+") as writer:
-					writer.write("\n")
-					writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
-					writer.write("\n")
+					with open(nu_file,"a+" if os.path.exists(nu_file) else "w+") as writer:
+						writer.write("\n")
+						writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
+						writer.write("\n")
+except:
+	pass
 
 class lyst(list):
 	def __init__(self,*args,**kwargs):
@@ -539,9 +542,13 @@ class timeout(object):
 				self.proc.join()
 			else:
 				self.output = self.queue.get()
-				if isinstance(self.output, pd.DataFrame):
-					self.output = frame(self.output)
-				elif isinstance(self.output, list):
+				try:
+					import pandas as pd
+					if isinstance(self.output, pd.DataFrame):
+						self.output = frame(self.output)
+				except:
+					pass
+				if isinstance(self.output, list):
 					self.output = lyst(self.output)
 				elif isinstance(self.output, str):
 					self.output = string(self.output)
@@ -682,7 +689,7 @@ class MyThreads(object):
 		if printout:
 			print("]",flush=True)
 
-import pybryt
+
 class grading(object):
 	"""
 	https://github.com/microsoft/pybryt/tree/1e87fbe06e3e190bab075dab1064cfe275044f75
@@ -690,11 +697,13 @@ class grading(object):
 	advance: http://aka.ms/advancedpybryt
 	"""
 	def __init__(self, reference:str):
+		import pybryt
 		self.ref = pybryt.ReferenceImplementation.compile(reference)
 		self.subs = {}
 
 
 	def __iadd__(self, value:str):
+		import pybryt
 		if value.endswith(".py"):
 			from . import py2nb
 			import ephfile
@@ -732,9 +741,11 @@ class grading(object):
 
 
 	def val(self, value:object, on_success:str, on_failure:str):
+		import pybryt
 		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
 
 
 	@staticmethod
 	def value(value:object, on_success:str, on_failure:str):
+		import pybryt
 		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
