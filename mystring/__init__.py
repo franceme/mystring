@@ -186,7 +186,7 @@ class string(str):
 		return file_ext
 
 try:
-import pandas as pd
+	import pandas as pd
 	class frame(pd.DataFrame):
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
