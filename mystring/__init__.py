@@ -590,7 +590,7 @@ class foil(object):
 		return self.content
 
 	def hash_content(self,hashtype=hashlib.sha512, encoding="utf-8"):
-		hashing = hash_function()
+		hashing = hashtype()
 		with open(foil, 'rb') as f:
 			for chunk in iter(lambda: f.read(4096), b""):
 				hashing.update(chunk)
