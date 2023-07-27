@@ -589,9 +589,12 @@ class foil(object):
 		self._content = lyst([])
 		return self.content
 
-	def hash_content(self,hashtype="sha512", encoding="utf-8"):
-		hashr = getattr(hashlib, hashtype)(bytes(self.content.joins("\n"), encoding))
-		return hashr.hexdigest()
+	def hash_content(self,hashtype=hashlib.sha512, encoding="utf-8"):
+		hashing = hash_function()
+		with open(foil, 'rb') as f:
+			for chunk in iter(lambda: f.read(4096), b""):
+				hashing.update(chunk)
+		return hashing.hexdigest()
 
 	def b64_content(self, encoding="utf-8"):
 		return base64.b64encode(self.content.joins("\n").encode(encoding)).decode(encoding)
