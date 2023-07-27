@@ -566,7 +566,7 @@ class foil(object):
 	def __init__(self, path, preload=False):
 		self.path = path
 		if preload:
-			with open(path, "r") as reader:
+			with open(self.path, "r") as reader:
 				self._content = lyst([string(x) for x in reader.readlines()])
 		else:
 			self._content = lyst([])
@@ -581,7 +581,7 @@ class foil(object):
 	@property
 	def content(self):
 		if self._content.length == 0:
-			with open(path, "r") as reader:
+			with open(self.path, "r") as reader:
 				self._content = lyst([string(x) for x in reader.readlines()])
 		return self._content
 	
@@ -590,7 +590,7 @@ class foil(object):
 		return self.content
 
 	def hash_content(self,hashtype="sha512", encoding="utf-8"):
-		hashr = getattr(hashlib, hashtype)(bytes(self._content.joins("\n"), encoding))
+		hashr = getattr(hashlib, hashtype)(bytes(self.content.joins("\n"), encoding))
 		return hashr.hexdigest()
 
 	def b64_content(self, encoding="utf-8"):
