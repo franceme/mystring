@@ -594,7 +594,7 @@ class foil(object):
 		return hashr.hexdigest()
 
 	def b64_content(self, encoding="utf-8"):
-		return base64.b64encode(self._content.joins("\n").encode(encoding)).decode(encoding)
+		return base64.b64encode(self.content.joins("\n").encode(encoding)).decode(encoding)
 
 	def structured(self):
 		return str(json.dumps({
