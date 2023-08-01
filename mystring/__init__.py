@@ -306,7 +306,7 @@ try:
 		@staticmethod
 		def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
 			from ephfile import ephfile
-			with ephfile.ephfile("config.ini") as eph:
+			with ephfile("config.ini") as eph:
 				eph += f"""[dbhub]
 			api_key = {api_key}
 			db_owner = {db_owner}
