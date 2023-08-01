@@ -304,7 +304,7 @@ try:
 			)
 		
 		@staticmethod
-		def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+		def from_dbhub_query(query:str, dbhub_apikey, dbhub_owner, dbhub_name):
 			from ephfile import ephfile
 			import pydbhub.dbhub as dbhub
 			with ephfile("config.ini") as eph:
@@ -319,10 +319,7 @@ try:
 					r, err = db.Query(
 						dbhub_owner,
 						dbhub_name,
-						'''
-						SELECT * 
-						FROM {0}
-						'''.format(table_name)
+						query
 					)
 					if err is not None:
 						print(f"[ERROR] {err}")
@@ -330,6 +327,16 @@ try:
 					return frame.from_arr(r)
 				except Exception as e:
 					print(e)
+		
+		@staticmethod
+		def from_dbhub_table(table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+			return frame.from_dbhub_query(
+				'''
+				SELECT * 
+				FROM {0}
+				'''.format(table_name),
+				dbhub_apikey, dbhub_owner, dbhub_name
+			)
 
 		@property
 		def roll(self):
