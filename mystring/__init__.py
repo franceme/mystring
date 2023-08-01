@@ -308,16 +308,16 @@ try:
 			from ephfile import ephfile
 			with ephfile("config.ini") as eph:
 				eph += f"""[dbhub]
-			api_key = {api_key}
-			db_owner = {db_owner}
-			db_name = {db_name}
+	api_key = {dbhub_apikey}
+	db_owner = {dbhub_owner}
+	db_name = {dbhub_name}
 			"""
 				try:
 					db = dbhub.Dbhub(config_file=eph())
 
 					r, err = db.Query(
-						db_owner,
-						db_name,
+						dbhub_owner,
+						dbhub_name,
 						'''
 						SELECT * 
 						FROM {0}
