@@ -607,6 +607,19 @@ class foil(object):
 	def b64_content(self, encoding="utf-8"):
 		return base64.b64encode(self.content.joins("\n").encode(encoding)).decode(encoding)
 
+	def tob64(self):
+		newName = self.path+".64"
+		with open(self.path, 'rb') as fin, open(newName, 'w') as fout:
+			base64.encode(fin, fout)
+		return newName
+
+	@staticmethod
+	def fromb64(path):
+		newName = path.replace(".64",'')
+		with open(self.path, 'rb') as fin, open(newName, 'w') as fout:
+			base64.decode(fin, fout)
+		return foil(newName)
+
 	def structured(self):
 		return str(json.dumps({
 			'header':False,
