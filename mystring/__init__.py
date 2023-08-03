@@ -635,6 +635,41 @@ class foil(object):
 		is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 		return is_binary_string(open(foil, 'rb').read(1024))
 
+	@staticmethod
+	def getExt(path:str):
+		import pathlib
+		return pathlib.Path(path).suffix
+
+	@staticmethod
+	def isJava(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".java",".jsp"
+		]])
+
+	@staticmethod
+	def isScala(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".scala"
+		]])
+
+	@staticmethod
+	def isPython(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".py",".pyi"
+		]])
+
+	@staticmethod
+	def isRust(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".rs"
+		]])
+
+	@staticmethod
+	def isJs(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".js"
+		]])
+
 class foldentre(object):
 	def __init__(self,new_path:str,ini_path:str = os.path.abspath(os.curdir)):
 		self.ini_path = ini_path
