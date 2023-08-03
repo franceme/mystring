@@ -142,15 +142,15 @@ class string(str):
 					for temp_split_item in temp_item.split(joiner):
 						output_list.append(temp_split_item)
 
-		return [mystring(x) for x in output_list]
+		return [string(x) for x in output_list]
 
 	def tohash(self, hash_type='sha512', encoding='utf-8'):
 		import hashlib
-		return mystring(getattr(hashlib, hash_type)(self.encode(encoding)).hexdigest())
+		return string(getattr(hashlib, hash_type)(self.encode(encoding)).hexdigest())
 
 	def tobase64(self, encoding='utf-8'):
 		import base64
-		return mystring(base64.b64encode(self.encode(encoding)).decode(encoding))
+		return string(base64.b64encode(self.encode(encoding)).decode(encoding))
 
 	@staticmethod
 	def frombase64(string, encoding='utf-8'):
