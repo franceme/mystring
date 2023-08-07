@@ -478,6 +478,10 @@ try:
 						writer.write("\n")
 						writer.write('INSERT INTO '+name+' ('+ str(', '.join(working.columns))+ ') VALUES '+ str(tuple(row.values)))
 						writer.write("\n")
+
+		def ofQuery(self, query:str):
+			return frame(self.query(query))
+
 except:
 	pass
 
