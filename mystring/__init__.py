@@ -640,9 +640,23 @@ class foil(object):
 		return is_binary_string(open(foil, 'rb').read(1024))
 
 	@staticmethod
+	def loadJson(foil):
+		if not foil.isJson(foil):
+			return None
+		import json
+		with open(foil, 'r') as reader:
+			return json.load(reader)
+
+	@staticmethod
 	def getExt(path:str):
 		import pathlib
 		return pathlib.Path(path).suffix
+
+	@staticmethod
+	def isJson(path:str):
+		return any([foil.getExt(path) == x for x in [
+			".json"
+		]])
 
 	@staticmethod
 	def isJava(path:str):
@@ -751,7 +765,6 @@ class MyThreads(object):
 
 		if printout:
 			print("]",flush=True)
-
 
 class grading(object):
 	"""
