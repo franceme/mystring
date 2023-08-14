@@ -710,6 +710,26 @@ def from_b64(contents,file=None):
 	else:
 		return string_contents
 
+import datetime,time
+class Timer(object):
+	def __init__(self):
+		self.start_time = None
+		self.start_datetime = None
+		self.end_time = None
+		self.end_datetime = None
+	
+	def __enter__(self):
+		self.start_time = time.time()
+		self.start_datetime = datetime.datetime.now(datetime.timezone.utc)
+		self.start_datetime = self.start_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
+		return self
+	
+	def __exit__(self,type, value, traceback):
+		self.end_time = time.time()
+		self.end_datetime = datetime.datetime.now(datetime.timezone.utc)
+		self.end_datetime = self.end_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
+		return self
+
 import threading, queue, time
 from typing import Dict, List, Union, Callable
 class MyThread(threading.Thread):
