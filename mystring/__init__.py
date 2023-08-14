@@ -736,9 +736,10 @@ class wrapper:
 		return value
 
 	def __set__(self, obj, value):
-		if self._b64:
-			value = mystring.string(value).tobase64()
-		setattr(obj, self._name, self._typing(value))
+		if not obj.isEmpty(value):
+			if self._b64:
+				value = mystring.string(value).tobase64()
+			setattr(obj, self._name, self._typing(value))
 
 	def __type__(self):
 		return self._typing
