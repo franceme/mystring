@@ -729,6 +729,14 @@ class Timer(object):
 		self.end_datetime = datetime.datetime.now(datetime.timezone.utc)
 		self.end_datetime = self.end_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
 		return self
+	
+	def __dict__(self):
+		return {
+			"start_time": self.start_time,
+			"start_datetime_UTC": self.start_datetime,
+			"end_time": self.end_time,
+			"end_datetime_UTC": self.end_datetime,
+		}
 
 import threading, queue, time
 from typing import Dict, List, Union, Callable
