@@ -710,6 +710,14 @@ def from_b64(contents,file=None):
 	else:
 		return string_contents
 
+class obj:
+	@staticmethod
+	def safe_get_check(obj, attr, default=None):
+		if hasattr(obj,attr) and getattr(obj,attr) is not None and getattr(obj,attr).strip().lower() not in ['','none','na']:
+			return getattr(obj,attr)
+		else:
+			return default
+
 import datetime,time
 class Timer(object):
 	def __init__(self):
