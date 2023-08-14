@@ -516,6 +516,10 @@ class lyst(list):
 	@property
 	def length(self):
 		return len(self)
+	
+	@staticmethod
+	def fromStrs(args*):
+		return lyst(list(args))
 
 	def roll(self, kast=None,filter_lambda = None):
 		for item in self:
@@ -527,6 +531,9 @@ class lyst(list):
 	
 	def joins(self,on=","):
 		return on.join(self)
+	
+	def execs(self):
+		return [x.exec() for x in self if isinstance(x, string)]
 
 import multiprocessing
 import time
