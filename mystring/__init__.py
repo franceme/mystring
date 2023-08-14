@@ -121,7 +121,14 @@ class string(str):
 
 	@property
 	def empty(self):
-		return self is None or self.strip() == '' or self.strip().lower() == 'nan' or self.strip().lower() == 'none'
+		if obj is None:
+			return True
+
+		return any([
+			str(obj).strip().lower() == x for x in [
+				'nan', 'none', 'null'
+			]
+		])
 
 	@property
 	def notempty(self):
@@ -711,6 +718,12 @@ def from_b64(contents,file=None):
 		return string_contents
 
 class obj:
+	@staticmethod
+	def isEmpty(obj:object):
+		if obj is None:
+			return True
+		return string(obj).empty
+
 	@staticmethod
 	def safe_get_check(obj, attr, default=None):
 		if hasattr(obj,attr) and getattr(obj,attr) is not None and getattr(obj,attr).strip().lower() not in ['','none','na']:
