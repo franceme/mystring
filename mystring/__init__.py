@@ -717,6 +717,32 @@ def from_b64(contents,file=None):
 	else:
 		return string_contents
 
+class wrapper:
+	def __init__(self, *, typing, default, b64=False):
+		self._typing = typing
+		self._default = default
+		self._b64=b64
+
+	def __set_name__(self, owner, name):
+		self._name = "_" + name
+
+	def __get__(self, obj, type):
+		if obj is None:
+			return self._default
+
+		value = self.typing(getattr(obj, self._name, self._default))
+		if self._b64:
+			value = mystring.from_b64(value)
+		return value
+
+	def __set__(self, obj, value):
+		if self._b64:
+			value = mystring.string(value).tobase64()
+		setattr(obj, self._name, self._typing(value))
+
+	def __type__(self):
+		return self._typing
+
 class obj:
 	@staticmethod
 	def isEmpty(obj:object):
