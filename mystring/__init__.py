@@ -517,9 +517,6 @@ class lyst(list):
 	def length(self):
 		return len(self)
 	
-	@staticmethod
-	def fromStrs(args*):
-		return lyst(list(args))
 
 	def roll(self, kast=None,filter_lambda = None):
 		for item in self:
