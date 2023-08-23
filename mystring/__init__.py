@@ -1,4 +1,4 @@
-import os,sys,re
+import os,sys,re,importlib.machinery
 class string(str):
 	def equals(self,*args):
 		for arg in args:
@@ -183,6 +183,11 @@ class string(str):
 		return os.path.isdir(self)
 
 	@property
+	def file_name(self):
+		file_name, file_ext = os.path.splitext(self)
+		return os.path.basename(file_name)
+
+	@property
 	def filedir_name(self):
 		file_name, file_ext = os.path.splitext(self)
 		return file_name
@@ -191,6 +196,13 @@ class string(str):
 	def ext(self):
 		file_name, file_ext = os.path.splitext(self)
 		return file_ext
+
+	def aspy(self):
+		#https://stackoverflow.com/questions/19009932/import-arbitrary-python-source-file-python-3-3#answer-19011259
+		loader = importlib.machinery.SourceFileLoader(self.file_name, os.path.abspath(self))
+		mod = types.ModuleType(loader.name)
+		loader.exec_module(mod)
+		return mod
 
 try:
 	import pandas as pd
