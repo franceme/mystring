@@ -1,4 +1,4 @@
-import os,sys,re,importlib.machinery
+import os,sys,re,importlib.machinery,types
 class string(str):
 	def equals(self,*args):
 		for arg in args:
