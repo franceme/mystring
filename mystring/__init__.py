@@ -528,7 +528,6 @@ class lyst(list):
 	@property
 	def length(self):
 		return len(self)
-	
 
 	def roll(self, kast=None,filter_lambda = None):
 		for item in self:
@@ -801,7 +800,7 @@ class Timer(object):
 import threading, queue, time
 from typing import Dict, List, Union, Callable
 class MyThread(threading.Thread):
-	def __init__(self, func, threadLimiter, group=None, target=None, name=None,args=(), kwargs=None):
+	def __init__(self, func, threadLimiter=None, group=None, target=None, name=None,args=(), kwargs=None):
 		super(MyThread,self).__init__(group=group, target=target, name=name)
 		self.func = func
 		self.threadLimiter = threadLimiter
@@ -810,11 +809,13 @@ class MyThread(threading.Thread):
 		return
 
 	def run(self): 
-		self.threadLimiter.acquire() 
+		if self.threadLimiter:
+			self.threadLimiter.acquire() 
 		try: 
 			self.func() 
 		finally: 
-			self.threadLimiter.release() 
+			if self.threadLimiter:
+				self.threadLimiter.release() 
 
 class MyThreads(object):
 	def __init__(self, num_threads):
