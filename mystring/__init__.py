@@ -545,7 +545,12 @@ class lyst(list):
 
 import multiprocessing
 import time
-class timeout(object): 
+class timeout(object):
+	"""
+	with mystring.timeout(6*10, func=callr.pull) as exe:
+	if not exe.timeout:
+		resultr = exe.output
+	"""
 	#https://stackoverflow.com/questions/10415028/how-to-get-the-return-value-of-a-function-passed-to-multiprocessing-process/10415215#10415215
 	#https://stackoverflow.com/questions/492519/timeout-on-a-function-call
 	def __init__(self, number_of_seconds, func, *args, **kwargs):
