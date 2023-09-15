@@ -458,7 +458,7 @@ try:
 			return self
 
 		@staticmethod
-		def from_sqlite(file="out.sqlite", table_name="default"):
+		def from_sqlite(file="out.sqlite", table_name="main"):
 			output = pd.DataFrame()
 
 			if not os.path.exists(file):
@@ -470,9 +470,13 @@ try:
 
 			current_cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table';")
 			for name in current_cursor.fetchall():
+				table_names += [name[0]]
 				if table_name == name[0]:
 					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), self.connection)
 					break
+
+			if output == pd.DataFrame():
+				print("table {0} not within [{1}]".format(table_name, ', '.join(table_names)))
 
 			current_cursor = None
 			connection.close()
