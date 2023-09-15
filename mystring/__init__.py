@@ -206,6 +206,7 @@ class string(str):
 
 try:
 	import pandas as pd
+	import sqlite3
 	class frame(pd.DataFrame):
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
@@ -455,7 +456,29 @@ try:
 			for column_itr, column in enumerate(self.kolz):
 				self.rename_column(column, str(column_itr)+"_"+column)
 			return self
-		
+
+		@staticmethod
+		def from_sqlite(file="out.sqlite", table_name="default"):
+			output = pd.DataFrame()
+
+			if not os.path.exists(file):
+				return frame(output)
+
+			connection = sqlite3.connect(file)
+			table_names = []
+			current_cursor = connection.cursor()
+
+			current_cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table';")
+			for name in current_cursor.fetchall():
+				if table_name == name[0]:
+					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), self.connection)
+					break
+
+			current_cursor = None
+			connection.close()
+
+			return frame(output)
+
 		def to_sqlite(self, file="out.sqlite", table_name="default"):
 			from sqlalchemy import create_engine
 			with create_engine('sqlite://{0}'.format(file), echo=False).begin() as connection:
