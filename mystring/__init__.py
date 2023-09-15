@@ -465,7 +465,7 @@ try:
 				return frame(output)
 
 			connection = sqlite3.connect(file)
-			table_names = []
+			table_names, found = [], False
 			current_cursor = connection.cursor()
 
 			current_cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table';")
@@ -473,9 +473,10 @@ try:
 				table_names += [name[0]]
 				if table_name == name[0]:
 					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), self.connection)
+					found = True
 					break
 
-			if output == pd.DataFrame():
+			if not found:
 				print("table {0} not within [{1}]".format(table_name, ', '.join(table_names)))
 
 			current_cursor = None
