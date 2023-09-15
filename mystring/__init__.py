@@ -472,7 +472,7 @@ try:
 			for name in current_cursor.fetchall():
 				table_names += [name[0]]
 				if table_name == name[0]:
-					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), self.connection)
+					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), connection)
 					found = True
 					break
 
