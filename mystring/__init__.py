@@ -162,7 +162,7 @@ class string(str):
 	@staticmethod
 	def frombase64(string, encoding='utf-8'):
 		import base64
-		return base64.b64decode(string.encode(encoding)).decode(encoding)
+		return string(base64.b64decode(string.encode(encoding)).decode(encoding))
 
 	@staticmethod
 	def ofrom(strung):
