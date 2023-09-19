@@ -164,6 +164,12 @@ class string(str):
 		import base64
 		return base64.b64decode(string.encode(encoding)).decode(encoding)
 
+	@staticmethod
+	def ofrom(strung):
+		if strung.startswith('b64:'):
+			return string.frombase64(strung.replace('b64:','',1))
+		return strung
+
 	def matches(self, regex:str, at_most:int=-1) -> bool:
 		try:
 			grps = [
