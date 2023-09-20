@@ -166,12 +166,17 @@ class string(str):
 
 	@staticmethod
 	def of(strung):
+		if strung == None:
+			strung = ""
+
 		if strung.startswith('b64:'):
 			return string.frombase64(strung.replace('b64:','',1))
+
 		try:
 			return string.frombase64(strung)
 		except:
 			pass
+
 		return strung
 
 	def matches(self, regex:str, at_most:int=-1) -> bool:
