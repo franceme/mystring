@@ -962,3 +962,30 @@ class grading(object):
 	def value(value:object, on_success:str, on_failure:str):
 		import pybryt
 		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
+
+class session(object):
+    def __init__(self, lock, onCall=None, onOpen=None, onClose=None):
+        self.lock = lock
+		self.onCall = onCall
+		self.onOpen = onOpen
+		self.onClose = onClose
+
+    def __enter__(self):
+        self.lock.acquire()
+
+		if self.onOpen:
+			self.onOpen()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+		if self.onClose:
+			self.onClose()
+
+        self.lock.release()
+
+    def __call__(self, string: object):
+		if self.onCall:
+			return self.onCall(string)
+		else:
+        	return string
