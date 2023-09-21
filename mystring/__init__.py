@@ -584,7 +584,7 @@ class lyst(list):
 		return on.join(self)
 	
 	def execs(self):
-		return [x.exec() for x in self if isinstance(x, string)]
+		return [mystring.string(x).exec() for x in self if isinstance(x, str)]
 
 import multiprocessing
 import time
