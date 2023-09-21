@@ -155,9 +155,9 @@ class string(str):
 		import hashlib
 		return string(getattr(hashlib, hash_type)(self.encode(encoding)).hexdigest())
 
-	def tobase64(self, encoding='utf-8'):
+	def tobase64(self, encoding='utf-8', prefix=False):
 		import base64
-		return string(base64.b64encode(self.encode(encoding)).decode(encoding))
+		return "b64:" if prefix else "" +string(base64.b64encode(self.encode(encoding)).decode(encoding))
 
 	@staticmethod
 	def frombase64(strang, encoding='utf-8'):
