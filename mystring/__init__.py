@@ -989,3 +989,14 @@ class session(object):
 			return self.onCall(string)
 		else:
         	return string
+
+def walker(path:str=".", eachFile=None, eachFolder=None):
+	import os
+	for root, dirnames, fnames in os.walk(path):
+		for dirname in dirnames:
+			if eachFolder is not None:
+				eachFolder(os.path.join(root,dirname))
+
+		for fname in fnames:
+			if eachFile is not None:
+				eachFile(os.path.join(root,fname))
