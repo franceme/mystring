@@ -231,6 +231,61 @@ class string(str):
 		self = string(output)
 		return self
 
+class boolean(bool):
+
+	@staticmethod
+	def of(obj:any) -> bool:
+		obj = string.of(obj)
+
+		if obj.empty:
+			return boolean(False)
+
+		return boolean(obj.trim.lower() in ["true", 1, "1", "active", "high"])
+
+class integer(int):
+
+	@staticmethod
+	def of(obj:any, default:int = -1) -> int:
+		obj = string.of(obj)
+
+		if obj.empty:
+			return integer(default)
+		
+		try:
+			return int(obj)
+		except:
+			return integer(default)
+
+try:
+	from dateutil.parser import parse
+	import datetime 
+	class timestamp(datetime.datetime):
+
+		@staticmethod
+		def of(obj:any) -> Union[datetime.datetime, None]:
+			obj = string.of(obj)
+
+			if obj.empty:
+				return None
+
+			try:
+				return timestamp(datetime.fromisoformat(obj))
+			except: pass
+
+			try:
+				return timestamp(parse(obj))
+			except:
+				return None
+
+		def toIso(self) -> str:
+			tz = self.astimezone()
+			return string(tz.isoformat())
+
+		def now(self) -> datetime.datetime:
+			return timestamp(datetime.datetime.now(datetime.timezone.utc))
+except:
+	pass
+
 try:
 	import pandas as pd
 	import sqlite3
