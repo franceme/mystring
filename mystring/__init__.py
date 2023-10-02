@@ -262,7 +262,7 @@ try:
 	class timestamp(datetime.datetime):
 
 		@staticmethod
-		def of(obj:any) -> Union[datetime.datetime, None]:
+		def of(obj:any) -> Union[timestamp, None]:
 			obj = string.of(obj)
 
 			if obj.empty:
@@ -281,7 +281,8 @@ try:
 			tz = self.astimezone()
 			return string(tz.isoformat())
 
-		def now(self) -> datetime.datetime:
+		@staticmethod
+		def now() -> timestamp:
 			return timestamp(datetime.datetime.now(datetime.timezone.utc))
 except:
 	pass
