@@ -218,6 +218,18 @@ class string(str):
 		mod = types.ModuleType(loader.name)
 		loader.exec_module(mod)
 		return mod
+	
+
+	def deepClean(self, perma:bool=False):
+		valid_kar = lambda kar: (ord('0') <= ord(kar) and ord(kar) <= ord('9')) or (ord('A') <= ord(kar) and ord(kar) <= ord('z'))
+		output = None
+		if perma:
+			output = ''.join([i for i in self if valid_kar(i)])
+		else:
+			output = self.replace(' ', '\ ').replace('&','\&')
+
+		self = string(output)
+		return self
 
 try:
 	import pandas as pd
