@@ -586,6 +586,17 @@ class lyst(list):
 	def execs(self):
 		return [string(x).exec() for x in self if isinstance(x, str)]
 
+	@staticmethod
+	def of(obj: object, functor=None) -> list:
+		if not functor or functor is None:
+			def functor(x):
+				return x
+
+		if isinstance(obj, list):
+			return lyst([functor(x) for x in obj])
+		else:
+			return lyst([functor(obj)])
+
 import multiprocessing
 import time
 class timeout(object):
