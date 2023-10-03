@@ -499,6 +499,14 @@ try:
 				self.current_index += 1
 				yield x
 
+		@property
+		def readRoll(self):
+			self.current_index=0
+			while self.current_index < self.shape[0]:
+				x = obj(self.iloc[self.current_index]).setindexdata(self.current_index, self)
+				self.current_index += 1
+				yield x
+
 		def tobase64(self, encoding='utf-8'):
 			import base64
 			return base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
