@@ -229,7 +229,7 @@ class string(str):
 		else:
 			output = self.replace(' ', '\ ').replace('&','\&')
 
-		self = string(output)
+		self = string(string(output).trim)
 		return self
 
 def ofBoolean(obj:any) -> bool:
