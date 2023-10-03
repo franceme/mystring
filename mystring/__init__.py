@@ -128,7 +128,7 @@ class string(str):
 			str(obj).strip().lower() == x for x in [
 				'nan', 'none', 'null'
 			]
-		])
+		]) or self.deplete is None
 
 	@property
 	def notempty(self):
@@ -221,6 +221,7 @@ class string(str):
 	
 
 	def deepClean(self, perma:bool=False):
+		self = self.trim
 		valid_kar = lambda kar: (ord('0') <= ord(kar) and ord(kar) <= ord('9')) or (ord('A') <= ord(kar) and ord(kar) <= ord('z'))
 		output = None
 		if perma:
@@ -255,6 +256,44 @@ class integer(int):
 			return int(obj)
 		except:
 			return integer(default)
+
+class obj(object):
+	#https://python-patterns.guide/gang-of-four/decorator-pattern/
+	#https://stackoverflow.com/questions/1957780/how-to-override-the-operator-in-python
+	def __iter__(self):
+		return self.__iter__()
+
+	def __next__(self):
+		return self.__next__()
+
+	def __getattr__(self, attr):
+		if attr in self.__dict__:
+			return getattr(self, attr)
+		return None
+
+	def __setattr__(self, name, value):
+		setattr(self.__dict__, name, value)
+
+	def __delattr__(self, name):
+		if name in self.__dict__:
+			delattr(self.__dict__, name)
+
+	def __getitem__(self, key):
+		if isinstance(key, str):
+			return self.__getattr__(key)
+		return super.__getitem__(key)
+	
+	def __setitem__(self,key,value):
+		if isinstance(key, str):
+			return self.__getattr__(key)
+		else:
+			super.__setattr__(key,value)
+	
+	def __delitem__(self,key):
+		if isinstance(key, str):
+			return self.__getattr__(key)
+		else:
+			super.__delitem__(key)
 
 try:
 	from dateutil.parser import parse
