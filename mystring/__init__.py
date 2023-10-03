@@ -177,7 +177,7 @@ class string(str):
 		except:
 			pass
 
-		return strung
+		return string(strung)
 
 	def matches(self, regex:str, at_most:int=-1) -> bool:
 		try:
