@@ -232,16 +232,13 @@ class string(str):
 		self = string(output)
 		return self
 
-class boolean(bool):
+def ofBoolean(obj:any) -> bool:
+	obj = string.of(obj)
 
-	@staticmethod
-	def of(obj:any) -> bool:
-		obj = string.of(obj)
+	if obj.empty:
+		return False
 
-		if obj.empty:
-			return boolean(False)
-
-		return boolean(obj.trim.lower() in ["true", 1, "1", "active", "high"])
+	return obj.trim.lower() in ["true", 1, "1", "active", "high"]
 
 class integer(int):
 
