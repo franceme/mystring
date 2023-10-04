@@ -219,7 +219,7 @@ class string(str):
 		loader.exec_module(mod)
 		return mod
 
-	def progLangName(self):
+	def progLangName(self, upper:bool=False):
 		for rawName, cleanName in {
 			"#":"Sharp",
 			"+":"Plus",
@@ -228,7 +228,7 @@ class string(str):
 			"-":"Dash",
 			"/":"Slash",
 		}.items():
-			self = self.replace(rawName, cleanName)
+			self = self.replace(rawName, cleanName.upper() if upper else cleanName)
 
 		return string(self)
 
