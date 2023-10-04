@@ -218,7 +218,19 @@ class string(str):
 		mod = types.ModuleType(loader.name)
 		loader.exec_module(mod)
 		return mod
-	
+
+	def progLangName(self):
+		for rawName, cleanName in {
+			"#":"Sharp",
+			"+":"Plus",
+			"*":"Asterik",
+			".":"Dot",
+			"-":"Dash",
+			"/":"Slash",
+		}.items():
+			self = self.replace(rawName, cleanName)
+
+		return string(self)
 
 	def deepClean(self, perma:bool=False):
 		self = self.trim
