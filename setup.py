@@ -35,7 +35,7 @@ long_description = pathlib.Path(f"{here}/README.md").read_text(encoding='utf-8')
 REQUIRES_PYTHON = '>=3.8.0'
 RELEASE = "?"
 entry_point = f"src.{NAME}"
-VERSION = "0.1.34"
+VERSION = "0.1.35"
 
 def zip_program(outputName:str = f"{NAME}.zip"):
 	#http://blog.ablepear.com/2012/10/bundling-python-files-into-stand-alone.html
@@ -105,7 +105,6 @@ elif selfArg('zip'):
 
 grading_deps = ["pybryt", "ephfile"]
 frame_deps = ["pandas", "seaborn", "ephfile", "pydbhub", "sqlalchemy"]
-time_deps = ["python-dateutil"]
 
 setup(
 	name=NAME,
@@ -124,13 +123,13 @@ setup(
 	entry_points={
 	},
 	install_requires=[
+		"python-dateutil"
 	],
 	extra_requires={
 		"grading":grading_deps,
 		"frames":frame_deps,
-		"time":time_deps,
 		"date":time_deps,
-		"all":grading_deps + frame_deps + time_deps
+		"all":grading_deps + frame_deps
 	},
 	include_package_data=True,
 	classifiers=[

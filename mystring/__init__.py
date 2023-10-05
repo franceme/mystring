@@ -308,36 +308,34 @@ class obj(object):
 		else:
 			super.__delitem__(key)
 
-try:
-	from dateutil.parser import parse
-	import datetime 
-	class timestamp(datetime.datetime):
 
-		@staticmethod
-		def of(obj:any) -> Union[timestamp, None]:
-			obj = string.of(obj)
+from dateutil.parser import parse
+import datetime 
+class timestamp(datetime.datetime):
 
-			if obj.empty:
-				return None
+	@staticmethod
+	def of(obj:any) -> Union[timestamp, None]:
+		obj = string.of(obj)
 
-			try:
-				return timestamp(datetime.fromisoformat(obj))
-			except: pass
+		if obj.empty:
+			return None
 
-			try:
-				return timestamp(parse(obj))
-			except:
-				return None
+		try:
+			return timestamp(datetime.fromisoformat(obj))
+		except: pass
 
-		def toIso(self) -> str:
-			tz = self.astimezone()
-			return string(tz.isoformat())
+		try:
+			return timestamp(parse(obj))
+		except:
+			return None
 
-		@staticmethod
-		def now() -> timestamp:
-			return timestamp(datetime.datetime.now(datetime.timezone.utc))
-except:
-	pass
+	def toIso(self) -> str:
+		tz = self.astimezone()
+		return string(tz.isoformat())
+
+	@staticmethod
+	def now() -> timestamp:
+		return timestamp(datetime.datetime.now(datetime.timezone.utc))
 
 try:
 	import pandas as pd
