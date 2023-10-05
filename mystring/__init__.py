@@ -314,7 +314,7 @@ import datetime
 class timestamp(datetime.datetime):
 
 	@staticmethod
-	def of(obj:any) -> Union[timestamp, None]:
+	def of(obj:any):
 		obj = string.of(obj)
 
 		if obj.empty:
@@ -329,12 +329,12 @@ class timestamp(datetime.datetime):
 		except:
 			return None
 
-	def toIso(self) -> str:
+	def toIso(self):
 		tz = self.astimezone()
 		return string(tz.isoformat())
 
 	@staticmethod
-	def now() -> timestamp:
+	def now():
 		return timestamp(datetime.datetime.now(datetime.timezone.utc))
 
 try:
