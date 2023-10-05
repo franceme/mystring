@@ -226,7 +226,9 @@ class string(str):
 			"*":"Asterik",
 			".":"Dot",
 			"-":"Dash",
+			"_":"underscore",
 			"/":"Slash",
+			"\\":"Slash",
 		}.items():
 			self = self.replace(rawName, cleanName.upper() if upper else cleanName)
 
