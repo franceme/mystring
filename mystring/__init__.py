@@ -169,6 +169,8 @@ class string(str):
 		if strung == None:
 			strung = ""
 
+		strung = str(strung)
+
 		if strung.startswith('b64:'):
 			return string.frombase64(strung.replace('b64:','',1))
 
