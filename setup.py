@@ -128,7 +128,6 @@ setup(
 	extra_requires={
 		"grading":grading_deps,
 		"frames":frame_deps,
-		"date":time_deps,
 		"all":grading_deps + frame_deps
 	},
 	include_package_data=True,
