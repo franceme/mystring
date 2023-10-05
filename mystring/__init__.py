@@ -335,7 +335,7 @@ class timestamp(datetime.datetime):
 
 	@staticmethod
 	def now():
-		return timestamp(datetime.datetime.now(datetime.timezone.utc))
+		return datetime.datetime.now(datetime.timezone.utc)
 
 try:
 	import pandas as pd
