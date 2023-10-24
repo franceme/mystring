@@ -1245,7 +1245,7 @@ try:
 			self.owner, self.reponame = url.split("/")
 			self.owner, self.reponame = string(self.owner), string(self.reponame)
 
-			if not tag.empty:
+			if not self.tag.empty:
 				self.stringurl = string(self.stringurl + "<b>" + self.tag)
 			if not self.commit.empty:
 				self.stringurl = string(self.stringurl + "<#>" + self.commit)
