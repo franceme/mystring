@@ -1247,10 +1247,10 @@ try:
 
 			if not string(tag).empty:
 				self.tag = string(tag)
-				self.stringurl += f"<b>{tag}"
+				self.stringurl = string(self.stringurl + "<b>" + self.tag)
 			if not string(self.commit).empty:
 				self.commit = string(commit)
-				self.stringurl += f"<#>{self.commit}"
+				self.stringurl = string(self.stringurl + "<#>" + self.commit)
 
 		@property
 		def dir(self):
