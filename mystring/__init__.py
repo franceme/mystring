@@ -978,7 +978,7 @@ class wrapper:
 	def __set__(self, obj, value):
 		if not obj.isEmpty(value):
 			if self._b64:
-				value = mystring.string(value).tobase64()
+				value = string(value).tobase64()
 			setattr(obj, self._name, self._typing(value))
 
 	def __type__(self):
@@ -1181,3 +1181,189 @@ def my_ip():
 			except:
 				pass
 	return ip
+
+
+class gh_api_status(object):
+	def __init__(self):
+		self.cur_status = None
+		self.now = None
+		self.resetdate = None
+
+	@property
+	def status(self):
+		# curl -I https://api.github.com/users/octocat|grep x-ratelimit-reset
+		self.cur_status, self.now = requests.get("https://api.github.com/users/octocat").headers, datetime.datetime.now()
+		return {
+			'Reset': self.cur_status['X-RateLimit-Reset'],
+			'Used': self.cur_status['X-RateLimit-Used'],
+			'Total': self.cur_status['X-RateLimit-Limit'],
+			'Remaining': self.cur_status['X-RateLimit-Remaining'],
+			'RemainingDate':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])),
+			'WaitFor':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now,
+			'WaitForSec':(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now).seconds,
+			'WaitForNow':lambda :(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - datetime.datetime.now()).seconds,
+		}
+
+	@property
+	def timing(self):
+		import time
+		if not hasattr(self, 'remaining') or self.remaining is None:
+			stats = self.status
+			print(stats)
+			self.remaining = int(stats['Remaining'])
+			self.wait_until = stats['WaitForNow']
+			self.resetdate = stats['RemainingDate']
+			self.timing
+		elif self.remaining >= 10:
+			self.remaining = self.remaining - 1
+		else:
+			print("Waiting until: {0}".format(self.resetdate))
+			pause.until(self.resetdate)
+			delattr(self, 'remaining')
+			delattr(self, 'wait_until')
+		return
+
+
+
+try:
+	import waybackpy
+
+	class githuburl(object):
+		def __init__(self,url,token=None,verify=True,commit=None,tag=None):
+			self.url = string(dc(url))
+			self.token = string(token)
+			self.verify = verify
+			self.stringurl = string(dc(url))
+			self.commit = None
+			self.tag = None
+			self.api_watch = niceghapi()
+
+			url = string(url).repsies('https://','http://','github.com/').repsies_end('.git', "/")
+			self.owner, self.reponame = url.split("/")
+			self.owner, self.reponame = string(self.owner), string(self.reponame)
+
+			if not string(tag).empty:
+				self.tag = string(tag)
+				self.stringurl += f"<b>{tag}"
+			if not string(self.commit).empty:
+				self.commit = string(commit)
+				self.stringurl += f"<#>{self.commit}"
+
+		@property
+		def dir(self):
+			return string(self.reponame+"/")
+
+		@property
+		def core(self):
+			return string("{0}/{1}".format(self.owner, self.reponame))
+
+		@property
+		def furl(self):
+			return string("https://github.com/{0}".format(self.core))
+
+		def filewebinfo(self, filepath, lineno=None):
+			baseurl = "https://github.com/{0}/blob/{1}/{2}".format(self.core, self.commit,filepath.replace(str(self.reponame) + "/", '', 1))
+			if lineno:
+				baseurl += "#L{0}".format(int(lineno))
+
+			return string(baseurl)
+
+		#Transforming this into a cloning function
+		def __call__(self,return_error=False, json=True, baserun=False,headers = {}):
+			string("git clone {0}".format(self.furl)).exec(True)
+
+			if self.commit:
+				with foldentre()(self.dir):
+					string("git checkout {0}".format(self.commit)).exec(True)
+			return self.dir
+
+		def __enter__(self):
+			self()
+			return self
+
+		def __exit__(self, exc_type, exc_val, exc_tb):
+			string("yes|rm -r {0}".format(self.dir)).exec(True)
+			return self
+
+		def find_asset(self,asset_check=None, accept="application/vnd.github+json", print_info=False):
+			if asset_check is None:
+				asset_check = lambda x:False
+
+			def req(string, verify=self.verify, accept=accept, auth=self.token, print_info=print_info):
+				try:
+					output = requests.get(string, verify=verify, headers={
+						"Accept": accept,
+						"Authorization":"Bearer {}".format(auth)
+					})
+					if print_info:
+						print(output)
+					return output.json()
+				except Exception as e:
+					if print_info:
+						print(e)
+					pass
+
+			latest_version = req("https://api.github.com/repos/{0}/releases/latest".format(self.core))
+			release_information = req(latest_version['url'])
+			for asset in release_information['assets']:
+				if asset_check(asset['name']):
+					return asset
+			return None
+
+		def download_asset(self, url, save_path, chunk_size=128, accept="application/vnd.github+json"):
+			r = requests.get(url, stream=True, verify=self.verify, headers={
+				"Accept": accept,
+				"Authorization":"Bearer {0}".format(self.token)
+			})
+			with open(save_path, 'wb') as fd:
+				for chunk in r.iter_content(chunk_size=chunk_size):
+					fd.write(chunk)
+			return save_path
+
+		def get_date_from_commit_url(self, accept="application/vnd.github+json"):
+			req = requests.get(self.furl, headers={
+				"Accept": accept,
+				"Authorization":"Bearer {0}".format(self.token)
+			}).json()
+			return datetime.datetime.strptime(req['commit']['committer']['date'], "%Y-%m-%dT%H:%M:%SZ")
+
+		def get_commits_of_repo(self, from_date=None, to_date=None, accept="application/vnd.github+json"):
+			params = []
+			if from_date:
+				params += ["since={0}".format(from_date)]
+			if from_date:
+				params += ["until={0}".format(to_date)]
+			request_url = "https://api.github.com/repos/{0}/commits?{1}".format(self.core, '&'.join(params))
+			req = requests.get(request_url, headers={
+				"Accept": accept,
+				"Authorization":"Bearer {0}".format(self.token)
+			})
+			return req.json()
+
+		@property
+		def zip_url(self):
+			url_builder = self.furl + "/archive"
+			if self.commit:
+				url_builder += f"/{self.commit}.zip"
+			elif self.tag:
+				url_builder += f"/{self.tag}.zip"
+
+			self.zip_url_base = url_builder
+			return self.zip_url_base
+
+		@property
+		def static_webarchive_save_url(self):
+			return string("https://web.archive.org/save/" + self.zip_url)
+
+		def save_on_webarchive(self, user_agent="Mozilla/5.0 (Windows NT 5.1; rv:40.0) Gecko/20100101 Firefox/40.0"):
+			"""
+			https://github.com/akamhy/waybackpy#save-api-aka-savepagenow
+			"""
+			from waybackpy import WaybackMachineSaveAPI
+			save_url = WaybackMachineSaveAPI(
+				self.zip_url,
+				user_agent
+			).save()
+			return save_url
+except:
+	pass

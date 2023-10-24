@@ -35,7 +35,7 @@ long_description = pathlib.Path(f"{here}/README.md").read_text(encoding='utf-8')
 REQUIRES_PYTHON = '>=3.8.0'
 RELEASE = "?"
 entry_point = f"src.{NAME}"
-VERSION = "0.1.55"
+VERSION = "0.2.0"
 
 def zip_program(outputName:str = f"{NAME}.zip"):
 	#http://blog.ablepear.com/2012/10/bundling-python-files-into-stand-alone.html
@@ -105,6 +105,8 @@ elif selfArg('zip'):
 
 grading_deps = ["pybryt", "ephfile"]
 frame_deps = ["pandas", "seaborn", "ephfile", "pydbhub"]
+gh_deps = ["requests"]
+gh_url_deps = ["requests", "waybackpy"]
 
 setup(
 	name=NAME,
@@ -128,7 +130,9 @@ setup(
 	extra_requires={
 		"grading":grading_deps,
 		"frames":frame_deps,
-		"all":grading_deps + frame_deps
+		"gh":gh_deps,
+		"gh_url":gh_url_deps,
+		"all":grading_deps + frame_deps + gh_url_deps + gh_deps
 	},
 	include_package_data=True,
 	classifiers=[
