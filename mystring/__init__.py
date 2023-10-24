@@ -1227,6 +1227,7 @@ class gh_api_status(object):
 
 try:
 	import waybackpy
+	from copy import deepcopy as dc
 
 	class githuburl(object):
 		def __init__(self,url,token=None,verify=True,commit=None,tag=None):
