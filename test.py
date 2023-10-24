@@ -14,3 +14,8 @@ for row in df.roll:
         print("set")
 
 print(df)
+
+from mystring import gh_url
+simple = gh_url("https://github.com/franceme/mystring")
+
+print(simple.core)
