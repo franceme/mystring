@@ -1237,19 +1237,17 @@ try:
 			self.token = string(token)
 			self.verify = verify
 			self.stringurl = string(dc(url))
-			self.commit = None
-			self.tag = None
+			self.commit = string(commit)
+			self.tag = string(tag)
 			self.api_watch = gh_api_status()
 
 			url = string(url).repsies('https://','http://','github.com/').repsies_end('.git', "/")
 			self.owner, self.reponame = url.split("/")
 			self.owner, self.reponame = string(self.owner), string(self.reponame)
 
-			if not string(tag).empty:
-				self.tag = string(tag)
+			if not tag.empty:
 				self.stringurl = string(self.stringurl + "<b>" + self.tag)
-			if not string(self.commit).empty:
-				self.commit = string(commit)
+			if not self.commit.empty:
 				self.stringurl = string(self.stringurl + "<#>" + self.commit)
 
 		@property
