@@ -1241,7 +1241,7 @@ try:
 			self.tag = string(tag)
 			self.api_watch = gh_api_status()
 
-			url = string(url).repsies('https://','http://','github.com/').repsies_end('.git', "")
+			url = string(url).repsies('https://','http://','github.com/').repsies_end('.git')
 			self.owner, self.reponame = url.split("/")
 			self.owner, self.reponame = string(self.owner), string(self.reponame)
 
