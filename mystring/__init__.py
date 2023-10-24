@@ -1183,46 +1183,48 @@ def my_ip():
 	return ip
 
 
-class gh_api_status(object):
-	def __init__(self):
-		self.cur_status = None
-		self.now = None
-		self.resetdate = None
+try:
+	import requests
+	class gh_api_status(object):
+		def __init__(self):
+			self.cur_status = None
+			self.now = None
+			self.resetdate = None
 
-	@property
-	def status(self):
-		# curl -I https://api.github.com/users/octocat|grep x-ratelimit-reset
-		self.cur_status, self.now = requests.get("https://api.github.com/users/octocat").headers, datetime.datetime.now()
-		return {
-			'Reset': self.cur_status['X-RateLimit-Reset'],
-			'Used': self.cur_status['X-RateLimit-Used'],
-			'Total': self.cur_status['X-RateLimit-Limit'],
-			'Remaining': self.cur_status['X-RateLimit-Remaining'],
-			'RemainingDate':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])),
-			'WaitFor':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now,
-			'WaitForSec':(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now).seconds,
-			'WaitForNow':lambda :(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - datetime.datetime.now()).seconds,
-		}
+		@property
+		def status(self):
+			# curl -I https://api.github.com/users/octocat|grep x-ratelimit-reset
+			self.cur_status, self.now = requests.get("https://api.github.com/users/octocat").headers, datetime.datetime.now()
+			return {
+				'Reset': self.cur_status['X-RateLimit-Reset'],
+				'Used': self.cur_status['X-RateLimit-Used'],
+				'Total': self.cur_status['X-RateLimit-Limit'],
+				'Remaining': self.cur_status['X-RateLimit-Remaining'],
+				'RemainingDate':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])),
+				'WaitFor':datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now,
+				'WaitForSec':(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - self.now).seconds,
+				'WaitForNow':lambda :(datetime.datetime.fromtimestamp(int(self.cur_status['X-RateLimit-Reset'])) - datetime.datetime.now()).seconds,
+			}
 
-	@property
-	def timing(self):
-		import time
-		if not hasattr(self, 'remaining') or self.remaining is None:
-			stats = self.status
-			print(stats)
-			self.remaining = int(stats['Remaining'])
-			self.wait_until = stats['WaitForNow']
-			self.resetdate = stats['RemainingDate']
-			self.timing
-		elif self.remaining >= 10:
-			self.remaining = self.remaining - 1
-		else:
-			print("Waiting until: {0}".format(self.resetdate))
-			pause.until(self.resetdate)
-			delattr(self, 'remaining')
-			delattr(self, 'wait_until')
-		return
-
+		@property
+		def timing(self):
+			import time
+			if not hasattr(self, 'remaining') or self.remaining is None:
+				stats = self.status
+				print(stats)
+				self.remaining = int(stats['Remaining'])
+				self.wait_until = stats['WaitForNow']
+				self.resetdate = stats['RemainingDate']
+				self.timing
+			elif self.remaining >= 10:
+				self.remaining = self.remaining - 1
+			else:
+				print("Waiting until: {0}".format(self.resetdate))
+				pause.until(self.resetdate)
+				delattr(self, 'remaining')
+				delattr(self, 'wait_until')
+			return
+except: pass
 
 
 try:
@@ -1237,7 +1239,7 @@ try:
 			self.stringurl = string(dc(url))
 			self.commit = None
 			self.tag = None
-			self.api_watch = niceghapi()
+			self.api_watch = gh_api_status()
 
 			url = string(url).repsies('https://','http://','github.com/').repsies_end('.git', "/")
 			self.owner, self.reponame = url.split("/")
