@@ -1311,7 +1311,7 @@ try:
 					return asset
 			return None
 
-		def download_asset(self, url, save_path, chunk_size=128, accept="application/vnd.github+json"):
+		def download_asset(self, url, save_path, chunk_size=128, accept="application/octet-stream"):
 			r = requests.get(url, stream=True, verify=self.verify, headers={
 				"Accept": accept,
 				"Authorization":"Bearer {0}".format(self.token)
