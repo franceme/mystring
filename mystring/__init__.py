@@ -346,7 +346,7 @@ from dateutil.parser import parse
 import datetime
 
 current_date = lambda:datetime.datetime.now(datetime.timezone.utc)
-date_to_iso = lambda x:x.astimezone().isoformat()
+date_to_iso = lambda x:x.astimezone().isoformat('T')
 
 class timestamp(datetime.datetime):
 
