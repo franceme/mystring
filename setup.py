@@ -136,7 +136,7 @@ setup(
 		"gh":gh_deps,
 		"gh_url":gh_url_deps,
 		"pkg":package_deps,
-		"all":grading_deps + frame_deps + gh_url_deps + gh_deps + versions
+		"all":grading_deps + frame_deps + gh_url_deps + gh_deps + package_deps
 	},
 	include_package_data=True,
 	classifiers=[
