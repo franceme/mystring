@@ -1417,4 +1417,9 @@ try:
 	
 		def at_latest(self):
 			return self.current == self.latest
+
+		def update_to_latest(self):
+			if not self.at_latest():
+				self.update
+			return self.latest
 except:pass
