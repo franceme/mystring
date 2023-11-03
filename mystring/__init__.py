@@ -1371,3 +1371,50 @@ try:
 			return save_url
 except:
 	pass
+
+try:
+	import requests
+	class package_aide(object):
+		def __init__(self, package, extras_strings=None, install_live=False):
+			self.package = package
+			self.install_live = install_live
+			self.extras_strings = extras_strings
+
+		@property
+		def has(self):
+			try:
+				__import__(self.package)
+			except:
+				print("Package {0} is not installed".format(self.package))
+				self.update
+
+		@property
+		def update(self):
+			if self.install_live:
+				import os,sys;os.system("{0} -m pip install --upgrade {1}{2}".format(
+					sys.executable, self.package,
+					"[{0}]".format(self.extras_strings) if self.extras_strings else ""
+				))
+
+		@property
+		def latest(self):
+			self.has
+			output = None
+			try:
+				output = requests.get("https://pypi.org/pypi/{0}/json".format(self.package)).json()['info']['version']
+			except:pass
+			return output
+
+		@property
+		def current(self):
+			self.has
+			output = None
+			try:
+				import importlib.metadata
+				output = importlib.metadata.version(self.package)
+			except:pass
+			return output
+	
+		def at_latest(self):
+			return self.current == self.latest
+except:pass
