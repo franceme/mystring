@@ -557,12 +557,12 @@ try:
 
 		def tobase64(self, encoding='utf-8'):
 			import base64
-			return base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
+			return "b64:"+base64.b64encode(self.to_json().encode(encoding)).decode(encoding)
 
 		@staticmethod
 		def frombase64(string, encoding='utf-8'):
 			import base64
-			return frame.from_json(base64.b64decode(string.encode(encoding)).decode(encoding))
+			return frame.from_json(base64.b64decode(string.replace("b64:","").encode(encoding)).decode(encoding))
 		
 		def quick_heatmap(self,cmap ='viridis',properties={'font-size': '20px'}):
 			return self.style.background_gradient(cmap=cmap).set_properties(**properties) 
@@ -712,6 +712,54 @@ try:
 
 		def ofQuery(self, query:str):
 			return frame(self.query(query))
+	
+		@staticmethod
+		def of(obj_or_file_path, sheet_name:str="Sheet1", dbhub_apikey=None, dbhub_owner=None, dbhub_name=None):
+			data = None
+			#return frame(pd.read_csv(file_path, low_memory=False))
+			if isinstance(obj_or_file_path, pd.DataFrame):
+				return frame(obj_or_file_path)
+			elif isinstance(obj_or_file_path, str) and os.path.exists(obj_or_file_path):
+				from pathlib import Path
+				ext = Path(obj_or_file_path).suffix
+
+				if ext == ".pkl":
+					data = frame(pd.read_pickle(obj_or_file_path, low_memory=False))
+				elif ext == ".csv":
+					data = frame.from_csv(obj_or_file_path)
+				elif ext == ".excel":
+					data = frame(pd.read_excel(obj_or_file_path, sheet_name=sheet_name, engine="openpyxl"))
+				elif ext == ".json":
+					data = frame.from_json(obj_or_file_path)
+				elif ext == ".sqlite":
+					data = frame.from_sqlite(obj_or_file_path)
+				elif ext == ".dbhub":
+					data = frame.from_dbhub_table(obj_or_file_path, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+			elif isinstance(obj_or_file_path, str) and obj_or_file_path.startswith("b64:"):
+				data = frame.frombase64(obj_or_file_path.replace("b64:",""))
+			elif isinstance(obj_or_file_path, list):
+				data = frame.from_arr(obj_or_file_path)
+
+			return data
+
+		def write_to(self, file_path, sheet_name:str="Sheet1"):
+			if isinstance(file_path, str):
+				from pathlib import Path
+				ext = Path(file_path).suffix
+
+				if ext == ".pkl":
+					self.to_pickle(file_path)
+				elif ext == ".csv":
+					self.to_csv(file_path)
+				elif ext == ".excel":
+					with pd.ExcelWriter(file_path, engine="xlsxwriter") as writer:
+						self.to_excel(writer, sheet_name=sheet_name, startrow=1, header=True)
+				elif ext == ".json":
+					self.to_json(file_path)
+				elif ext == ".sqlite":
+					self.to_sqlite(file_path)
+
+			return
 
 except:
 	pass
