@@ -719,24 +719,29 @@ try:
 			#return frame(pd.read_csv(file_path, low_memory=False))
 			if isinstance(obj_or_file_path, pd.DataFrame):
 				return frame(obj_or_file_path)
-			elif isinstance(obj_or_file_path, str) and os.path.exists(obj_or_file_path):
-				from pathlib import Path
-				ext = Path(obj_or_file_path).suffix
+			elif isinstance(obj_or_file_path, str):
+				if os.path.exists(obj_or_file_path):
+					from pathlib import Path
+					ext = Path(obj_or_file_path).suffix
 
-				if ext == ".pkl":
-					data = frame(pd.read_pickle(obj_or_file_path, low_memory=False))
-				elif ext == ".csv":
-					data = frame.from_csv(obj_or_file_path)
-				elif ext == ".excel":
-					data = frame(pd.read_excel(obj_or_file_path, sheet_name=sheet_name, engine="openpyxl"))
-				elif ext == ".json":
-					data = frame.from_json(obj_or_file_path)
-				elif ext == ".sqlite":
-					data = frame.from_sqlite(obj_or_file_path)
-				elif ext == ".dbhub":
-					data = frame.from_dbhub_table(obj_or_file_path, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
-			elif isinstance(obj_or_file_path, str) and obj_or_file_path.startswith("b64:"):
-				data = frame.frombase64(obj_or_file_path.replace("b64:",""))
+					if ext == ".pkl":
+						data = frame(pd.read_pickle(obj_or_file_path, low_memory=False))
+					elif ext == ".csv":
+						data = frame.from_csv(obj_or_file_path)
+					elif ext == ".tsv":
+						data = pd.read_csv(obj_or_file_path,seperator='	')
+					elif ext == ".excel":
+						data = frame(pd.read_excel(obj_or_file_path, sheet_name=sheet_name, engine="openpyxl"))
+					elif ext == ".json":
+						data = frame.from_json(obj_or_file_path)
+					elif ext == ".sqlite":
+						data = frame.from_sqlite(obj_or_file_path)
+					elif ext == ".dbhub":
+						data = frame.from_dbhub_table(obj_or_file_path, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+				elif obj_or_file_path.startswith("b64:"):
+					data = frame.frombase64(obj_or_file_path.replace("b64:",""))
+				elif obj_or_file_path.startswith("https://"):
+					data = frame(pd.read_html(obj_or_file_path))
 			elif isinstance(obj_or_file_path, list):
 				data = frame.from_arr(obj_or_file_path)
 
