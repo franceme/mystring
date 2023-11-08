@@ -121,9 +121,6 @@ class string(str):
 
 	@property
 	def empty(self):
-		if self is None:
-			return True
-
 		return any([
 			str(self).strip().lower() == x for x in [
 				'nan', 'none', 'null', ''
