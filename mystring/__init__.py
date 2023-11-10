@@ -1119,66 +1119,6 @@ class MyThreads(object):
 		if printout:
 			print("]",flush=True)
 
-class grading(object):
-	"""
-	https://github.com/microsoft/pybryt/tree/1e87fbe06e3e190bab075dab1064cfe275044f75
-	https://github.com/microsoft/pybryt/
-	advance: http://aka.ms/advancedpybryt
-	"""
-	def __init__(self, reference:str):
-		import pybryt
-		self.ref = pybryt.ReferenceImplementation.compile(reference)
-		self.subs = {}
-
-
-	def __iadd__(self, value:str):
-		import pybryt
-		if value.endswith(".py"):
-			from . import py2nb
-			import ephfile
-			with ephfile.ephfile(value.replace(".py",".ipynb")) as eph:
-				py2nb.convert(value)
-				studentImpl = pybryt.StudentImplementation(eph())
-		else:
-			studentImpl = pybryt.StudentImplementation(value)
-
-		self.subs[f"Sub_{len(self.subs.keys())}"] = {
-			"Implementation":studentImpl
-		}
-		return self
-
-
-	def grade(self):
-		results = []
-		for key, value in self.subs.items():
-			value['Result'] = value["Implementation"].check(self.ref)
-			results += [value['Result']]
-		return results
-
-
-	def __call__(self, *args, **kwargs):
-		self.grade()
-		return results
-
-
-	def __enter__(self):
-		return self
-
-
-	def __exit__(self, type, value, traceback):
-		return
-
-
-	def val(self, value:object, on_success:str, on_failure:str):
-		import pybryt
-		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
-
-
-	@staticmethod
-	def value(value:object, on_success:str, on_failure:str):
-		import pybryt
-		return pybryt.Value(value, success_message=on_success, failure_message=on_failure)
-
 class session(object):
 	def __init__(self, lock, onCall=None, onOpen=None, onClose=None):
 		self.lock = lock
@@ -1205,6 +1145,31 @@ class session(object):
 			return self.onCall(string)
 		else:
 			return string
+
+class shelving(object):
+	@staticmethod
+	def load(path):
+		output = None
+		import shelve
+		try:
+			with shelve.open(path) as db:
+				output = db
+		except Exception as e:
+			print("Could not shelf {0} due to exception {1}".format(key, str(e)))
+		return output
+
+	@staticmethod
+	def save(path):
+		import shelve
+		with shelve.open(path, 'n+') as shelf:
+			for key in dir():
+				try:
+					shelf[key] = globals()[key]
+				except TypeError:
+					print("Could not shelf {0} due to type error".format(key))
+				except Exception as e:
+					print("Could not shelf {0} due to exception {1}".format(key, str(e)))
+		return path
 
 def walker(path:str=".", eachFile=None, eachFolder=None):
 	import os
@@ -1419,6 +1384,13 @@ try:
 				user_agent
 			).save()
 			return save_url
+		
+		def commits_by_date(self, _to_,_from_=None,verify=True):
+			if _from_ is None:
+				new_to = _to_ - timedelta(days=2)
+				return nicepy("{}/commits?until={}".format(self.furl,_to_.strftime("%Y-%m-%dT%H:%M:00")))['data']
+			else:
+				return nicepy("{}/commits?since={}&until={}".format(self.furl,_from_.strftime("%Y-%m-%dT%H:%M:%S"),_to_.strftime("%Y-%m-%dT%H:%M:%S")))['data']
 except:
 	pass
 
