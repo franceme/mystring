@@ -244,9 +244,12 @@ class string(str):
 
 		self = string(string(output).trim)
 		return self
-	
-	def shellPrep(self,prefix="/usr/bin/env python3 -c"):
-		return string.of("{prefix} \"import base64;exec(base64.b64decode('{cmd}').decode())\"".format(prefix=prefix, cmd=self.tobase64()))
+
+	def shellCore(self):
+		return string.of("import base64;exec(base64.b64decode('{cmd}').decode())".format(cmd=self.tobase64()))
+
+	def shellPrep(self,prefix="/usr/bin/env python3 -c "):
+		return string.of("{prefix} \"{cmd}\"".format(prefix=prefix, cmd=self.shellCore()))
 
 	def shellAlias(self, aliasName="ALIASNAME", prefix="/usr/bin/env python3 -c"):
 		return string.of(
