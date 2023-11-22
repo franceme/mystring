@@ -154,7 +154,11 @@ class string(str):
 
 	def tobase64(self, encoding='utf-8', prefix=False):
 		import base64
-		return "b64:" if prefix else "" +string(base64.b64encode(self.encode(encoding)).decode(encoding))
+		return string(
+			string("b64:" if prefix else "")
+			+
+			string(base64.b64encode(self.encode(encoding)).decode(encoding))
+		)
 
 	@staticmethod
 	def frombase64(strang, encoding='utf-8'):
