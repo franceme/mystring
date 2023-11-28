@@ -125,7 +125,7 @@ class string(str):
 			str(self).strip().lower() == x for x in [
 				'nan', 'none', 'null', ''
 			]
-		]) or self.deplete is None
+		])
 
 	@property
 	def notempty(self):
