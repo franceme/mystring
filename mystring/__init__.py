@@ -763,6 +763,9 @@ try:
 				elif ext == ".excel":
 					with pd.ExcelWriter(file_path, engine="xlsxwriter") as writer:
 						self.to_excel(writer, sheet_name=sheet_name, startrow=1, header=True)
+				elif ext == ".xlsx":
+					with pd.ExcelWriter(file_path, engine="xlsxwriter") as writer:
+						self.to_excel(writer, sheet_name=sheet_name, startrow=1, header=True)
 				elif ext == ".json":
 					self.to_json(file_path)
 				elif ext == ".sqlite":
