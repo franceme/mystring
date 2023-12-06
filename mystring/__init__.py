@@ -766,7 +766,7 @@ try:
 				elif ext == ".json":
 					self.to_json(file_path)
 				elif ext == ".sqlite":
-					self.to_sqlite(file_path)
+					self.to_sqlite(file_path, table_name=sheet_name)
 
 			return
 
