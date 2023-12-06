@@ -739,7 +739,7 @@ try:
 					elif ext == ".json":
 						data = frame.from_json(obj_or_file_path)
 					elif ext == ".sqlite":
-						data = frame.from_sqlite(obj_or_file_path)
+						data = frame.from_sqlite(obj_or_file_path, table_name=sheet_name)
 					elif ext == ".dbhub":
 						data = frame.from_dbhub_table(obj_or_file_path, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
 				elif obj_or_file_path.startswith("b64:"):
