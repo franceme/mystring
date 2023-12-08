@@ -773,6 +773,19 @@ try:
 
 			return
 
+		def add_dyct(self, dyct):
+			if not isinstance(dyct, dict):
+				print("Object passed in needs to be a dictionary")
+				return
+			
+			if list(dyct.keys()) != self.kolz:
+				print("The dictionary keys must match the columns of the dataframe")
+				return
+
+			new_frame = self.arr() + [dyct]
+			self = frame(new_frame)
+			return self
+
 except:
 	pass
 
