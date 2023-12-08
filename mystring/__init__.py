@@ -734,7 +734,7 @@ try:
 						data = frame.from_csv(obj_or_file_path)
 					elif ext == ".tsv":
 						data = pd.read_csv(obj_or_file_path,seperator='	')
-					elif ext == ".excel":
+					elif ext == ".excel" or ext == ".xlsx":
 						data = frame(pd.read_excel(obj_or_file_path, sheet_name=sheet_name, engine="openpyxl"))
 					elif ext == ".json":
 						data = frame.from_json(obj_or_file_path)
