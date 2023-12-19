@@ -782,8 +782,11 @@ try:
 				print("The dictionary keys must match the columns of the dataframe")
 				return
 
-			new_frame = self.arr() + [dyct]
-			self = frame(new_frame)
+			self = frame.from_arr(self.arr() + [dyct])
+			return self
+
+		def on(self, string):
+			self = frame(new_frame.query(string))
 			return self
 
 except:
