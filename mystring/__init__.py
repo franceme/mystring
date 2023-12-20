@@ -786,7 +786,8 @@ try:
 			return self
 
 		def on(self, string):
-			self = frame(new_frame.query(string))
+			from copy import deepcopy as dc
+			self = frame(dc(self).query(string))
 			return self
 
 except:
