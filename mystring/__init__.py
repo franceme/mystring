@@ -1493,5 +1493,9 @@ class pretty(object):
 		return number
 
 	@staticmethod
+	def num_commas(number):
+		return "{:,}".format(number)
+
+	@staticmethod
 	def percent(number):
 		return "%{0}".format(round(number*100,2))
