@@ -1472,3 +1472,26 @@ try:
 				self.update
 			return self.latest
 except:pass
+
+
+class pretty(object):
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def num_prune(number):
+		if isinstance(number, str):
+			while number.startswith("0") and number != "0":
+				number = number[1:]
+		return int(number)
+
+	@staticmethod
+	def num_flate(number, fill_to_length=2):
+		number = str(number)
+		while len(number) < fill_to_length:
+			number = "0"+number
+		return number
+
+	@staticmethod
+	def percent(number):
+		return "%{0}".format(round(number*100,2))
