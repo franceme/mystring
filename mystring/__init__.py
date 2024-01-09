@@ -353,7 +353,7 @@ current_date = lambda:datetime.datetime.now(datetime.timezone.utc)
 date_to_iso = lambda x:x.astimezone().isoformat('T')
 
 utc_date_to_iso = lambda x:str(x.isoformat('T',timespec='microseconds'))
-now_utc_to_iso = lambda:current_utc_date_to_iso(current_date())
+now_utc_to_iso = lambda:utc_date_to_iso(current_date())
 utc_date_from_iso = lambda x:datetime.datetime.fromisoformat(x)
 
 class timestamp(datetime.datetime):
