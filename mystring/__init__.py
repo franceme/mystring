@@ -123,7 +123,7 @@ class string(str):
 	def empty(self):
 		return any([
 			str(self).strip().lower() == x for x in [
-				'nan', 'none', 'null', ''
+				'nan', 'none', 'null','n/a','na','non-applicable', ''
 			]
 		]) or self == None
 
