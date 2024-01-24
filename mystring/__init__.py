@@ -914,7 +914,7 @@ class foil(object):
 		else:
 			self._content = lyst([])
 
-	@attribute
+	@property
 	def impor(self):
 		if file not in self.files():
 			print("FILE IS NOT AVAILABLE")
