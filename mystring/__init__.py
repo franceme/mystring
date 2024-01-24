@@ -916,9 +916,6 @@ class foil(object):
 
 	@property
 	def impor(self):
-		if file not in self.files():
-			print("FILE IS NOT AVAILABLE")
-			return None
 
 		import_name = str(self.path.split('/')[-1]).replace('.py','')
 		#https://stackoverflow.com/questions/19009932/import-arbitrary-python-source-file-python-3-3#answer-19011259
