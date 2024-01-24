@@ -914,6 +914,20 @@ class foil(object):
 		else:
 			self._content = lyst([])
 
+	@attribute
+	def impor(self):
+		if file not in self.files():
+			print("FILE IS NOT AVAILABLE")
+			return None
+
+		import_name = str(self.path.split('/')[-1]).replace('.py','')
+		#https://stackoverflow.com/questions/19009932/import-arbitrary-python-source-file-python-3-3#answer-19011259
+		loader = importlib.machinery.SourceFileLoader(import_name, os.path.abspath(self.path))
+		mod = types.ModuleType(loader.name)
+		loader.exec_module(mod)
+
+		return mod
+
 	def __enter__(self, append=False):
 		self._content = lyst([])
 		yield finput(self.path, inplace=True)
