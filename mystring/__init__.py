@@ -1,4 +1,4 @@
-import os,sys,re,importlib.machinery,types
+import os,sys,re,importlib.machinery,types,json
 class string(str):
 	def equals(self,*args):
 		for arg in args:
@@ -38,7 +38,7 @@ class string(str):
 		for arg in args:
 			self = self.rep_fromend(arg)
 		return self
-	
+
 	def exec(self, display=True, lines=False):
 		import subprocess
 
@@ -268,6 +268,14 @@ class string(str):
 	
 	def escapeTab(self, replaceWith=""):
 		return string(self.replace("\t",replaceWith))
+
+def obj_to_string(obj):
+	import json
+	return string(
+		json.dumps(
+			obj
+		)
+	)
 
 def ofBoolean(obj:any) -> bool:
 	obj = string.of(obj)
