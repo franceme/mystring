@@ -175,6 +175,9 @@ class string(str):
 		if strung.startswith('b64:'):
 			return string.frombase64(strung.replace('b64:','',1))
 
+		if strung.startswith('json:'):
+			return strung.replace("json:",'',1)
+
 		try:
 			return string.frombase64(strung)
 		except:
@@ -269,13 +272,16 @@ class string(str):
 	def escapeTab(self, replaceWith=""):
 		return string(self.replace("\t",replaceWith))
 
-def obj_to_string(obj):
+def obj_to_string(obj, prefix=None):
 	import json
-	return string(
+	output = string(
 		json.dumps(
 			obj
 		)
 	)
+	if prefix:
+		output = string(prefix + output)
+	return output
 
 def ofBoolean(obj:any) -> bool:
 	obj = string.of(obj)
