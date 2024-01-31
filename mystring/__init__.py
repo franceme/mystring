@@ -987,6 +987,11 @@ class foil(object):
 			'hash':self.hash_content(),
 			'base64':self.b64_content()
 		}))
+
+	@property
+	def linez(self):
+		from fileinput import FileInput as finput
+		yield finput(self.path, inplace=True, backup=False)
 	
 	@staticmethod
 	def is_bin(foil):
