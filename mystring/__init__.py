@@ -16,7 +16,7 @@ class string(str):
 		self = self.replace(substring,'')
 		return self
 	
-	def rreplace(self,x,y='', num_occurences=None)
+	def rreplace(self,x,y='', num_occurences=None):
 		return string(y.join(self.rsplit(x,-1 if num_occurences is not None else num_occurences)))
 
 	def repsies(self,*args):
