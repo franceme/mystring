@@ -6,12 +6,18 @@ class string(str):
 				return True
 		return False
 
-	def replace(self,x,y):
-		return string(super().replace(x,y))
+	def replace(self,x,y, num_occurences=None):
+		if num_occurences:
+			return string(super().replace(x,y,num_occurences))
+		else:
+			return string(super().replace(x,y))
 
 	def rep(self,substring):
 		self = self.replace(substring,'')
 		return self
+	
+	def rreplace(self,x,y, num_occurences=None)
+		return string(y.join(self.rsplit(x,-1 if num_occurences is not None else num_occurences)))
 
 	def repsies(self,*args):
 		for arg in args:
