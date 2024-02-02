@@ -283,13 +283,26 @@ def obj_to_string(obj, prefix=None):
 		output = string(prefix + output)
 	return output
 
-def ofBoolean(obj:any) -> bool:
+def ofBoolean(obj:any, cast:bool=True) -> bool:
 	obj = string.of(obj)
 
-	if obj.empty:
-		return False
+	active_values = ["true", 1, "1", "active", "high"]
+	inactive_values = ["false", 0, "0", "inactive", "low"]
 
-	return obj.trim.lower() in ["true", 1, "1", "active", "high"]
+	if cast:
+		if obj.empty:
+			return False
+
+		return obj.trim.lower() in active_values
+	else:
+		obj = obj.trim.lower()
+		if obj in active_values:
+			return True
+		elif obj in inactive_values:
+			return False
+		else:
+			return None
+
 
 class integer(int):
 
