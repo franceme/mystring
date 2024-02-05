@@ -30,15 +30,22 @@ class string(str):
 			to_replace = end or start_and_end
 			self = string(self[:-len(to_replace)])
 		return self
-
+	
+	def rep_surroundings(self, *start_and_end):
+		for arg in start_and_end:
+			self = self.rep_surrounding(arg)
+		return self
 
 	def rreplace(self,x,y='', num_occurences=None):
 		return string(y.join(self.rsplit(x,-1 if num_occurences is not None else num_occurences)))
 
-	def repsies(self,*args):
+	def reps(self,*args):
 		for arg in args:
 			self = self.rep(arg)
 		return self
+
+	def repsies(self,*args):
+		return self.reps(arg)
 
 	def rep_end(self, substring):
 		if self.endswith(substring):
