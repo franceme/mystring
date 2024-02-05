@@ -22,7 +22,16 @@ class string(str):
 	def rep(self,substring):
 		self = self.replace(substring,'')
 		return self
-	
+
+	def rep_surrounding(self, start_and_end, end=None):
+		if self.startswith(start_and_end):
+			self = string(self[len(start_and_end):])
+		if (end and self.endswith(end)) or self.endswith(start_and_end):
+			to_replace = end or start_and_end
+			self = string(self[:-len(to_replace)])
+		return self
+
+
 	def rreplace(self,x,y='', num_occurences=None):
 		return string(y.join(self.rsplit(x,-1 if num_occurences is not None else num_occurences)))
 
