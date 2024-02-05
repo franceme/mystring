@@ -87,6 +87,11 @@ class string(str):
 	def nquotes(self):
 		return self.reps("'",'"', "`")
 
+	def fixnulines(self):
+		for nuline in ["\\\\n", "\\\n", "\\n"]:
+			self = self.replace(nuline, "\n")
+		return self
+
 	def percent_diff(self, string, func=levenshtein_distance, use_percent=True):
 		return func(self, string, use_percent)
 
