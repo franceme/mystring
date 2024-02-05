@@ -45,7 +45,7 @@ class string(str):
 		return self
 
 	def repsies(self,*args):
-		return self.reps(arg)
+		return self.reps(args)
 
 	def rep_end(self, substring):
 		if self.endswith(substring):
