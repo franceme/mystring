@@ -49,6 +49,9 @@ class string(str):
 			self = self.rep(arg)
 		return self
 
+	def nquotes(self):
+		self = self.reps("'",'"', "`")
+
 	def rep_end(self, substring):
 		if self.endswith(substring):
 			self = string(self[:-1 * len(substring)])
