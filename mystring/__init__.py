@@ -317,6 +317,19 @@ def obj_to_string(obj, prefix=None):
 		output = string(prefix + output)
 	return output
 
+def ofInteger(obj:any, cast:bool=True) -> int:
+	obj = string.of(obj)
+	is_int = False
+
+	try:
+		int(obj)
+		is_int=True
+	except:pass
+
+	if is_int:
+		return int(obj) if cast else True
+	return None if cast else False
+
 def ofBoolean(obj:any, cast:bool=True) -> bool:
 	obj = string.of(obj)
 
