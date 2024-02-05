@@ -1,9 +1,16 @@
 import os,sys,re,importlib.machinery,types,json
 class string(str):
-	def equals(self,*args):
-		for arg in args:
-			if self == arg:
-				return True
+	def equals(self,*args, upper_check=False, lower_check=False):
+		matches = [lambda x:x]
+		if upper_check:
+			matches += [lambda x:x.upper()]
+		if lower_check:
+			matches += [lambda x:x.lower()]
+		
+		for shiftr in matches:
+			for arg in args:
+				if shiftr(self) == shiftr(arg):
+					return True
 		return False
 
 	def replace(self,x,y='', num_occurences=None):
