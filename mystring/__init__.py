@@ -1,4 +1,39 @@
 import os,sys,re,importlib.machinery,types,json
+
+def levenshtein_distance(first, second, percent=True):
+	if isinstance(first, list):
+		first = "".join(first)
+	if isinstance(second, list):
+		second = "".join(second)
+
+	"""Find the Levenshtein distance between two strings."""
+	#https://stackoverflow.com/questions/3106994/algorithm-to-calculate-percent-difference-between-two-blobs-of-text
+	if len(first) > len(second):
+		first, second = second, first
+	if len(second) == 0:
+		return len(first)
+	first_length = len(first) + 1
+	second_length = len(second) + 1
+	distance_matrix = [[0] * second_length for x in range(first_length)]
+	for i in range(first_length):
+	   distance_matrix[i][0] = i
+	for j in range(second_length):
+	   distance_matrix[0][j]=j
+	for i in range(1, first_length):
+		for j in range(1, second_length):
+			deletion = distance_matrix[i-1][j] + 1
+			insertion = distance_matrix[i][j-1] + 1
+			substitution = distance_matrix[i-1][j-1]
+			if first[i-1] != second[j-1]:
+				substitution += 1
+			distance_matrix[i][j] = min(insertion, deletion, substitution)
+
+	diff_value = distance_matrix[first_length-1][second_length-1]
+	if percent:
+		return 100*(diff_value / float(max(len(first), len(second))))
+	else:
+		return diff_value
+
 class string(str):
 	def equals(self,*args, upper_check=False, lower_check=False):
 		matches = [lambda x:x]
@@ -51,6 +86,9 @@ class string(str):
 
 	def nquotes(self):
 		return self.reps("'",'"', "`")
+
+	def percent_diff(self, string, func=levenshtein_distance, use_percent=True):
+		return func(self, string, use_percent)
 
 	def rep_end(self, substring):
 		if self.endswith(substring):
