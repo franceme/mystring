@@ -50,7 +50,7 @@ class string(str):
 		return self
 
 	def nquotes(self):
-		self = self.reps("'",'"', "`")
+		return self.reps("'",'"', "`")
 
 	def rep_end(self, substring):
 		if self.endswith(substring):
