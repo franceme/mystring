@@ -1,6 +1,6 @@
 import os,sys,re,importlib.machinery,types,json
 
-class redirect(object):
+class red(object):
 	def __init__(self):
 		self.stream = None
 		self.f = None
