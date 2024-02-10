@@ -1,16 +1,18 @@
 import os,sys,re,importlib.machinery,types,json
 
-class red(object):
-	def __init__(self):
-		self.stream = None
-		self.f = None
-	def __enter__(self):
-		self.stream = sys.stdout
-		self.f = open(os.devnull, 'w')
-		sys.stdout = self.f
-		return self
-	def __exit__(self,a=None,b=None,c=None):
-		sys.stdout = self.stream
+def redir():
+	class red(object):
+		def __init__(self):
+			self.stream = None
+			self.f = None
+		def __enter__(self):
+			self.stream = sys.stdout
+			self.f = open(os.devnull, 'w')
+			sys.stdout = self.f
+			return self
+		def __exit__(self,a=None,b=None,c=None):
+			sys.stdout = self.stream
+	return red()
 
 def levenshtein_distance(first, second, percent=True):
 	if isinstance(first, list):
