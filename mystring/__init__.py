@@ -370,6 +370,7 @@ def string_appliers():
 
 def exhaustive_quoted():
 	return [
+		lambda value:value,
 		lambda value:'"' + value + '"',
 		lambda value:"'" + value + "'",
 		lambda value:'"""' + value + '"""',
