@@ -177,7 +177,7 @@ class string(str):
 	@property
 	def deplete(self):
 		self = self.trim.irregularstrip.trim
-		if self.empty or self.equals("None", "none", "Null", "null", "NaN", "nan"):
+		if self.empty:
 			self = None
 		return self
 
@@ -210,12 +210,14 @@ class string(str):
 			self = None
 		return self
 
+	@staticmethod
+	def null_values():
+		return ['nan', 'none', 'null','n/a','na','non-applicable', '']
+
 	@property
 	def empty(self):
 		return any([
-			str(self).strip().lower() == x for x in [
-				'nan', 'none', 'null','n/a','na','non-applicable', ''
-			]
+			exhaustive_equal(self,x) for x in string.null_values()
 		]) or self == None
 
 	@property
@@ -362,6 +364,13 @@ class string(str):
 	
 	def escapeTab(self, replaceWith=""):
 		return string(self.replace("\t",replaceWith))
+
+def exhaustive_equal(string_one,string_two):
+	for applier_one in [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]:
+		for applier_two in [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]:
+			if applier_one(string_one) == applier_two(string_two):
+				return True
+	return False
 
 def obj_to_string(obj, prefix=None):
 	import json
