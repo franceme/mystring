@@ -365,9 +365,20 @@ class string(str):
 	def escapeTab(self, replaceWith=""):
 		return string(self.replace("\t",replaceWith))
 
+def string_appliers():
+	return [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]
+
+def exhaustive_quoted():
+	return [
+		lambda value:'"' + value + '"',
+		lambda value:"'" + value + "'",
+		lambda value:'"""' + value + '"""',
+		lambda value:'"""' + value.replace('"""','\"\"\"') + '"""',
+	]
+
 def exhaustive_equal(string_one,string_two):
-	for applier_one in [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]:
-		for applier_two in [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]:
+	for applier_one in string_appliers():
+		for applier_two in string_appliers():
 			if applier_one(string_one) == applier_two(string_two):
 				return True
 	return False
