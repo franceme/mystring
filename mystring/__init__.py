@@ -381,7 +381,7 @@ def exhaustive_quoted():
 		lambda value:'"""' + value.replace('"""','\"\"\"') + '"""',
 	]
 
-def full_wrapping(*strings_to_wrap, string_appliers=[], quoting_or_wrapping=[]):
+def full_wrapping(*strings_to_wrap, extra_string_appliers=[], quoting_or_wrapping=[]):
 	output = []
 	for string_to_wrap in strings_to_wrap: 
 		for string_applier in string_appliers() + string_appliers:
