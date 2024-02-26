@@ -216,7 +216,7 @@ class string(str):
 
 	@staticmethod
 	def null_values():
-		return string + ['']
+		return string.empty_values() + ['']
 
 	@property
 	def empty(self):
