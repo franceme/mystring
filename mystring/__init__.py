@@ -388,7 +388,7 @@ def exhaustive_equal(string_one,string_two):
 				return True
 	return False
 
-def exhaustive_string_contain(string, whole_string, use_empty_values=True, extra_string_appliers=[]):
+def exhaustive_string_contain(string_value, whole_string, use_empty_values=True, extra_string_appliers=[]):
 	full_string_appliers = string_appliers() + extra_string_appliers
 	for quote_appl in exhaustive_quoted():
 		for string_applier in full_string_appliers:
@@ -402,7 +402,7 @@ def exhaustive_string_contain(string, whole_string, use_empty_values=True, extra
 				appliers = lambda x:quote_appl(string_applier(x))
 				for x_applier in [lambda x:x, lambda x:appliers(x)]:
 					for y_applier in [lambda x:x, lambda x:appliers(x)]:
-						string_to_look_for = x_applier(string)+":"+y_applier(null_value)
+						string_to_look_for = x_applier(string_value)+":"+y_applier(null_value)
 						if string_to_look_for in whole_string:
 							return True
 	return False
