@@ -397,7 +397,8 @@ def exhaustive_string_contain(string_value, whole_string, empty_values=string.em
 				for x_applier in [lambda x:x, lambda x:appliers(x)]:
 					for y_applier in [lambda x:x, lambda x:appliers(x)]:
 						string_to_look_for = x_applier(string_value)+":"+y_applier(null_value)
-						if string_to_look_for in whole_string:
+						trim_whole_string = whole_string.strip().replace(" :", ":").replace(": ", ":")
+						if string_to_look_for in trim_whole_string or string_to_look_for == trim_whole_string:
 							return True
 	return False
 
