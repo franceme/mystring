@@ -384,9 +384,10 @@ def exhaustive_equal(string_one,string_two):
 				return True
 	return False
 
-def exhaustive_string_contain(string, whole_string):
+def exhaustive_string_contain(string, whole_string, extra_string_appliers=[]):
+	full_string_appliers = string_appliers() + extra_string_appliers
 	for quote_appl in exhaustive_quoted():
-		for string_applier in string_appliers():
+		for string_applier in full_string_appliers:
 			for null_value in string.null_values:
 				appliers = lambda x:quote_appl(string_applier(x))
 				for x_applier in [lambda x:x, lambda x:appliers(x)]:
