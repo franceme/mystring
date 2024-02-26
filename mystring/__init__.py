@@ -381,6 +381,20 @@ def exhaustive_quoted():
 		lambda value:'"""' + value.replace('"""','\"\"\"') + '"""',
 	]
 
+def full_wrapping(*strings_to_wrap, string_appliers=[], quoting_or_wrapping=[]):
+	output = []
+	for string_to_wrap in strings_to_wrap: 
+		for string_applier in string_appliers() + string_appliers:
+			for wrappr in exhaustive_quoted() + quoting_or_wrapping:
+				output += [
+					wrappr(
+						string_applier(
+							string_to_wrap
+						)
+					)
+				]
+	return output
+
 def exhaustive_equal(string_one,string_two):
 	for applier_one in string_appliers():
 		for applier_two in string_appliers():
