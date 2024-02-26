@@ -369,6 +369,16 @@ class string(str):
 	def escapeTab(self, replaceWith=""):
 		return string(self.replace("\t",replaceWith))
 
+def flatten_list(lyst: list) -> list:
+	if not lyst:
+		return []
+
+	big_list = len(lyst) > 1
+	if isinstance(lyst[0], list):
+		return flatten_list(lyst[0]) + (big_list * flatten_list(lyst[1:]))
+	else:
+		return [lyst[0]] + (big_list * flatten_list(lyst[1:]))
+
 def string_appliers():
 	return [lambda x:x, lambda x:x.upper(), lambda x:x.lower()]
 
@@ -383,7 +393,7 @@ def exhaustive_quoted():
 
 def full_wrapping(*strings_to_wrap, extra_string_appliers=[], quoting_or_wrapping=[]):
 	output = []
-	for string_to_wrap in strings_to_wrap: 
+	for string_to_wrap in flatten_list(strings_to_wrap): 
 		for string_applier in string_appliers() + extra_string_appliers:
 			for wrappr in exhaustive_quoted() + quoting_or_wrapping:
 				output += [
