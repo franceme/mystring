@@ -394,9 +394,9 @@ def exhaustive_string_contain(string, whole_string, use_empty_values=True, extra
 		for string_applier in full_string_appliers:
 
 			if use_empty_values:
-				looping_values = string.empty_values
+				looping_values = string.empty_values()
 			else:
-				looping_values = string.null_values
+				looping_values = string.null_values()
 
 			for null_value in looping_values:
 				appliers = lambda x:quote_appl(string_applier(x))
