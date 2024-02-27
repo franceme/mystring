@@ -450,11 +450,20 @@ def ofInteger(obj:any, cast:bool=True) -> int:
 		return int(obj) if cast else True
 	return None if cast else False
 
+def bool_true_values():
+	return ["true", 1, "1", "active", "high"]
+
+def bool_false_values():
+	return ["false", 0, "0", "inactive", "low"]
+
+def bool_values():
+	return bool_true_values() + bool_false_values()
+
 def ofBoolean(obj:any, cast:bool=True) -> bool:
 	obj = string.of(obj)
 
-	active_values = ["true", 1, "1", "active", "high"]
-	inactive_values = ["false", 0, "0", "inactive", "low"]
+	active_values = bool_true_values()
+	inactive_values = bool_false_values()
 
 	if cast:
 		if obj.empty:
