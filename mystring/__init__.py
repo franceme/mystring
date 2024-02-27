@@ -405,6 +405,12 @@ def full_wrapping(*strings_to_wrap, extra_string_appliers=[], quoting_or_wrappin
 				]
 	return output
 
+def exhaustive_equals(string_one, *string_two_provider):
+	for string_to_check in flatten_list(string_two_provider):
+		if exhaustive_equal(string_one, string_to_check):
+			return True
+	return False
+
 def exhaustive_equal(string_one,string_two):
 	for applier_one in string_appliers():
 		for applier_two in string_appliers():
