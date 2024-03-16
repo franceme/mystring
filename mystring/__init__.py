@@ -1056,7 +1056,7 @@ try:
 				value.write_to(file_out_to, sheet_name=key)
 		
 		@staticmethod
-		def of(self, obj):
+		def of(obj):
 			output = framecase()
 			if isinstance(obj, str) and os.path.exists(obj):
 				from pathlib import Path
