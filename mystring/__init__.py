@@ -1053,6 +1053,38 @@ class framecase(object):
 	def arx(self):
 		for key,value in self.dyct.items():
 			value.write_to(file_out_to, sheet_name=key)
+	
+	@staticmethod
+	def of(self, obj):
+		output = framecase()
+		if isinstance(obj, str) and os.path.exists(obj):
+			from pathlib import Path
+			ext = Path(obj).suffix
+			if ext == ".excel" or ext == ".xlsx":
+				from openpyxl import load_workbook
+				for sheet_name in load_workbook(obj, read_only=True, keep_links=False).sheetnames:
+					self.add_frame(obj, sheet_name)
+			elif ext == ".json":
+				contents = None
+				with open(obj, "r") as reader:
+					contents = json.load(reader)
+				self._set_from_raw(contents)
+			elif ext == ".sqlite":
+				sheet_names = []
+				connection = sqlite3.connect(obj)
+				current_cursor = connection.cursor()
+				current_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+				for name in current_cursor.fetchall():
+					sheet_names += [name[0]]
+				current_cursor = None
+				for sheet_name in sheet_names:
+					self.add_frame(obj, sheet_name)
+		return output
+
+	def write_to(self, override_writeto:str=None):
+		for key,value in self.items():
+			value.write_to(override_writeto, sheet_name = key)
+		return
 
 	def _set_from_raw(self, dyct:dict):
 		for key,value in dyct.items():
