@@ -1106,9 +1106,9 @@ try:
 		def __iter__(self):return iter(self.dyct.values())
 		def __reversed__(self):return reversed(self.dyct.values())
 		def __contains__(self, item):return item in self.dyct.keys()
-		def __getattr__(self, name):return self[name]
-		def __setattr__(self, name, value):self[name] = value
-		def __delattr__(self, name): del self[name]
+		#def __getattr__(self, name):return self[name]
+		#def __setattr__(self, name, value):self[name] = value
+		#def __delattr__(self, name): del self[name]
 		def __int__(self):return len(self)
 		def __enter__(self):return self
 		def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
