@@ -1064,12 +1064,12 @@ try:
 				if ext == ".excel" or ext == ".xlsx":
 					from openpyxl import load_workbook
 					for sheet_name in load_workbook(obj, read_only=True, keep_links=False).sheetnames:
-						self.add_frame(obj, sheet_name)
+						output.add_frame(obj, sheet_name)
 				elif ext == ".json":
 					contents = None
 					with open(obj, "r") as reader:
 						contents = json.load(reader)
-					self._set_from_raw(contents)
+					output._set_from_raw(contents)
 				elif ext == ".sqlite":
 					sheet_names = []
 					connection = sqlite3.connect(obj)
@@ -1079,7 +1079,7 @@ try:
 						sheet_names += [name[0]]
 					current_cursor = None
 					for sheet_name in sheet_names:
-						self.add_frame(obj, sheet_name)
+						output.add_frame(obj, sheet_name)
 			return output
 
 		def write_to(self, override_writeto:str=None):
