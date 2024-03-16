@@ -1,4 +1,5 @@
 import os,sys,re,importlib.machinery,types,json
+from datetime import datetime, MINYEAR
 
 def redir():
 	class red(object):
@@ -745,6 +746,24 @@ try:
 				dbhub_apikey, dbhub_owner, dbhub_name
 			)
 
+		@staticmethod
+		def export_datetime(object):
+			if isinstance(object, datetime):
+				return str(object.isoformat('T'))
+			elif isinstance(object, str):
+				from dateutil.parser import parse
+				return framecase.export_datetime(parse(object))
+			else:
+				return None
+
+		def to_raw_json(self):
+			arrs = self.arr()
+			for row in arrs:
+				for key,value in row.items():
+					if isinstance(value, datetime):
+						value = frame.export_datetime(value)
+			return json.dumps(arrs)
+
 		@property
 		def roll(self):
 			class SubSeries(pd.Series):
@@ -1003,6 +1022,63 @@ try:
 			self = frame(dc(self).query(string))
 			return self
 
+from copy import deepcopy as dc
+class framecase(object):
+	#https://rszalski.github.io/magicmethods/
+	def __init__(self, file_out_to=None, base_name="unknown_data"):
+		self.dyct = {}
+		self.base = base_name
+		self.file_out_to = file_out_to
+
+	def add_frame(self, obj, obj_name=None):
+		frame_to_add = None
+		if isinstance(obj, frame):
+			frame_to_add = dc(obj)
+		elif isinstance(obj, pd.DataFrame):
+			frame_to_add = frame(obj)
+		elif isinstance(obj, str):
+			try:
+				output = frame.of(obj)
+				if output is not None:
+					frame_to_add = output
+			except:pass
+
+		if frame_to_add is not None:
+			self.dyct[obj_name or self.__nu_name()] = frame_to_add
+
+	def __iadd__(self, other):
+		self.add_frame(other)
+		return self
+
+	def arx(self):
+		for key,value in self.dyct.items():
+			value.write_to(file_out_to, sheet_name=key)
+
+
+	def to_raw(self, b64:bool=False):return {key,(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
+	#Overridden methods
+	def __len__(self):return len(self.dyct.values())
+    def __getitem__(self, key):return pd.DataFrame() if key not in self else return self.dyct[key]
+    def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
+    def __delitem__(self, key):del self.dyct[key]
+	def __iter__(self):return iter(self.dyct.values())
+	def __reversed__(self):return reversed(self.dyct.values())
+	def __contains__(self, item):return item in self.dyct
+	def __getattr__(self, name):return self[name]
+	def __setattr__(self, name, value):self[name] = value
+	def __delattr__(self, name): defl self[name]
+	def __int__(self):return len(self)
+	def __enter__(self):return self
+	def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
+	def __deepcopy__(self, memodict={}): return dc(self.dyct)
+	def equal_cols(self):return all([value.columns.tolist() == self.dyct.values()[0].columns.tolist() for value in self.dyct.values()])
+
+	def __nu_name(self):
+		name = base_name
+		itr = 0
+		while str(name+"_"+str(itr)) in self.dyct:
+			itr += 1
+		return str(name+"_"+str(itr))
 except:
 	pass
 
