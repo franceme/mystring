@@ -1096,7 +1096,7 @@ try:
 			output = framecase()
 			output._set_from_raw(dyct)
 			return output
-		def to_raw(self, b64:bool=False):return {key,(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
+		def to_raw(self, b64:bool=False):return {key:(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
 		#Overridden methods
 		def __str__(self):return json.dumps(self.to_raw())
 		def __len__(self):return len(self.dyct.values())
