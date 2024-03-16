@@ -1100,7 +1100,7 @@ try:
 		#Overridden methods
 		def __str__(self):return json.dumps(self.to_raw())
 		def __len__(self):return len(self.dyct.values())
-		def __getitem__(self, key):return pd.DataFrame() if key not in self else return self.dyct[key]
+		def __getitem__(self, key):return pd.DataFrame() if key not in self else self.dyct[key]
 		def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
 		def __delitem__(self, key):del self.dyct[key]
 		def __iter__(self):return iter(self.dyct.values())
