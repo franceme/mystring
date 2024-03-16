@@ -1054,9 +1054,18 @@ class framecase(object):
 		for key,value in self.dyct.items():
 			value.write_to(file_out_to, sheet_name=key)
 
+	def _set_from_raw(self, dyct:dict):
+		for key,value in dyct.items():
+			output[key] = value
 
+	@staticmethod
+	def from_raw(self, dyct:dict):
+		output = framecase()
+		output._set_from_raw(dyct)
+		return output
 	def to_raw(self, b64:bool=False):return {key,(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
 	#Overridden methods
+	def __str__(self):return json.dumps(self.to_raw())
 	def __len__(self):return len(self.dyct.values())
     def __getitem__(self, key):return pd.DataFrame() if key not in self else return self.dyct[key]
     def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
@@ -1071,7 +1080,12 @@ class framecase(object):
 	def __enter__(self):return self
 	def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
 	def __deepcopy__(self, memodict={}): return dc(self.dyct)
+	def items(self):return self.dyct.items()
+	def keys(self):return self.dyct.keys()
+	def values(self):return self.dyct.values()
 	def equal_cols(self):return all([value.columns.tolist() == self.dyct.values()[0].columns.tolist() for value in self.dyct.values()])
+	def __getstate__(self):return self.to_raw()
+	def __setstate__(self, state):self._set_from_raw(state)
 
 	def __nu_name(self):
 		name = base_name
