@@ -1024,108 +1024,108 @@ try:
 			self = frame(dc(self).query(string))
 			return self
 
-class framecase(object):
-	#https://rszalski.github.io/magicmethods/
-	def __init__(self, file_out_to=None, base_name="unknown_data"):
-		self.dyct = {}
-		self.base = base_name
-		self.file_out_to = file_out_to
+	class framecase(object):
+		#https://rszalski.github.io/magicmethods/
+		def __init__(self, file_out_to=None, base_name="unknown_data"):
+			self.dyct = {}
+			self.base = base_name
+			self.file_out_to = file_out_to
 
-	def add_frame(self, obj, obj_name=None):
-		frame_to_add = None
-		if isinstance(obj, frame):
-			frame_to_add = dc(obj)
-		elif isinstance(obj, pd.DataFrame):
-			frame_to_add = frame(obj)
-		elif isinstance(obj, str):
-			try:
-				output = frame.of(obj)
-				if output is not None:
-					frame_to_add = output
-			except:pass
+		def add_frame(self, obj, obj_name=None):
+			frame_to_add = None
+			if isinstance(obj, frame):
+				frame_to_add = dc(obj)
+			elif isinstance(obj, pd.DataFrame):
+				frame_to_add = frame(obj)
+			elif isinstance(obj, str):
+				try:
+					output = frame.of(obj)
+					if output is not None:
+						frame_to_add = output
+				except:pass
 
-		if frame_to_add is not None:
-			self.dyct[obj_name or self.__nu_name()] = frame_to_add
+			if frame_to_add is not None:
+				self.dyct[obj_name or self.__nu_name()] = frame_to_add
 
-	def __iadd__(self, other):
-		self.add_frame(other)
-		return self
+		def __iadd__(self, other):
+			self.add_frame(other)
+			return self
 
-	def arx(self):
-		for key,value in self.dyct.items():
-			value.write_to(file_out_to, sheet_name=key)
-	
-	@staticmethod
-	def of(self, obj):
-		output = framecase()
-		if isinstance(obj, str) and os.path.exists(obj):
-			from pathlib import Path
-			ext = Path(obj).suffix
-			if ext == ".excel" or ext == ".xlsx":
-				from openpyxl import load_workbook
-				for sheet_name in load_workbook(obj, read_only=True, keep_links=False).sheetnames:
-					self.add_frame(obj, sheet_name)
-			elif ext == ".json":
-				contents = None
-				with open(obj, "r") as reader:
-					contents = json.load(reader)
-				self._set_from_raw(contents)
-			elif ext == ".sqlite":
-				sheet_names = []
-				connection = sqlite3.connect(obj)
-				current_cursor = connection.cursor()
-				current_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-				for name in current_cursor.fetchall():
-					sheet_names += [name[0]]
-				current_cursor = None
-				for sheet_name in sheet_names:
-					self.add_frame(obj, sheet_name)
-		return output
+		def arx(self):
+			for key,value in self.dyct.items():
+				value.write_to(file_out_to, sheet_name=key)
+		
+		@staticmethod
+		def of(self, obj):
+			output = framecase()
+			if isinstance(obj, str) and os.path.exists(obj):
+				from pathlib import Path
+				ext = Path(obj).suffix
+				if ext == ".excel" or ext == ".xlsx":
+					from openpyxl import load_workbook
+					for sheet_name in load_workbook(obj, read_only=True, keep_links=False).sheetnames:
+						self.add_frame(obj, sheet_name)
+				elif ext == ".json":
+					contents = None
+					with open(obj, "r") as reader:
+						contents = json.load(reader)
+					self._set_from_raw(contents)
+				elif ext == ".sqlite":
+					sheet_names = []
+					connection = sqlite3.connect(obj)
+					current_cursor = connection.cursor()
+					current_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+					for name in current_cursor.fetchall():
+						sheet_names += [name[0]]
+					current_cursor = None
+					for sheet_name in sheet_names:
+						self.add_frame(obj, sheet_name)
+			return output
 
-	def write_to(self, override_writeto:str=None):
-		for key,value in self.items():
-			value.write_to(override_writeto, sheet_name = key)
-		return
+		def write_to(self, override_writeto:str=None):
+			for key,value in self.items():
+				value.write_to(override_writeto, sheet_name = key)
+			return
 
-	def _set_from_raw(self, dyct:dict):
-		for key,value in dyct.items():
-			output[key] = value
+		def _set_from_raw(self, dyct:dict):
+			for key,value in dyct.items():
+				output[key] = value
 
-	@staticmethod
-	def from_raw(self, dyct:dict):
-		output = framecase()
-		output._set_from_raw(dyct)
-		return output
-	def to_raw(self, b64:bool=False):return {key,(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
-	#Overridden methods
-	def __str__(self):return json.dumps(self.to_raw())
-	def __len__(self):return len(self.dyct.values())
-    def __getitem__(self, key):return pd.DataFrame() if key not in self else return self.dyct[key]
-    def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
-    def __delitem__(self, key):del self.dyct[key]
-	def __iter__(self):return iter(self.dyct.values())
-	def __reversed__(self):return reversed(self.dyct.values())
-	def __contains__(self, item):return item in self.dyct
-	def __getattr__(self, name):return self[name]
-	def __setattr__(self, name, value):self[name] = value
-	def __delattr__(self, name): defl self[name]
-	def __int__(self):return len(self)
-	def __enter__(self):return self
-	def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
-	def __deepcopy__(self, memodict={}): return dc(self.dyct)
-	def items(self):return self.dyct.items()
-	def keys(self):return self.dyct.keys()
-	def values(self):return self.dyct.values()
-	def equal_cols(self):return all([value.columns.tolist() == self.dyct.values()[0].columns.tolist() for value in self.dyct.values()])
-	def __getstate__(self):return self.to_raw()
-	def __setstate__(self, state):self._set_from_raw(state)
+		@staticmethod
+		def from_raw(self, dyct:dict):
+			output = framecase()
+			output._set_from_raw(dyct)
+			return output
+		def to_raw(self, b64:bool=False):return {key,(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
+		#Overridden methods
+		def __str__(self):return json.dumps(self.to_raw())
+		def __len__(self):return len(self.dyct.values())
+		def __getitem__(self, key):return pd.DataFrame() if key not in self else return self.dyct[key]
+		def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
+		def __delitem__(self, key):del self.dyct[key]
+		def __iter__(self):return iter(self.dyct.values())
+		def __reversed__(self):return reversed(self.dyct.values())
+		def __contains__(self, item):return item in self.dyct
+		def __getattr__(self, name):return self[name]
+		def __setattr__(self, name, value):self[name] = value
+		def __delattr__(self, name): defl self[name]
+		def __int__(self):return len(self)
+		def __enter__(self):return self
+		def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
+		def __deepcopy__(self, memodict={}): return dc(self.dyct)
+		def items(self):return self.dyct.items()
+		def keys(self):return self.dyct.keys()
+		def values(self):return self.dyct.values()
+		def equal_cols(self):return all([value.columns.tolist() == self.dyct.values()[0].columns.tolist() for value in self.dyct.values()])
+		def __getstate__(self):return self.to_raw()
+		def __setstate__(self, state):self._set_from_raw(state)
 
-	def __nu_name(self):
-		name = base_name
-		itr = 0
-		while str(name+"_"+str(itr)) in self.dyct:
-			itr += 1
-		return str(name+"_"+str(itr))
+		def __nu_name(self):
+			name = base_name
+			itr = 0
+			while str(name+"_"+str(itr)) in self.dyct:
+				itr += 1
+			return str(name+"_"+str(itr))
 except:
 	pass
 
