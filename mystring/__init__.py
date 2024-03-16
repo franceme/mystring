@@ -1,5 +1,6 @@
 import os,sys,re,importlib.machinery,types,json
 from datetime import datetime, MINYEAR
+from copy import deepcopy as dc
 
 def redir():
 	class red(object):
@@ -1022,7 +1023,6 @@ try:
 			self = frame(dc(self).query(string))
 			return self
 
-from copy import deepcopy as dc
 class framecase(object):
 	#https://rszalski.github.io/magicmethods/
 	def __init__(self, file_out_to=None, base_name="unknown_data"):
