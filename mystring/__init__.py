@@ -756,6 +756,7 @@ try:
 				return framecase.export_datetime(parse(object))
 			else:
 				return None
+			return None
 
 		def to_raw_json(self):
 			arrs = self.arr()
