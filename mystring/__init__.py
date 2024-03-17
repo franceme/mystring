@@ -24,16 +24,11 @@ class backup_dir(object):
 	def __floordiv__(self, other):return core_dir + str("*" if other == "*" else str(0 if not isinstance(other, int) else other).zfill(self.prefix))
 	def __div__(self, other):return None if (not isinstance(other, int) or other not in self) else str(self // other)
 	def __dir__(self):os.mkdir(str(self));return max(self)
-	def __list__(self):
-		from glob import glob as re
-		output = re(self.core_dir+"_*")
-		#sorting = lambda test_string:list(map(int, re.findall(r'\d+', test_string)))[0]
-		output.sort()#(key=sorting)
-		return output
+	def __abs__(self):from glob import glob as re;output = re(self.core_dir+"_*");output.sort();return output
 	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in self(list)])
-	def __len__(self):return sum([1 for x in list(self)])#list(self).__len__()
-	def __max__(self):return str(list(self)[-1])
-	def __min__(self):return str(list(self)[0])
+	def __len__(self):return abs(self).__len__()
+	def __max__(self):return str(abs(self)[-1])
+	def __min__(self):return str(abs(self)[0])
 	def __pos__(self):return 0 if len(self) == 0 else int(max(self).replace(self.core_dir+"_", ""))
 	def __invert__(self):return 0 if len(self) == 0 else int(min(self).replace(self.core_dir+"_",""))
 
