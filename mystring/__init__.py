@@ -17,6 +17,7 @@ def redir():
 	return red()
 
 class backup_dir(object):
+	#https://rszalski.github.io/magicmethods/ < Helpful Link
 	def __init__(self, core_dir:str, prefix=5):
 		self.core_dir = core_dir
 		self.prefix=prefix
