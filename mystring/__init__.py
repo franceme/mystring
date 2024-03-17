@@ -1121,9 +1121,16 @@ try:
 		def items(self):return list(self.dyct.items())
 		def keys(self):return list(self.dyct.keys())
 		def values(self):return list(self.dyct.values())
-		def equal_cols(self):return all([value.columns.tolist() == self.values()[0].columns.tolist() for value in self.values()])
 		def __getstate__(self):return self.to_raw()
 		def __setstate__(self, state):self._set_from_raw(state)
+
+
+		def equal_cols(self):
+			sample_kolz = self.values()[0].kolz
+			for value in self.values:
+				if len(list( set(value.kolz)-set(sample_kolz)  )) > 0:
+					return False
+			return True
 
 		def __nu_name(self):
 			name = base_name
