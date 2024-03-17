@@ -879,22 +879,14 @@ try:
 
 			if not os.path.exists(file):
 				return frame(output)
+			db_tables = frame.of_sheet_names(file)
+			if table_name not in db_tables:
+				print("table {0} not within [{1}]".format(table_name, ', '.join(db_tables)))
+				return frame(output)
 
 			connection = sqlite3.connect(file)
-			table_names, found = [], False
 			current_cursor = connection.cursor()
-
-			current_cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table';")
-			for name in current_cursor.fetchall():
-				table_names += [name[0]]
-				if table_name == name[0]:
-					output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), connection)
-					found = True
-					break
-
-			if not found:
-				print("table {0} not within [{1}]".format(table_name, ', '.join(table_names)))
-
+			output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), connection)
 			current_cursor = None
 			connection.close()
 
@@ -950,7 +942,25 @@ try:
 
 		def ofQuery(self, query:str):
 			return frame(self.query(query))
-	
+
+		@staticmethod
+		def of_sheet_names(obj_or_file_path):
+			output = []
+			if isinstance(obj_or_file_path, str) and os.path.exists(obj_or_file_path):
+				if ext == ".excel" or ext == ".xlsx":
+					from openpyxl import load_workbook
+					for sheet_name in load_workbook(obj_or_file_path, read_only=True, keep_links=False).sheetnames:
+						output += [sheet_name]
+				elif ext == ".sqlite":
+					connection = sqlite3.connect(obj_or_file_path)
+					current_cursor = connection.cursor()
+					current_cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table';")
+					for name in current_cursor.fetchall():
+						output += [name[0]]
+					current_cursor = None
+					connection.close()
+			return output
+
 		@staticmethod
 		def of(obj_or_file_path, sheet_name:str="Sheet1", dbhub_apikey=None, dbhub_owner=None, dbhub_name=None):
 			data = None
@@ -1062,8 +1072,7 @@ try:
 				from pathlib import Path
 				ext = Path(obj).suffix
 				if ext == ".excel" or ext == ".xlsx":
-					from openpyxl import load_workbook
-					for sheet_name in load_workbook(obj, read_only=True, keep_links=False).sheetnames:
+					for sheet_name in frame.of_sheet_names(obj):
 						output.add_frame(obj, sheet_name)
 				elif ext == ".json":
 					contents = None
@@ -1071,14 +1080,7 @@ try:
 						contents = json.load(reader)
 					output._set_from_raw(contents)
 				elif ext == ".sqlite":
-					sheet_names = []
-					connection = sqlite3.connect(obj)
-					current_cursor = connection.cursor()
-					current_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-					for name in current_cursor.fetchall():
-						sheet_names += [name[0]]
-					current_cursor = None
-					for sheet_name in sheet_names:
+					for sheet_name in frame.of_sheet_names(obj):
 						output.add_frame(obj, sheet_name)
 			return output
 
