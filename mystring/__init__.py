@@ -886,7 +886,7 @@ try:
 
 			connection = sqlite3.connect(file)
 			current_cursor = connection.cursor()
-			output = pd.read_sql_query("SELECT * FROM {0}".format(name[0]), connection)
+			output = pd.read_sql_query("SELECT * FROM {0}".format(table_name), connection)
 			current_cursor = None
 			connection.close()
 
