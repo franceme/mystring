@@ -24,7 +24,7 @@ class backup_dir(object):
 	def __floordiv__(self, other):return self.core_dir + "_" + str("*" if other == "*" else str(0 if not isinstance(other, int) else other).zfill(self.prefix))
 	def __div__(self, other):return None if (other not in self) else str(self // other)
 	def __truediv__(self,other):return self.__div__(other) #Python3 uses truediv and not div?? simply redirect to __div__
-	def __dir__(self):os.mkdir(self // int(self));return max(self)
+	def __dir__(self):os.mkdir(self.__floordiv__(int(self)));return max(self)
 	def __abs__(self):from glob import glob as re;output = re(self.core_dir+"_*");output.sort();return output
 	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in abs(self)])
 	def __enter__(self):return self // int(self)
