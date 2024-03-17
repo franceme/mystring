@@ -30,8 +30,8 @@ class backup_dir(object):
 	def __len__(self):return abs(self).__len__()
 	def __max__(self):return str(abs(self)[-1])
 	def __min__(self):return str(abs(self)[0])
-	def __pos__(self):return 0 if len(self) == 0 else int(str(abs(self)[-1]).replace(dyr.core_dir, "").replace("_",""))
-	def __invert__(self):return 0 if len(self) == 0 else int(str(abs(self)[0]).replace(dyr.core_dir, "").replace("_",""))
+	def __pos__(self):return 0 if len(self) == 0 else int(str(abs(self)[-1]).replace(self.core_dir, "").replace("_",""))
+	def __invert__(self):return 0 if len(self) == 0 else int(str(abs(self)[0]).replace(self.core_dir, "").replace("_",""))
 
 
 def levenshtein_distance(first, second, percent=True):
