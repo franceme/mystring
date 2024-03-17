@@ -21,16 +21,17 @@ class backup_dir(object):
 		self.core_dir = core_dir
 		self.prefix=prefix
 
-	def __floordiv__(self, other):return core_dir + str("*" if other == "*" else str(0 if not isinstance(other, int) else other).zfill(self.prefix))
-	def __div__(self, other):return None if (not isinstance(other, int) or other not in self) else str(self // other)
+	def __floordiv__(self, other):return self.core_dir + "_" + str("*" if other == "*" else str(0 if not isinstance(other, int) else other).zfill(self.prefix))
+	def __div__(self, other):return None if (not isinstance(other, int) or str(other).zfill(self.prefix) not in self) else str(self // other)
+	def __truediv__(self,other):return self.__div__(other) #Python3 uses truediv and not div?? simply redirect to __div__
 	def __dir__(self):os.mkdir(str(self));return max(self)
 	def __abs__(self):from glob import glob as re;output = re(self.core_dir+"_*");output.sort();return output
-	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in self(list)])
+	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in abs(self)])
 	def __len__(self):return abs(self).__len__()
 	def __max__(self):return str(abs(self)[-1])
 	def __min__(self):return str(abs(self)[0])
-	def __pos__(self):return 0 if len(self) == 0 else int(max(self).replace(self.core_dir+"_", ""))
-	def __invert__(self):return 0 if len(self) == 0 else int(min(self).replace(self.core_dir+"_",""))
+	def __pos__(self):return 0 if len(self) == 0 else int(str(abs(self)[-1]).replace(dyr.core_dir, "").replace("_",""))
+	def __invert__(self):return 0 if len(self) == 0 else int(str(abs(self)[0]).replace(dyr.core_dir, "").replace("_",""))
 
 
 def levenshtein_distance(first, second, percent=True):
