@@ -1118,9 +1118,9 @@ try:
 		def __enter__(self):return self
 		def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
 		def __deepcopy__(self, memodict={}): return dc(self.dyct)
-		def items(self):return self.dyct.items()
-		def keys(self):return self.dyct.keys()
-		def values(self):return self.dyct.values()
+		def items(self):return list(self.dyct.items())
+		def keys(self):return list(self.dyct.keys())
+		def values(self):return list(self.dyct.values())
 		def equal_cols(self):return all([value.columns.tolist() == self.dyct.values()[0].columns.tolist() for value in self.dyct.values()])
 		def __getstate__(self):return self.to_raw()
 		def __setstate__(self, state):self._set_from_raw(state)
