@@ -1051,7 +1051,7 @@ try:
 				frame_to_add = frame(obj)
 			elif isinstance(obj, str):
 				try:
-					output = frame.of(obj)
+					output = frame.of(obj, sheet_name=obj_name)
 					if output is not None:
 						frame_to_add = output
 				except:pass
