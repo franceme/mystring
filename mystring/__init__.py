@@ -50,6 +50,9 @@ def levenshtein_distance(first, second, percent=True):
 	else:
 		return diff_value
 
+def exec(command, display=True, lines=False):
+	return string.of(command).exec(display=display, lines=lines)
+
 class string(str):
 	def equals(self,*args, upper_check=False, lower_check=False):
 		matches = [lambda x:x]
