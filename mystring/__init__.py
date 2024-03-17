@@ -1127,7 +1127,7 @@ try:
 
 		def equal_cols(self):
 			sample_kolz = self.values()[0].kolz
-			for value in self.values:
+			for value in self.values():
 				if len(list( set(value.kolz)-set(sample_kolz)  )) > 0:
 					return False
 			return True
