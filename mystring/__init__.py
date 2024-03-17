@@ -26,7 +26,7 @@ class backup_dir(object):
 	def __dir__(self):os.mkdir(str(self));return max(self)
 	def __list__(self):
 		from glob import glob as re
-		output = re(core_dir+"_*")
+		output = re(self.core_dir+"_*")
 		#sorting = lambda test_string:list(map(int, re.findall(r'\d+', test_string)))[0]
 		output.sort()#(key=sorting)
 		return output
