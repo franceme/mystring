@@ -16,12 +16,22 @@ def redir():
 			sys.stdout = self.stream
 	return red()
 
-def backup_name(self, foil_name):
-	import pathlib
-	itr = 0;file_ext = pathlib.Path(foil_name).suffix
-	while os.path.exists(foil_name.replace(file_ext, "_"+str(itr).zfill(5)+"_"+file_ext)):
-		itr += 1
-	return foil_name.replace(file_ext, "_"+str(itr).zfill(5)+"_"+file_ext)
+class backup_dir(object):
+	def __init__(self, core_dir:str):
+		self.core_dir = core_dir
+
+	def __list__(self):
+		from glob import glob as re
+		output = re(core_dir+"_*")
+		sorting = lambda test_string:list(map(int, re.findall(r'\d+', test_string)))[0]
+		output.sort(key=sorting)
+		return output
+	def __len__(self):return len(list(self))
+	def __max__(self):return str(list(self)[-1])
+	def __min__(self):return str(list(self)[0])
+	def __pos__(self):return 0 if len(self) == 0 else int(max(self).replace(self.core_dir+"_", ""))
+	def __invert__(self):return 0 if len(self) == 0 else int(min(self).replace(self.core_dir+"_",""))
+
 
 def levenshtein_distance(first, second, percent=True):
 	if isinstance(first, list):
