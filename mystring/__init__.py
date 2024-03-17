@@ -762,7 +762,7 @@ try:
 			arrs = self.arr()
 			for row in arrs:
 				for key,value in row.items():
-					if isinstance(value, datetime):
+					if isinstance(value, datetime.datetime):
 						value = frame.export_datetime(value)
 			return json.dumps(arrs)
 
