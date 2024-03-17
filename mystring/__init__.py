@@ -16,6 +16,13 @@ def redir():
 			sys.stdout = self.stream
 	return red()
 
+def backup_name(self, foil_name):
+	import pathlib
+	itr = 0;file_ext = pathlib.Path(foil_name).suffix
+	while os.path.exists(foil_name.replace(file_ext, "_"+str(itr).zfill(5)+"_"+file_ext)):
+		itr += 1
+	return foil_name.replace(file_ext, "_"+str(itr).zfill(5)+"_"+file_ext)
+
 def levenshtein_distance(first, second, percent=True):
 	if isinstance(first, list):
 		first = "".join(first)
