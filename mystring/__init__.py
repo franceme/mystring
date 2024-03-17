@@ -947,6 +947,8 @@ try:
 		def of_sheet_names(obj_or_file_path):
 			output = []
 			if isinstance(obj_or_file_path, str) and os.path.exists(obj_or_file_path):
+				from pathlib import Path
+				ext = Path(obj).suffix
 				if ext == ".excel" or ext == ".xlsx":
 					from openpyxl import load_workbook
 					for sheet_name in load_workbook(obj_or_file_path, read_only=True, keep_links=False).sheetnames:
