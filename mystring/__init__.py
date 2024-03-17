@@ -31,7 +31,7 @@ class backup_dir(object):
 		output.sort()#(key=sorting)
 		return output
 	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in self(list)])
-	def __len__(self):return list(self).__len__()
+	def __len__(self):return sum([1 for x in list(self)])#list(self).__len__()
 	def __max__(self):return str(list(self)[-1])
 	def __min__(self):return str(list(self)[0])
 	def __pos__(self):return 0 if len(self) == 0 else int(max(self).replace(self.core_dir+"_", ""))
