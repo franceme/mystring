@@ -1437,13 +1437,20 @@ class foldentre(object):
 		self.new_path = new_path
 		self.clean = clean
 		self.path = None
-	
+		self.__set_strings()
+
+	def __set_strings(self):
+		self.ini_path = string.of(self.ini_path)
+		self.new_path = string.of(self.new_path)
+		self.clean = string.of(self.clean)
+
 	def __enter__(self):
 		if not os.path.exists(self.new_path):
 			os.mkdir(self.new_path)
 		os.chdir(self.new_path)
 		self.path = self.new_path
-		return self
+		self.__set_strings()
+		return self.path
 	
 	def __exit__(self,type=None, value=None, traceback=None):
 		os.chdir(self.ini_path)
@@ -1451,6 +1458,7 @@ class foldentre(object):
 			import shutil
 			shutil.rmtree(self.new_path)
 		self.path = self.ini_path
+		self.__set_strings()
 		return self
 
 def from_b64(contents,file=None):
