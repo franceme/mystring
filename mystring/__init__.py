@@ -111,7 +111,7 @@ class string(str):
 	def __truediv__(self,other):return self.path_add(other) #Python3 uses truediv and not div?? simply redirect to __div__
 	def __idiv__(self, other):self = string(self / string(other));return self
 	def __rand__(self, other):return string(self + string(other))#;return self
-	def __iand__(self, other):self = self & other;return self
+	def __iand__(self, other):self = self & string(other);return self
 
 	def rep(self,substring):
 		self = self.replace(substring,'')
