@@ -1642,6 +1642,9 @@ def my_ip():
 	return ip
 
 
+def gh_file_to_raw_url(self, owner_repo, filepath,branch:str="main"):
+	return string.of("https://raw.githubusercontent.com") / owner_repo / branch / filepath
+
 try:
 	import requests, pause
 	class gh_api_status(object):
