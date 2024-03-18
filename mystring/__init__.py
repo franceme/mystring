@@ -16,7 +16,7 @@ def redir():
 			sys.stdout = self.stream
 	return red()
 
-str = lambda some_string:string.of(some_string)
+styr = lambda some_string:string.of(some_string)
 
 class backup_dir(object):
 	#https://rszalski.github.io/magicmethods/ < Helpful Link
