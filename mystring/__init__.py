@@ -1663,14 +1663,13 @@ except: pass
 
 try:
 	import waybackpy
-	from copy import deepcopy as dc
 
 	class gh_url(object):
 		def __init__(self,url,token=None,verify=True,commit=None,tag=None):
-			self.url = string(dc(url))
+			self.url = string(url)
 			self.token = string(token)
 			self.verify = verify
-			self.stringurl = string(dc(url))
+			self.stringurl = string(url)
 			self.commit = string(commit)
 			self.tag = string(tag)
 			self.api_watch = gh_api_status()
