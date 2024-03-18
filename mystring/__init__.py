@@ -26,9 +26,13 @@ def of_list(obj: object, functor=lambda x:x) -> list:
 
 class backup_dir(object):
 	#https://rszalski.github.io/magicmethods/ < Helpful Link
-	def __init__(self, core_dir:str, prefix=5):
+	def __init__(self, core_dir:str, prefix=5,enter:bool=False,clean:bool=False):
 		self.core_dir = core_dir
 		self.prefix=prefix
+		self.enter=enter
+		self.clean=clean
+		self.start_dir = os.getcwd()
+		self.used_dir = None
 
 	def __floordiv__(self, other):return self.core_dir + "_" + str("*" if other == "*" else str(other).zfill(self.prefix))
 	def __div__(self, other):return None if (other not in self) else str(self // other)
@@ -36,8 +40,19 @@ class backup_dir(object):
 	def __invert__(self):top = int(self);os.mkdir(self.__floordiv__(top));top = str(self // top);return "".join(top)
 	def __abs__(self):from glob import glob as re;output = re(self.core_dir+"_*");output.sort();return output
 	def __contains__(self, other):return any([str(other).lower() in _dir.lower() for _dir in abs(self)])
-	def __enter__(self, num=None):return self // num if num is not None else ~self
-	def __exit__(self,exception_type=None, exception_value=None, traceback=None):return
+	def __enter__(self, num=None):
+		path = self // num if num is not None else ~self
+		if self.enter:
+			os.chdir(path)
+			self.used_dir = path
+		return path
+	def __exit__(self,exception_type=None, exception_value=None, traceback=None):
+		if self.enter:
+			os.chdir(self.start_dir)
+		if self.clean and self.used_dir:
+			import shutil
+			shutil.rmtree(self.used_dir)
+		return
 	def __len__(self):return abs(self).__len__()
 	def __max__(self):return str(self.__abs__()[-1])
 	def __min__(self):return str(self.__abs__()[0])
