@@ -1097,8 +1097,17 @@ try:
 			return self
 
 		def arx(self):
-			for key,value in self.dyct.items():
+			for key,value in self.items():
 				value.write_to(file_out_to, sheet_name=key)
+		
+		def query(self, query_string:str):
+			output = {}
+			for key,value in self.items():
+				sub_output = None
+				try:sub_output=frame(value.query(query_string))
+				except:pass
+				output[key] = sub_output
+			return output
 		
 		@staticmethod
 		def of(obj):
