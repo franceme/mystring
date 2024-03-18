@@ -18,6 +18,12 @@ def redir():
 
 styr = lambda some_string:string.of(some_string)
 
+def of_list(obj: object, functor=lambda x:x) -> list:
+	if isinstance(obj, list):
+		return [functor(x) for x in obj]
+	else:
+		return [functor(obj)]
+
 class backup_dir(object):
 	#https://rszalski.github.io/magicmethods/ < Helpful Link
 	def __init__(self, core_dir:str, prefix=5):
