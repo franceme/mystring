@@ -96,7 +96,7 @@ class string(str):
 			return string(super().replace(x,y))
 
 	def path_add(self, other):
-		self = string(os.path.join(self, other))
+		self = string(os.path.join(self, string(other)))
 		return self
 
 	def __div__(self, other):return self.path_add(other)
