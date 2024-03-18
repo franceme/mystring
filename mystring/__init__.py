@@ -95,6 +95,13 @@ class string(str):
 		else:
 			return string(super().replace(x,y))
 
+	def path_add(self, other):
+		self = string(os.path.join(self, other))
+		return self
+
+	def __div__(self, other):return self.path_add(other)
+	def __truediv__(self,other):return self.path_add(other) #Python3 uses truediv and not div?? simply redirect to __div__
+
 	def rep(self,substring):
 		self = self.replace(substring,'')
 		return self
