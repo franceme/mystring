@@ -100,10 +100,12 @@ class string(str):
 		else:
 			return string(super().replace(x,y))
 
-	def path_add(self, other):self = string(os.path.join(self, string(other)));return self
+	def path_add(self, other):return string(os.path.join(self, string(other)))#;return self
 	def __div__(self, other):return self.path_add(other)
 	def __truediv__(self,other):return self.path_add(other) #Python3 uses truediv and not div?? simply redirect to __div__
-	def __rand__(self, other):self = string(self + string(other));return self
+	def __idiv__(self, other):self = string(self / string(other));return self
+	def __rand__(self, other):return string(self + string(other))#;return self
+	def __iand__(self, other):self = self & other;return self
 
 	def rep(self,substring):
 		self = self.replace(substring,'')
