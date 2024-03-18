@@ -1412,16 +1412,25 @@ class foil(object):
 		]])
 
 class foldentre(object):
-	def __init__(self,new_path:str,ini_path:str = os.path.abspath(os.curdir)):
+	def __init__(self,new_path:str,ini_path:str = os.path.abspath(os.curdir), clean:bool=True):
 		self.ini_path = ini_path
 		self.new_path = new_path
+		self.clean = clean
+		self.path = None
 	
 	def __enter__(self):
+		if not os.path.exists(self.new_path):
+			os.mkdir(self.new_path)
 		os.chdir(self.new_path)
+		self.path = self.new_path
 		return self
 	
-	def __exit__(self,type, value, traceback):
-		os.chdir(ini_path)
+	def __exit__(self,type=None, value=None, traceback=None):
+		os.chdir(self.ini_path)
+		if self.clean:
+			import shutil
+			shutil.rmtree(self.new_path)
+		self.path = self.ini_path
 		return self
 
 def from_b64(contents,file=None):
