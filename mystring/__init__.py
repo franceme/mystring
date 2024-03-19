@@ -1217,7 +1217,7 @@ try:
 	class framepipe(ABC):
 		def __init__(self, columns_needed=[], break_flow:bool=False):
 			super().__init__()
-			self.columns_needed = columns_needed
+			self.columns_needed = [x for x in columns_needed if x is not None]
 			self.break_flow = break_flow
 			self.iterated = None
 			self.__etherial = None
