@@ -16,6 +16,13 @@ def redir():
 			sys.stdout = self.stream
 	return red()
 
+def isinstances(object, *classes):
+	output = False
+	if isinstance(classes, list):
+		for classe in classes:
+			return output or isinstances(object, classe)
+	return output or isinstance(object, classes)
+
 styr = lambda some_string:string.of(some_string)
 
 def of_list(obj: object, functor=lambda x:x) -> list:
