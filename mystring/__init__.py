@@ -1265,7 +1265,7 @@ try:
 			del self.etherial()[item]
 
 		def etherial(self, hugg_repo=None, *foils):
-			if self.__etherial is not None:
+			if self.__etherial is None:
 				class py_util(object):
 					def __init__(self, repo, foils):
 						self.repo = repo
