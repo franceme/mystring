@@ -1213,6 +1213,13 @@ try:
 			super().__init__()
 			self.columns_needed = columns_needed
 			self.break_flow = break_flow
+			self.iterated = None
+
+		def rows(self, frame_or_dataframe):
+			frame_or_dataframe_arr = frame_or_dataframe.arr()
+			for row in frame_or_dataframe_arr:
+				yield row
+			self.iterated = frame.from_arr(frame_or_dataframe_arr)
 
 		@abstractmethod
 		def apply(self, frame_or_dataframe):
