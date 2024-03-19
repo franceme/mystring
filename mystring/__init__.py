@@ -1220,6 +1220,7 @@ try:
 			self.columns_needed = columns_needed
 			self.break_flow = break_flow
 			self.iterated = None
+			self.__etherial = None
 
 		def rows(self, frame_or_dataframe):
 			frame_or_dataframe_arr = frame_or_dataframe.arr()
