@@ -926,6 +926,12 @@ try:
 		@property
 		def kolz(self):
 			return lyst(self.columns.tolist())
+
+		@property
+		def kols(self):return self.kolz
+
+		@property
+		def cols(self):return self.kolz
 		
 		def enumerate_kol(self):
 			for column_itr, column in enumerate(self.kolz):
