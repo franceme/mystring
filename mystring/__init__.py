@@ -1214,6 +1214,7 @@ try:
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
+	import hugg
 	class framepipe(ABC):
 		def __init__(self, columns_needed=[], break_flow:bool=False):
 			super().__init__()
@@ -1255,6 +1256,36 @@ try:
 						return my_frame
 
 			return self.apply(my_frame)
+
+		def etherial(hugg_repo:hugg.mem, *foils):
+			class py_util(object):
+				def __init__(self, repo, foils):
+					self.repo = repo
+					self.foils = foils
+				def __enter__(self):
+					import json, os, sys
+					output = {}
+					for foil in self.foils:
+						output[foil.replace('.py','').replace('/','.')] = core.impor(foil, delete=True)
+						output[foil.replace('.py','')] = core.impor(foil, delete=True)
+						#Double up incase using slashy boys
+					return output
+				def __exit__(self, a=None,b=None,c=None):
+					import json, os, sys
+					for foil in self.foils:
+						if os.path.exists(foil):
+							os.remove(foil)
+				def __getitem__(self, item):
+					import json, os, sys
+					return None if item not in os.environ else json.loads(os.environ[item])
+				def __setitem__(self, item, value):
+					import json, os, sys
+					os.environ[item] = json.dumps(value)
+				def __delitem__(self, item):
+					import json, os, sys
+					if item in os.environ:
+						del os.environ[item]
+			return py_util(repo=hugg_repo, foils=foils)
 except:
 	pass
 
