@@ -1263,7 +1263,7 @@ try:
 		def __delitem__(self, item):
 			del self.etherial()[item]
 
-		def etherial(hugg_repo=None, *foils):
+		def etherial(self, hugg_repo=None, *foils):
 			if self.__etherial is not None:
 				class py_util(object):
 					def __init__(self, repo, foils):
