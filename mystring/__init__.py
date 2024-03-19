@@ -1209,9 +1209,10 @@ try:
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
 	class framepipe(ABC):
-		def __init__(self, columns_needed=[]):
+		def __init__(self, columns_needed=[], break_flow:bool=False):
 			super().__init__()
 			self.columns_needed = columns_needed
+			self.break_flow = break_flow
 
 		@abstractmethod
 		def apply(self, frame_or_dataframe):
@@ -1224,14 +1225,20 @@ try:
 			elif isinstance(frame_or_dataframe, pd.DataFrame):
 				my_frame = frame(frame_or_dataframe)
 			else:
-				print("Frame isn't either a dataframe or mystring.frame")
+				msg = "Frame isn't either a dataframe or mystring.frame"
+				if break_flow:
+					raise Exception(msg)
+				print(msg)
 				return frame_or_dataframe
 
 			if self.columns_needed != []:
 				frame_kols = list(my_frame.kols)
 				for column_needed in self.columns_needed:
 					if column_needed not in frame_kols:
-						print("Frame doesn't at least include the column: {0}".format(column_needed))
+						msg = "Frame doesn't at least include the column: {0}".format(column_needed)
+						if break_flow:
+							raise Exception(msg)
+						print(msg)
 						return my_frame
 
 			return self.apply(my_frame)
