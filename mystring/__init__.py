@@ -1214,7 +1214,6 @@ try:
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
-	import hugg
 	class framepipe(ABC):
 		def __init__(self, columns_needed=[], break_flow:bool=False):
 			super().__init__()
@@ -1264,7 +1263,7 @@ try:
 		def __delitem__(self, item):
 			del self.etherial()[item]
 
-		def etherial(hugg_repo:hugg.mem=None, *foils):
+		def etherial(hugg_repo=None, *foils):
 			if self.__etherial is not None:
 				class py_util(object):
 					def __init__(self, repo, foils):
