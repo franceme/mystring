@@ -1240,7 +1240,7 @@ try:
 				my_frame = frame(frame_or_dataframe)
 			else:
 				msg = "Frame isn't either a dataframe or mystring.frame"
-				if break_flow:
+				if self.break_flow:
 					raise Exception(msg)
 				print(msg)
 				return frame_or_dataframe
@@ -1250,7 +1250,7 @@ try:
 				for column_needed in self.columns_needed:
 					if column_needed not in frame_kols:
 						msg = "Frame doesn't at least include the column: {0}".format(column_needed)
-						if break_flow:
+						if self.break_flow:
 							raise Exception(msg)
 						print(msg)
 						return my_frame
