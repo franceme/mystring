@@ -1263,6 +1263,8 @@ try:
 			self.etherial()[item] = value
 		def __delitem__(self, item):
 			del self.etherial()[item]
+		def __contains__(self, item):
+			return item in self.etherial()
 
 		def etherial(self, hugg_repo=None, *foils):
 			if self.__etherial is None:
@@ -1285,14 +1287,16 @@ try:
 								os.remove(foil)
 					def __getitem__(self, item):
 						import json, os, sys
-						return None if item not in os.environ else json.loads(os.environ[item])
+						return None if item not in self else json.loads(os.environ[item])
 					def __setitem__(self, item, value):
 						import json, os, sys
 						os.environ[item] = json.dumps(value)
 					def __delitem__(self, item):
 						import json, os, sys
-						if item in os.environ:
+						if item in self:
 							del os.environ[item]
+					def __contains__(self, item):
+						return item in os.environ:
 				self.__etherial = py_util(repo=hugg_repo, foils=foils)
 			return self.__etherial
 except:
