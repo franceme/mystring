@@ -1274,8 +1274,8 @@ try:
 						import json, os, sys
 						output = {}
 						for foil in self.foils:
-							output[foil.replace('.py','').replace('/','.')] = core.impor(foil, delete=True)
-							output[foil.replace('.py','')] = core.impor(foil, delete=True)
+							output[foil.replace('.py','').replace('/','.')] = self.repo.impor(foil, delete=True)
+							output[foil.replace('.py','')] = self.repo.impor(foil, delete=True)
 							#Double up incase using slashy boys
 						return output
 					def __exit__(self, a=None,b=None,c=None):
