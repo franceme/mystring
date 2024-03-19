@@ -1303,7 +1303,7 @@ try:
 						if item in self:
 							del os.environ[item]
 					def __contains__(self, item):
-						return item in os.environ:
+						return item in os.environ
 				self.__etherial = py_util(repo=hugg_repo, foils=foils)
 			return self.__etherial
 except:
