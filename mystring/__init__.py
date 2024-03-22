@@ -686,6 +686,7 @@ try:
 				t_output = {
 					"MatchedColumn":match_column_value
 				}
+				has_any = False
 
 				old_compared = self[self[match_column] == match_column_value]
 				old_compared_num_rows = len(old_compared.index)
@@ -700,10 +701,14 @@ try:
 						t_output["OLD:"+shared_kol] = "Num Columns Don't Match and/or not unique"
 						t_output["NEW:"+shared_kol] = "Num Columns Don't Match and/or not unique"
 					else:
+						if str(old_compared_rows[0][shared_kol]) != str(new_compared_rows[0][shared_kol]):
+							has_any = True
+
 						t_output["OLD:"+shared_kol] = old_compared_rows[0][shared_kol]
 						t_output["NEW:"+shared_kol] = new_compared_rows[0][shared_kol]
 
-				output += [t_output]
+				if has_any:
+					output += [t_output]
 			return frame.from_arr(output)
 
 		def col_exists(self,column):
