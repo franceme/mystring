@@ -665,7 +665,7 @@ try:
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
 
-		def diff(self, obj, match_column):
+		def diff(self, obj, match_column='index'):
 			if not isinstances(obj, frame, pd.DataFrame):
 				print("The object it's being compared to is not a dataframe")
 				return self
