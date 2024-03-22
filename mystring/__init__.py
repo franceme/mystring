@@ -665,6 +665,47 @@ try:
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
 
+		def diff(self, obj, match_column):
+			if not isinstances(obj, frame, pd.DataFrame):
+				print("The object it's being compared to is not a dataframe")
+				return self
+
+			if not isinstance(obj, frame):
+				obj = frame(obj)
+
+			shared_kolz = list(
+				set(self.cols).intersection(set(obj.cols))
+			)
+
+			if len(shared_kolz) == 0:
+				print("There are no shared columns")
+				return self
+			
+			output = []
+			for match_column_value in self[match_column].unique().tolist():
+				t_output = {
+					"MatchedColumn":match_column_value
+				}
+
+				old_compared = self[self[match_column] == match_column_value]
+				old_compared_num_rows = len(old_compared.index)
+				old_compared_rows = frame(old_compared).arr()
+
+				new_compared = obj[obj[match_column] == match_column_value]
+				new_compared_num_rows = len(new_compared.index)
+				new_compared_rows = frame(new_compared).arr()
+
+				for shared_kol in shared_kolz:
+					if old_compared_num_rows != 1 or new_compared_num_rows != 1:
+						t_output["OLD:"+shared_kol] = "Num Columns Don't Match and/or not unique"
+						t_output["NEW:"+shared_kol] = "Num Columns Don't Match and/or not unique"
+					else:
+						t_output["OLD:"+shared_kol] = old_compared_rows[0][shared_kol]
+						t_output["NEW:"+shared_kol] = new_compared_rows[0][shared_kol]
+
+				output += [t_output]
+			return frame.from_arr(output)
+
 		def col_exists(self,column):
 			return column in self.columns
 
