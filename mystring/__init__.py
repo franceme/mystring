@@ -709,7 +709,8 @@ try:
 
 				if has_any:
 					output += [t_output]
-			return frame.from_arr(output)
+
+			return frame.from_arr(output) if len(output) > 0 else frame(pd.DataFrame())
 
 		def col_exists(self,column):
 			return column in self.columns
