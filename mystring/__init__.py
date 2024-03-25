@@ -666,10 +666,10 @@ try:
 			super(frame,self).__init__(*args,**kwargs)
 
 		@property
-		def num_rows():return len(self.index)
+		def num_rows(self):return len(self.index)
 
 		@property
-		def num_cols():return len(self.kols)
+		def num_cols(self):return len(self.kols)
 
 		def dyff(self, obj, match_column='index'):
 			if not isinstances(obj, frame, pd.DataFrame):
