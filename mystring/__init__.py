@@ -665,6 +665,12 @@ try:
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
 
+		@property
+		def num_rows():return len(self.index)
+
+		@property
+		def num_cols():return len(self.kols)
+
 		def dyff(self, obj, match_column='index'):
 			if not isinstances(obj, frame, pd.DataFrame):
 				print("The object it's being compared to is not a dataframe")
