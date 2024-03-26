@@ -665,6 +665,9 @@ try:
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
 
+		def query(self, query_string):
+			return frame(super(type(self), self).query(query_string))
+
 		@property
 		def num_rows(self):return len(self.index)
 
@@ -1187,6 +1190,15 @@ try:
 		def __iadd__(self, other):
 			self.add_frame(other)
 			return self
+
+		def query(query_string):
+			nu_framecase = ()
+			for key,value in self.items():
+				nu_framecase.add_frame(
+					obj=value.query(query_string),
+					obj_name=key
+				)
+			return nu_framecase
 
 		def arx(self):
 			for key,value in self.items():
