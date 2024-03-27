@@ -1286,7 +1286,7 @@ try:
 		def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
 		def __deepcopy__(self, memodict={}): return dc(self.dyct)
 		def items(self):return list(self.dyct.items())
-		def keys(self):return list(self.dyct.keys())
+		def keys(self, key_filter=lambda x:True):return [x for x in self.dyct.keys() if key_filter(x)]
 		def values(self):return list(self.dyct.values())
 		def __getstate__(self):return self.to_raw()
 		def __setstate__(self, state):self._set_from_raw(state)
