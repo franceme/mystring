@@ -997,7 +997,7 @@ try:
 		@property
 		def kols(self):return self.kolz
 
-		def cols(self, contains_string):return [x for x in self.kolz if contains_string in str(x)]
+		def cols(self, contains_string=None):return [x for x in self.kolz if (contains_string is None) or (contains_string in str(x))]
 		def collings(self, string_check = lambda x:True):return [x for x in self.kolz if string_check(str(x))]
 		
 		def enumerate_kol(self):
