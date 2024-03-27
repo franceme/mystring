@@ -1,14 +1,23 @@
-import os,sys,re,importlib.machinery,types,json
+import os,sys,re,importlib.machinery,types,json,time
 from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 
 class stringwrap(object):
-	def __init__(self, string=("-"*25)):
+	def __init__(self, string=("-"*25), time_difference=False):
 		self.string = string
+		self.time_difference = time_difference
+		self.start = None
+		self.end = None
 	def __enter__(self):
 		print(self.string)
+		if self.time_difference:
+			self.start = time.time()
 		return self
 	def __exit__(self, *args, **kwargs):
+		if self.time_difference:
+			self.end = time.time()
+			duration_seconds = round((self.end - self.start), 2)
+			print(str(duration_seconds) + " Seconds")
 		print(self.string)
 		return
 
