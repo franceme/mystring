@@ -669,6 +669,10 @@ try:
 			return frame(super(type(self), self).query(query_string))
 
 		@property
+		def T(self):
+			return frame(super(type(self), self).T)
+
+		@property
 		def num_rows(self):return len(self.index)
 
 		@property
@@ -993,8 +997,8 @@ try:
 		@property
 		def kols(self):return self.kolz
 
-		@property
-		def cols(self):return self.kolz
+		def cols(self, contains_string):return [x for x in self.kolz if contains_string in str(x)]
+		def collings(self, string_check = lambda x:True):return [x for x in self.kolz if string_check(str(x))]
 		
 		def enumerate_kol(self):
 			for column_itr, column in enumerate(self.kolz):
