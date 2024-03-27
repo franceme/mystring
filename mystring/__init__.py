@@ -1245,6 +1245,22 @@ try:
 			for key,value in dyct.items():
 				output[key] = value
 
+		def case(self, key_includes:str):
+			from copy import deepcopy as dc
+			output = {}
+			for key,value in dyct.items():
+				if key_includes in key:
+					output[key] = dc(value)
+			return output
+		
+		def case_by(self, key_lambda=lambda x:False):
+			from copy import deepcopy as dc
+			output = {}
+			for key,value in dyct.items():
+				if key_lambda(key):
+					output[key] = dc(value)
+			return output
+
 		@staticmethod
 		def from_raw(self, dyct:dict):
 			output = framecase()
