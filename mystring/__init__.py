@@ -1205,27 +1205,19 @@ try:
 			self.add_frame(other)
 			return self
 
-		def query(query_string):
-			nu_framecase = ()
+		def query(self, query_string, key_filter=lambda x:True):
+			nu_framecase = framecase()
 			for key,value in self.items():
-				nu_framecase.add_frame(
-					obj=value.query(query_string),
-					obj_name=key
-				)
+				if key_filter(key):
+					nu_framecase.add_frame(
+						obj=value.query(query_string),
+						obj_name=key
+					)
 			return nu_framecase
 
 		def arx(self):
 			for key,value in self.items():
 				value.write_to(file_out_to, sheet_name=key)
-		
-		def query(self, query_string:str):
-			output = {}
-			for key,value in self.items():
-				sub_output = None
-				try:sub_output=frame(value.query(query_string))
-				except:pass
-				output[key] = sub_output
-			return output
 		
 		@staticmethod
 		def of(obj):
