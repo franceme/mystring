@@ -2,6 +2,16 @@ import os,sys,re,importlib.machinery,types,json
 from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 
+class stringwrap(object):
+	def __init__(self, string=("-"*25)):
+		self.string = string
+	def __enter__(self):
+		print(self.string)
+		return self
+	def __exit__(self, *args, **kwargs):
+		print(self.string)
+		return
+
 def redir():
 	class red(object):
 		def __init__(self):
