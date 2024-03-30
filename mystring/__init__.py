@@ -1403,7 +1403,7 @@ try:
 				self.__etherial = py_util(repo=hugg_repo, foils=foils)
 			return self.__etherial
 
-	class framepipeplot(ABC):
+	class framepipeplot(framepipe):
 		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
