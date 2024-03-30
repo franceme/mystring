@@ -1402,6 +1402,19 @@ try:
 						return item in os.environ
 				self.__etherial = py_util(repo=hugg_repo, foils=foils)
 			return self.__etherial
+
+	class framepipeplot(ABC):
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None):
+			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
+			self.styler = styler
+
+		def __call__(self, frame_or_dataframe):
+			if self.styler:
+				with self.styler:
+					output = super().__call__(frame_or_dataframe=frame_or_dataframe)
+				return self.styler(output)
+			else:
+				return super().__call__(frame_or_dataframe=frame_or_dataframe)
 except:
 	pass
 
