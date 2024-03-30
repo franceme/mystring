@@ -709,9 +709,10 @@ try:
 				
 			output = []
 			for kol in frames_to_check[0].kols:
+				kol = str(kol).lower()
 				contains_it = True
 				for frame_to_check in frames_to_check[1:]:
-					if kol not in frame_to_check.kols:
+					if kol not in [str(x).lower() for x in frame_to_check.kols]:
 						contains_it = False
 						break;
 				if contains_it:
