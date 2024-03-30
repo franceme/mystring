@@ -697,6 +697,28 @@ try:
 		@property
 		def num_cols(self):return len(self.kols)
 
+		@staticmethod
+		def shared_cols(*dataframes_or_frames):
+			frames_to_check = [
+				x if isinstance(x, frame) else frame(x) for x in dataframes_or_frames if isinstances(x, frame, pd.DataFrame)
+			]
+			if len(frames_to_check) == 0:
+				return []
+			elif len(frames_to_check) == 1:
+				return frames_to_check[0].kols
+				
+			output = []
+			for kol in frames_to_check[0].kols:
+				contains_it = True
+				for frame_to_check in frames_to_check[1:]:
+					if kol not in frame_to_check.kols:
+						contains_it = False
+						break;
+				if contains_it:
+					output += [kol]
+
+			return output
+
 		def dyff(self, obj, match_column='index'):
 			if not isinstances(obj, frame, pd.DataFrame):
 				print("The object it's being compared to is not a dataframe")
