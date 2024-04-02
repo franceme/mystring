@@ -709,19 +709,25 @@ try:
 				return []
 			elif len(frames_to_check) == 1:
 				return frames_to_check[0].kols
-				
-			output = []
-			for kol in frames_to_check[0].kols:
-				kol = str(kol).lower()
-				contains_it = True
-				for frame_to_check in frames_to_check[1:]:
-					if kol not in [str(x).lower() for x in frame_to_check.kols]:
-						contains_it = False
-						break;
-				if contains_it:
-					output += [kol]
 
-			return output
+			output = []
+			if False: #Old Logic
+				for kol in frames_to_check[0].kols:
+					kol = str(kol).lower()
+					contains_it = True
+					for frame_to_check in frames_to_check[1:]:
+						if kol not in [str(x).lower() for x in frame_to_check.kols]:
+							contains_it = False
+							break;
+					if contains_it:
+						output += [kol]
+			else:
+				for frame_to_check in frames_to_check:
+					if output == []:
+						output = set(frame_to_check.columns)
+					else:
+						output = output & set(frame_to_check.columns)
+			return list(output)
 
 		def dyff(self, obj, match_column='index'):
 			if not isinstances(obj, frame, pd.DataFrame):
