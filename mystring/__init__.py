@@ -43,12 +43,15 @@ def isinstances(object, *classes):
 	return output or isinstance(object, classes)
 
 styr = lambda some_string:string.of(some_string)
+common_value_seperators = [",", ":", ";", "|"]
 
 def of_list(obj: object, functor=lambda x:x) -> list:
 	if isinstance(obj, list):
 		return [functor(x) for x in obj]
 	else:
-		return [functor(obj)]
+		for common_value_seperator in common_value_seperators:
+			for seperated_value in str(obj).split(common_value_seperator):
+				return [functor(seperated_value)]
 
 class backup_dir(object):
 	#https://rszalski.github.io/magicmethods/ < Helpful Link
