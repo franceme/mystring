@@ -1118,7 +1118,7 @@ try:
 			return frame(self.query(query))
 
 		@staticmethod
-		def of_sheet_names(obj_or_file_path):
+		def of_sheet_names(obj_or_file_path, **kwargs):
 			output = []
 			if isinstance(obj_or_file_path, str) and os.path.exists(obj_or_file_path):
 				from pathlib import Path
@@ -1135,6 +1135,37 @@ try:
 						output += [name[0]]
 					current_cursor = None
 					connection.close()
+			elif isinstance(obj_or_file_path, str) and obj_or_file_path.lower() == "dbhub":
+				dbhub_apikey = None
+				dbhub_owner = None
+				dbhub_name = None
+
+				for key,value in kwargs.items():
+					if key == 'dbhub_apikey':
+						dbhub_apikey = value
+					elif key == 'dbhub_owner':
+						dbhub_owner = value
+					elif key == 'dbhub_name':
+						dbhub_name = value
+				
+				if dbhub_apikey is None or dbhub_owner is None or dbhub_name is None:
+					return []
+
+				from ephfile import ephfile
+				import pydbhub.dbhub as dbhub
+				with ephfile("config.ini") as eph:
+					eph += f"""[dbhub]
+	api_key = {dbhub_apikey}
+	db_owner = {dbhub_owner}
+	db_name = {dbhub_name}
+					"""
+					tables, err = db.Tables(dbhub_owner, dbhub_name)
+					if err is not None:
+						print("[ERROR] {0}".format(err))
+						return []
+
+					output = [x for x in tables if x is not None and x.strip() != '']
+
 			return output
 
 		@staticmethod
@@ -1162,6 +1193,9 @@ try:
 						data = frame.from_sqlite(obj_or_file_path, table_name=sheet_name)
 					elif ext == ".dbhub":
 						data = frame.from_dbhub_table(obj_or_file_path, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+				elif obj_or_file_path == "dbhub":
+					if dbhub_apikey is not None or dbhub_owner is not None or dbhub_name is not None:
+						data = frame.from_dbhub_table(sheet_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
 				elif obj_or_file_path.startswith("b64:"):
 					data = frame.frombase64(obj_or_file_path.replace("b64:",""))
 				elif obj_or_file_path.startswith("https://"):
@@ -1233,6 +1267,15 @@ try:
 			if frame_to_add is not None:
 				self.dyct[obj_name or self.__nu_name()] = frame_to_add
 
+		def add_dbhub_frame(self, table_name, dbhub_apikey, dbhub_owner, dbhub_name):
+			frame_to_add = None
+
+			if dbhub_apikey is not None or dbhub_owner is not None or dbhub_name is not None and table_name is not None:
+				frame_to_add = frame.of("dbhub", sheet_name=table_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+
+			if frame_to_add is not None:
+				self.dyct[obj_name or self.__nu_name()] = frame_to_add
+
 		def __iadd__(self, other):
 			self.add_frame(other)
 			return self
@@ -1252,7 +1295,7 @@ try:
 				value.write_to(file_out_to, sheet_name=key)
 		
 		@staticmethod
-		def of(obj):
+		def of(obj, **kwargs):
 			output = framecase()
 			if isinstance(obj, str) and os.path.exists(obj):
 				from pathlib import Path
@@ -1268,6 +1311,24 @@ try:
 				elif ext == ".sqlite":
 					for sheet_name in frame.of_sheet_names(obj):
 						output.add_frame(obj, sheet_name)
+			if isinstance(obj, str) and obj == 'dbhub':
+				dbhub_apikey = None
+				dbhub_owner = None
+				dbhub_name = None
+
+				for key,value in kwargs.items():
+					if key == 'dbhub_apikey':
+						dbhub_apikey = value
+					elif key == 'dbhub_owner':
+						dbhub_owner = value
+					elif key == 'dbhub_name':
+						dbhub_name = value
+				
+				if dbhub_apikey is not None or dbhub_owner is not None or dbhub_name is not None:
+					sheet_names = list(frame.of_sheet_names("dbhub", dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name))
+					for table_name in sheet_names:
+						output.add_dbhub_frame(obj, table_name=table_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+
 			return output
 
 		def write_to(self, override_writeto:str=None):
