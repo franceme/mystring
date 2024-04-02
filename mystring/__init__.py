@@ -1159,12 +1159,17 @@ try:
 	db_owner = {dbhub_owner}
 	db_name = {dbhub_name}
 					"""
-					tables, err = db.Tables(dbhub_owner, dbhub_name)
-					if err is not None:
-						print("[ERROR] {0}".format(err))
-						return []
-
-					output = [x for x in tables if x is not None and x.strip() != '']
+					try:
+						db = dbhub.Dbhub(config_file=eph())
+						tables, err = db.Tables(dbhub_owner, dbhub_name)
+						if err is None:
+							output = [x for x in tables if x is not None and x.strip() != '']
+						else:
+							print("[ERROR] {0}".format(err))
+					
+					except Exception as e:
+						print(e)
+						pass
 
 			return output
 
