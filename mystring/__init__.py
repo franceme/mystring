@@ -1332,7 +1332,7 @@ try:
 				if dbhub_apikey is not None or dbhub_owner is not None or dbhub_name is not None:
 					sheet_names = list(frame.of_sheet_names("dbhub", dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name))
 					for table_name in sheet_names:
-						output.add_dbhub_frame(obj, table_name=table_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
+						output.add_dbhub_frame(table_name=table_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
 
 			return output
 
