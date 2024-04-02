@@ -688,7 +688,8 @@ try:
 			super(frame,self).__init__(*args,**kwargs)
 
 		def query(self, query_string):
-			return frame(super(type(self), self).query(query_string))
+			try:return frame(super(type(self), self).query(query_string))
+			except:return frame(pd.DataFrame())
 
 		@property
 		def T(self):
