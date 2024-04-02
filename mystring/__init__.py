@@ -1279,7 +1279,7 @@ try:
 				frame_to_add = frame.of("dbhub", sheet_name=table_name, dbhub_apikey=dbhub_apikey, dbhub_owner=dbhub_owner, dbhub_name=dbhub_name)
 
 			if frame_to_add is not None:
-				self.dyct[obj_name or self.__nu_name()] = frame_to_add
+				self.dyct[table_name or self.__nu_name()] = frame_to_add
 
 		def __iadd__(self, other):
 			self.add_frame(other)
