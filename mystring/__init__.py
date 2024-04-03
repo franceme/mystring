@@ -6,7 +6,7 @@ class stringwrap(object):
 	def __init__(self, string=("-"*25), last_hundo=None, time_difference=False):
 		self.string = string
 		if last_hundo:
-			self.string = last_hundo * (50 - len(self.string))
+			self.string = self.string + str(last_hundo * (50 - len(self.string)))
 		self.time_difference = time_difference
 		self.start = None
 		self.end = None
