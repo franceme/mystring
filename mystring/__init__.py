@@ -23,6 +23,26 @@ class stringwrap(object):
 		print(self.string)
 		return
 
+class envwrap(object):
+	def __init__(self):
+		pass
+	@staticmethod
+	def __getitem__(item):
+		import json, os, sys
+		return json.loads(os.environ[item]) if item in os.environ else None
+	@staticmethod
+	def __setitem__(item, value):
+		import json, os, sys
+		os.environ[item] = json.dumps(value)
+	@staticmethod
+	def __delitem__(item):
+		import os, sys
+		if item in self:
+			del os.environ[item]
+	@staticmethod
+	def __contains__(item):
+		return item in os.environ
+
 def redir():
 	class red(object):
 		def __init__(self):
