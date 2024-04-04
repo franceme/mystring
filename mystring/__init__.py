@@ -1438,8 +1438,10 @@ try:
 			return str(name+"_"+str(itr))
 		#https://rszalski.github.io/magicmethods/#copying
 		def __copy__(self):
-			cls = self.__class__
-			nu_copy = cls.__new__(cls)
+			nu_copy = framecase(
+				file_out_to=self.file_out_to,
+				base_name=self.base,
+			)
 			for key,value in self.items():
 				nu_copy.add_frame(value)
 			return nu_copy
