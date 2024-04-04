@@ -705,6 +705,7 @@ class timestamp(datetime.datetime):
 try:
 	import pandas as pd
 	import sqlite3
+	from copy import copy, deepcopy
 	class frame(pd.DataFrame):
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
@@ -1291,7 +1292,7 @@ try:
 		def add_frame(self, obj, obj_name=None):
 			frame_to_add = None
 			if isinstance(obj, frame):
-				frame_to_add = dc(obj)
+				frame_to_add = frame(dc(obj))
 			elif isinstance(obj, pd.DataFrame):
 				frame_to_add = frame(obj)
 			elif isinstance(obj, str):
@@ -1435,6 +1436,16 @@ try:
 			while str(name+"_"+str(itr)) in self.dyct:
 				itr += 1
 			return str(name+"_"+str(itr))
+		#https://rszalski.github.io/magicmethods/#copying
+		def __copy__(self):
+			cls = self.__class__
+			nu_copy = cls.__new__(cls)
+			for key,value in self.items():
+				nu_copy.add_frame(value)
+			return nu_copy
+		@property
+		def copyof(self):
+			return self.__copy__()
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
