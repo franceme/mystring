@@ -1402,7 +1402,7 @@ try:
 		#Overridden methods
 		def __str__(self):return json.dumps(self.to_raw())
 		def __len__(self):return len(self.dyct.values())
-		def __getitem__(self, key):return pd.DataFrame() if key not in self else self.dyct[key]
+		def __getitem__(self, key):return frame(pd.DataFrame()) if key not in self else frame(self.dyct[key])
 		def __setitem__(self, key, value):self.add_frame(obj=value, obj_name=key)
 		def __delitem__(self, key):del self.dyct[key]
 		def __iter__(self):return iter(self.dyct.values())
@@ -1417,7 +1417,7 @@ try:
 		def __deepcopy__(self, memodict={}): return dc(self.dyct)
 		def items(self, key_filter=lambda x:True):return [(x,frame(y)) for x,y in self.dyct.items() if key_filter(x)]
 		def keys(self, key_filter=lambda x:True):return [x for x in self.dyct.keys() if key_filter(x)]
-		def values(self):return list(self.dyct.values())
+		def values(self, key_filter=lambda x:True):return [self[x] for x in self.dyct.keys() if key_filter(x)]
 		def __getstate__(self):return self.to_raw()
 		def __setstate__(self, state):self._set_from_raw(state)
 
