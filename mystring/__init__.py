@@ -1443,7 +1443,7 @@ try:
 				base_name=self.base,
 			)
 			for key,value in self.items():
-				nu_copy.add_frame(obj=value, base_name=key)
+				nu_copy.add_frame(obj=value, obj_name=key)
 			return nu_copy
 		@property
 		def copyof(self):
