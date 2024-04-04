@@ -1431,7 +1431,7 @@ try:
 			return True
 
 		def __nu_name(self):
-			name = base_name
+			name = self.base
 			itr = 0
 			while str(name+"_"+str(itr)) in self.dyct:
 				itr += 1
@@ -1443,7 +1443,7 @@ try:
 				base_name=self.base,
 			)
 			for key,value in self.items():
-				nu_copy.add_frame(value)
+				nu_copy.add_frame(obj=value, base_name=key)
 			return nu_copy
 		@property
 		def copyof(self):
