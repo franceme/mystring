@@ -800,6 +800,16 @@ try:
 
 			return frame.from_arr(output) if len(output) > 0 else frame(pd.DataFrame())
 
+		def exact(self, obj):
+			if not isinstances(obj, frame, pd.DataFrame):
+				print("The object it's being compared to is not a dataframe")
+				return self
+
+			if not isinstance(obj, frame):
+				obj = frame(obj)
+
+			return all(list((self == obj).all().values))
+
 		def col_exists(self,column):
 			return column in self.columns
 
