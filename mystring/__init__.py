@@ -4,7 +4,7 @@ from copy import deepcopy as dc
 
 class stringwrap(object):
 	def __init__(self, string=("-"*25), last_hundo=None, time_difference=False):
-		self.string = string
+		self.string = str(string)
 		if last_hundo:
 			self.string = self.string + str(last_hundo * (50 - len(self.string)))
 		self.time_difference = time_difference
