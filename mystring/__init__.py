@@ -43,6 +43,18 @@ class envwrap(object):
 	def __contains__(item):
 		return item in os.environ
 
+class PrintWrap():
+	#sys.stdout = PrintWrap("log.txt")
+    def __init__(self, logfile):
+        self.stdout = sys.stdout
+        self.logfile = logfile
+    def write(self, text):
+        self.stdout.write(text)
+        with open(self.logfile, "a+") as writer:
+            writer.write(text)
+    def close(self):
+        self.stdout.close()
+
 def redir():
 	class red(object):
 		def __init__(self):
