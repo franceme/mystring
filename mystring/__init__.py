@@ -57,6 +57,20 @@ class PrintWrap():
     def close(self):
         self.stdout.close()
 
+class ErrWrap():
+	#sys.stderr = ErrWrap("logerr.csv")
+    def __init__(self, logfilename):
+        self.stderr = sys.stderr
+        self.logfilename = logfilename+".csv"
+    def write(self, text):
+        self.stderr.write(text)
+        with open(self.logfilename, "a+") as writer:
+            writer.write(", ".join([
+				str(now_utc_to_iso()), str(text)
+			]))
+    def close(self):
+        self.stderr.close()
+
 def redir():
 	class red(object):
 		def __init__(self):
