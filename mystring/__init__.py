@@ -44,14 +44,16 @@ class envwrap(object):
 		return item in os.environ
 
 class PrintWrap():
-	#sys.stdout = PrintWrap("log.txt")
-    def __init__(self, logfile):
+	#sys.stdout = PrintWrap("log.csv")
+    def __init__(self, logfilename):
         self.stdout = sys.stdout
-        self.logfile = logfile
+        self.logfilename = logfilename+".csv"
     def write(self, text):
         self.stdout.write(text)
-        with open(self.logfile, "a+") as writer:
-            writer.write(text)
+        with open(self.logfilename, "a+") as writer:
+            writer.write(", ".join([
+				str(now_utc_to_iso()), str(text)
+			]))
     def close(self):
         self.stdout.close()
 
