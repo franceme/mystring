@@ -58,7 +58,7 @@ class STDWrap(ABC):
 		self.stdstream = stdstream
 
 	def __write_out(self, text, *args, **kargs):
-		csv_text = "str(now_utc_to_iso())" +","+str(text)+","
+		csv_text = str(now_utc_to_iso()) +","+str(text)+","
 
 		self.stdstream.write(text)
 		with open(self.logfilename, "a+") as writer:
@@ -74,10 +74,12 @@ class STDWrap(ABC):
 		self.stdstream.close()
 
 class PrintWrap(STDWrap):
+	#sys.stdout = PrintWrap("log.csv")
 	def __init__(self, logfilename):
-		super().__init__(logfilename=logfilename, stdstream=sys.stderr)
+		super().__init__(logfilename=logfilename, stdstream=sys.stdout)
 
 class ErrWrap(STDWrap):
+	#sys.stdout = PrintWrap("log.csv")
 	def __init__(self, logfilename):
 		super().__init__(logfilename=logfilename, stdstream=sys.stderr)
 
