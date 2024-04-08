@@ -1,6 +1,7 @@
 import os,sys,re,importlib.machinery,types,json,time
 from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
+from abc import ABC, abstractmethod
 
 class stringwrap(object):
 	def __init__(self, string=("-"*25), last_hundo=None, time_difference=False):
@@ -43,33 +44,42 @@ class envwrap(object):
 	def __contains__(item):
 		return item in os.environ
 
-class PrintWrap():
-	#sys.stdout = PrintWrap("log.csv")
-    def __init__(self, logfilename):
-        self.stdout = sys.stdout
-        self.logfilename = logfilename+".csv"
-    def write(self, text):
-        self.stdout.write(text)
-        with open(self.logfilename, "a+") as writer:
-            writer.write(", ".join([
-				str(now_utc_to_iso()), str(text)
-			]))
-    def close(self):
-        self.stdout.close()
+from abc import ABC
+class STDWrap(ABC):
+	"""
+	https://medium.com/xster-tech/python-log-stdout-to-file-e6564a22ffb8
+	https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout
+	https://github.com/python/cpython/blob/main/Python/bltinmodule.c#L2046
+	"""
+	def __init__(self, logfilename, stdstream):
+		if not logfilename.endswith(".csv"):
+			logfilename = logfilename + ".csv"
+		self.logfilename = logfilename
+		self.stdstream = stdstream
 
-class ErrWrap():
-	#sys.stderr = ErrWrap("logerr.csv")
-    def __init__(self, logfilename):
-        self.stderr = sys.stderr
-        self.logfilename = logfilename+".csv"
-    def write(self, text):
-        self.stderr.write(text)
-        with open(self.logfilename, "a+") as writer:
-            writer.write(", ".join([
-				str(now_utc_to_iso()), str(text)
-			]))
-    def close(self):
-        self.stderr.close()
+	def __write_out(self, text, *args, **kargs):
+		csv_text = "str(now_utc_to_iso())" +","+str(text)+","
+
+		self.stdstream.write(text)
+		with open(self.logfilename, "a+") as writer:
+			writer.write(csv_text)
+
+	def write(self, text):
+		self.__write_out(str(text))
+
+	def flush(self):
+		pass
+
+	def close(self):
+		self.stdstream.close()
+
+class PrintWrap(STDWrap):
+	def __init__(self, logfilename):
+		super().__init__(logfilename=logfilename, stdstream=sys.stderr)
+
+class ErrWrap(STDWrap):
+	def __init__(self, logfilename):
+		super().__init__(logfilename=logfilename, stdstream=sys.stderr)
 
 def redir():
 	class red(object):
