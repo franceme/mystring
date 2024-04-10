@@ -876,6 +876,31 @@ try:
 			self.rename(columns={columnfrom: columnto},inplace=True)
 			return self
 
+		def of_dummies(self, *columns):
+			column_list = list(columns)
+			merged_combo_column = "|".join(column_list)
+			for column in column_list:
+				if column not in self.kolz:
+					raise Exception("Column {0} not in the frame".format(column))
+			
+			try:
+				mini_frame = dc(self)[*column_list]
+				mini_frame.from_dummies()
+			except Exception as e:
+				raise e
+			
+			self_arr = self.arr()
+			for row in self_arr:
+				activated_column = None
+				for column in column_list:
+					if row[column] == 1:
+						activated_column = column
+						break
+				row[merged_combo_column] = activated_column
+			output = frame.from_arr(self_arr)
+			self = output
+			return output
+
 		def rename_columns(self, dyct):
 			for key,value in dyct.items():
 				if self.col_exists(key):
