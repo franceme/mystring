@@ -3,6 +3,26 @@ from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 from abc import ABC, abstractmethod
 
+def gen_binary_strs(up_to_int=None, up_to_bin=None):
+	import itertools
+	bin_tuple_str = lambda x:"".join(map(str, x))
+	bin_str_cap = None
+
+	if up_to_int is not None:
+		bin_str_cap = bin_tuple_str("{0:b}".format(up_to_int))
+	elif up_to_bin is not None:
+		bin_str_cap = up_to_bin
+	else:
+		return None
+
+	cur_num = None
+	generator = itertools.product((0, 1), repeat=len(bin_str_cap))
+	while cur_num is None or int(bin_tuple_str(cur_num), 2) < int(bin_tuple_str(bin_str_cap),2):
+		cur_num = next(generator)
+		yield cur_num
+	return cur_num
+
+
 class stringwrap(object):
 	def __init__(self, string=("-"*25), last_hundo=None, time_difference=False):
 		self.string = str(string)
@@ -333,14 +353,14 @@ class string(str):
 		return self
 
 	def ad(self, value):
-		self = string(self + getattr(self, 'delim', "")  + value)
+		self = string(self + getattr(self, 'delim', "")	+ value)
 		return self
 
 	def delim(self, value):
 		self.delim = value
 
 	def pre(self, value):
-		self = string(value + getattr(self, 'delim', "")  + self)
+		self = string(value + getattr(self, 'delim', "")	+ self)
 		return self
 
 	def pres(self, *args):
@@ -952,7 +972,7 @@ try:
 			return self
 		
 		def confusion_matrix_sum(self,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
-			return (self[TP].sum() + self[TN].sum() + self[FN].sum())  
+			return (self[TP].sum() + self[TN].sum() + self[FN].sum())	
 
 		def verify_confusion_matrix_bool(self,TotalCases:int=0,TP:str='TP',FP:str='FP',TN:str='TN',FN:str='FN'):
 			return TotalCases == self.confusion_matrix_sum(TP=TP,FP=FP,TN=TN,FN=FN)
@@ -1089,13 +1109,13 @@ try:
 			MEDIUM_SIZE = 20
 			BIGGER_SIZE = 25
 
-			plt.rc('font', size=MEDIUM_SIZE)		  # controls default text sizes
+			plt.rc('font', size=MEDIUM_SIZE)			# controls default text sizes
 			plt.rc('axes', titlesize=MEDIUM_SIZE)	 # fontsize of the axes title
 			plt.rc('axes', labelsize=MEDIUM_SIZE)	# fontsize of the x and y labels
 			plt.rc('xtick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
 			plt.rc('ytick', labelsize=SMALL_SIZE)	# fontsize of the tick labels
 			plt.rc('legend', fontsize=SMALL_SIZE)	# legend fontsize
-			plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+			plt.rc('figure', titlesize=BIGGER_SIZE)	# fontsize of the figure title
 
 			temp_frame = self.copy()
 			mask = temp_frame.columns.isin(columns)
@@ -1474,7 +1494,7 @@ try:
 			output = framecase()
 			output._set_from_raw(dyct)
 			return output
-		def to_raw(self, b64:bool=False):return {key:(value.to_raw_json() if not b64 else value.tobase64()) for  key,value in self.dyct.items()}
+		def to_raw(self, b64:bool=False):return {key:(value.to_raw_json() if not b64 else value.tobase64()) for	key,value in self.dyct.items()}
 		#Overridden methods
 		def __str__(self):return json.dumps(self.to_raw())
 		def __len__(self):return len(self.dyct.values())
@@ -1501,7 +1521,7 @@ try:
 		def equal_cols(self):
 			sample_kolz = self.values()[0].kolz
 			for value in self.values():
-				if len(list( set(value.kolz)-set(sample_kolz)  )) > 0:
+				if len(list( set(value.kolz)-set(sample_kolz)	)) > 0:
 					return False
 			return True
 
