@@ -883,20 +883,20 @@ try:
 				if column not in self.kolz:
 					raise Exception("Column {0} not in the frame".format(column))
 			
-			try:
-				mini_frame = dc(self)[column_list]
-				mini_frame.from_dummies()
-			except Exception as e:
-				raise e
-			
 			self_arr = self.arr()
-			for row in self_arr:
-				activated_column = None
+			for row_itr, row in enumerate(self_arr):
+				temp = {}
 				for column in column_list:
-					if row[column] == 1:
-						activated_column = column
-						break
-				row[merged_combo_column] = activated_column
+					temp[column] = row[column]
+
+				if sum(temp.values()) > 1:
+					have_keys = [tkey for tkey, tvalue in temp.items() if tvalue >= 1]
+					raise Exception("Multiple columns [{0}] have a value.".format(",".join(have_keys)))
+				elif sum(temp.values()) == 0:
+					row[merged_combo_column] = None
+				else:
+					row[merged_combo_column] = max(temp, key=temp.get)
+
 			output = frame.from_arr(self_arr)
 			self = output
 			return output
