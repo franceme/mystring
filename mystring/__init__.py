@@ -876,9 +876,9 @@ try:
 			self.rename(columns={columnfrom: columnto},inplace=True)
 			return self
 
-		def of_dummies(self, *columns):
+		def of_dummies(self, *columns, merged_combo_column=None):
 			column_list = list(columns)
-			merged_combo_column = "|".join(column_list)
+			merged_combo_column = merged_combo_column or str("|".join(column_list))
 			for column in column_list:
 				if column not in self.kolz:
 					raise Exception("Column {0} not in the frame".format(column))
