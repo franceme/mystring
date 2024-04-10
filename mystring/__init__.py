@@ -884,7 +884,7 @@ try:
 					raise Exception("Column {0} not in the frame".format(column))
 			
 			try:
-				mini_frame = dc(self)[*column_list]
+				mini_frame = dc(self)[column_list]
 				mini_frame.from_dummies()
 			except Exception as e:
 				raise e
