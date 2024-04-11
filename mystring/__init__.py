@@ -1636,20 +1636,20 @@ try:
 		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
-			self.__default_font_size = 26
-			self.__default_font_family = "Times New Roman"
-			self.__default_theme = 'seaborn'
+			self.default_font_size = 26
+			self.default_font_family = "Times New Roman"
+			self.default_theme = 'seaborn'
 			self.style_defaults = {
 				'height':1020,
 				'width':1980,
 				'title_text':"General Text",
 				'showlegend':True,
-				'font_size':self.__default_font_size,
-				'font_family':self.__default_font_family,
-				'title_font_size':self.__default_font_size,
-				'title_font_family':self.__default_font_family,
-				'legend_font_size':self.__default_font_size,
-				'legend_font_family':self.__default_font_family
+				'font_size':self.default_font_size,
+				'font_family':self.default_font_family,
+				'title_font_size':self.default_font_size,
+				'title_font_family':self.default_font_family,
+				'legend_font_size':self.default_font_size,
+				'legend_font_family':self.default_font_family
 			}
 			self.update_on_return = update_on_return
 
