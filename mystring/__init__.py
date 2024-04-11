@@ -1633,17 +1633,39 @@ try:
 			return self.__etherial
 
 	class framepipeplot(framepipe):
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None):
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
+			self.__default_font_size = 26
+			self.__default_font_family = "Times New Roman"
+			self.__default_theme = 'seaborn'
+			self.style_defaults = {
+				height=1020,
+				width=1980,
+				title_text="General Text",
+				showlegend=True,
+				font_size=self.__default_font_size,
+				font_family=self.__default_font_family,
+				title_font_size=self.__default_font_size,
+				title_font_family=self.__default_font_family,
+				legend_font_size=self.__default_font_size,
+				legend_font_family=self.__default_font_family,
+			}
+			self.update_on_return = update_on_return
 
 		def __call__(self, frame_or_dataframe):
 			if self.styler:
 				with self.styler:
 					output = super().__call__(frame_or_dataframe=frame_or_dataframe)
-				return self.styler(output)
+				output = self.styler(output)
+				if self.update_on_return:
+					output.update_layout(**self.style_defaults)
+				return output
 			else:
-				return super().__call__(frame_or_dataframe=frame_or_dataframe)
+				output = super().__call__(frame_or_dataframe=frame_or_dataframe)
+				if self.update_on_return:
+					output.update_layout(**self.style_defaults)
+				return output
 except:
 	pass
 
