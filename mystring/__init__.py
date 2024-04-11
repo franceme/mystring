@@ -1640,16 +1640,16 @@ try:
 			self.__default_font_family = "Times New Roman"
 			self.__default_theme = 'seaborn'
 			self.style_defaults = {
-				height=1020,
-				width=1980,
-				title_text="General Text",
-				showlegend=True,
-				font_size=self.__default_font_size,
-				font_family=self.__default_font_family,
-				title_font_size=self.__default_font_size,
-				title_font_family=self.__default_font_family,
-				legend_font_size=self.__default_font_size,
-				legend_font_family=self.__default_font_family,
+				'height':1020,
+				'width':1980,
+				'title_text':"General Text",
+				'showlegend':True,
+				'font_size':self.__default_font_size,
+				'font_family':self.__default_font_family,
+				'title_font_size':self.__default_font_size,
+				'title_font_family':self.__default_font_family,
+				'legend_font_size':self.__default_font_size,
+				'legend_font_family':self.__default_font_family
 			}
 			self.update_on_return = update_on_return
 
