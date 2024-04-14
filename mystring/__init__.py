@@ -1665,16 +1665,20 @@ try:
 					output = super().__call__(frame_or_dataframe=frame_or_dataframe)
 				output = self.styler(output)
 				if self.update_on_return:
-					output.update_layout(**self.style_defaults)
+					output.update_layout(**self.no_subplots)
 				return output
 			else:
 				output = super().__call__(frame_or_dataframe=frame_or_dataframe)
 				if self.update_on_return:
-					output.update_layout(**self.style_defaults)
+					output.update_layout(**self.no_subplots)
 				return output
 
 		def defaults(self, key_lambda=lambda x:True):
-			return {key:value for key,value in self.style_defaults if key_lambda(key)}
+			return {key:value for key,value in self.style_defaults.items() if key_lambda(key)}
+		
+		@property
+		def no_subplots(self):
+			return self.defaults(key_lambda=lambda title:title.startswith("subplots"))
 except:
 	pass
 
