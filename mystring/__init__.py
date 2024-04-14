@@ -1636,28 +1636,7 @@ try:
 		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
-			self.default_font_size = 26
-			self.default_font_family = "Times New Roman"
-			self.default_theme = 'seaborn'
-			self.style_defaults = {
-				'height':1020,
-				'width':1980,
-				'title_text':"General Text",
-				'showlegend':True,
-				'font_size':self.default_font_size,
-				'font_family':self.default_font_family,
-				'title_font_size':self.default_font_size,
-				'title_font_family':self.default_font_family,
-				'legend_font_size':self.default_font_size,
-				'legend_font_family':self.default_font_family
-			}
 			self.update_on_return = update_on_return
-			try:
-				for styler_item_set in self.styler.kwargs + self.styler.subplot_kwargs:
-					for key,value in styler_item_set.items():
-						key = key.replace(".","_")
-						self.style_defaults[key] = value
-			except:pass
 
 		def __call__(self, frame_or_dataframe):
 			if self.styler:
@@ -1672,6 +1651,10 @@ try:
 				if self.update_on_return:
 					output.update_layout(**self.no_subplots)
 				return output
+
+		@property
+		def style_defaults(self):
+			return self.styler.total_items
 
 		def defaults(self, key_lambda=lambda x:True):
 			return {key:value for key,value in self.style_defaults.items() if key_lambda(key)}
