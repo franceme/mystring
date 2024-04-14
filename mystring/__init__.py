@@ -1654,7 +1654,9 @@ try:
 
 		@property
 		def style_defaults(self):
-			return self.styler.total_items
+			if self.styler:
+				return self.styler.total_items
+			return {}
 
 		def defaults(self, key_lambda=lambda x:True):
 			return {key:value for key,value in self.style_defaults.items() if key_lambda(key)}
