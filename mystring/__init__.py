@@ -1652,6 +1652,12 @@ try:
 				'legend_font_family':self.default_font_family
 			}
 			self.update_on_return = update_on_return
+			try:
+				for styler_item_set in self.styler.kwargs + self.styler.subplot_kwargs:
+					for key,value in styler_item_set.items():
+						key = key.replace(".","_")
+						self.style_defaults[key] = value
+			except:pass
 
 		def __call__(self, frame_or_dataframe):
 			if self.styler:
@@ -1666,6 +1672,9 @@ try:
 				if self.update_on_return:
 					output.update_layout(**self.style_defaults)
 				return output
+
+		def defaults(self, key_lambda=lambda x:True):
+			return {key:value for key,value in self.style_defaults if key_lambda(key)}
 except:
 	pass
 
