@@ -1634,7 +1634,7 @@ try:
 
 	class framepipeplot(framepipe):
 		#only_safe_keywords=True, update_on_return=False := This seems to be the only valid flags
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True):
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True, **kwargs):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
 			#OLD
@@ -1655,6 +1655,8 @@ try:
 			for key,value in self.safe_keywords.items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
+			for key,value in kwargs.items():
+				self.styler[key] = value
 			self.only_safe_keywords = only_safe_keywords
 			if only_safe_keywords:
 				for styler_key in list(self.styler.keys()):
