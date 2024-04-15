@@ -1675,17 +1675,31 @@ try:
 				output = self.styler(output)
 				if self.update_on_return:
 					try:output.update(**self.no_subplots)
-					except:pass
+					except Exception as e:
+						import os,sys
+						_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+						print(":> Hit an unexpected error |some_figure_obj.update_layout| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
+
 					try:output.update_layout(**self.no_subplots)
-					except:pass
+					except Exception as e:
+						import os,sys
+						_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+						print(":> Hit an unexpected error |some_figure_obj.update_layout| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
 				return output
 			else:
 				output = super().__call__(frame_or_dataframe=frame_or_dataframe)
 				if self.update_on_return and self.no_subplots != {}:
 					try:output.update(**self.no_subplots)
-					except:pass
+					except Exception as e:
+						import os,sys
+						_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+						print(":> Hit an unexpected error |some_figure_obj.update_layout| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
+
 					try:output.update_layout(**self.no_subplots)
-					except:pass
+					except Exception as e:
+						import os,sys
+						_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+						print(":> Hit an unexpected error |some_figure_obj.update_layout| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
 				return output
 
 		def styles(self, use_main_plot=True, key_lambda=lambda x:True, only_safe=False):
