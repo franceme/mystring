@@ -1654,6 +1654,7 @@ try:
 			for key,value in self.safe_keywords.items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
+			self.only_safe_keywords = only_safe_keywords
 			if only_safe_keywords:
 				for styler_key in list(self.styler.keys()):
 					if styler_key not in list(self.safe_keywords.keys()):
