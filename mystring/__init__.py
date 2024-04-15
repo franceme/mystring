@@ -3,6 +3,21 @@ from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 from abc import ABC, abstractmethod
 
+def update_fig(figure, **kwargs):
+	try:
+		try:figure.update(**kwargs)
+		except Exception as e:
+			import os,sys
+			_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print(":> Hit an unexpected error |figure.update| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
+
+		try:figure.update_layout(**kwargs)
+		except Exception as e:
+			import os,sys
+			_, _, exc_tb = sys.exc_info();fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print(":> Hit an unexpected error |figure.update_layout| {0} @ {1}:{2}".format(e, fname, exc_tb.tb_lineno))
+	except:pass
+
 def gen_binary_strs(up_to_int=None, up_to_bin=None):
 	import itertools
 	bin_tuple_str = lambda x:"".join(map(str, x))
