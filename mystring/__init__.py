@@ -1648,7 +1648,7 @@ try:
 				'title_font_family':"Times New Roman",
 				'legend_font_size':26,
 				'legend_font_family':"Times New Roman",
-				'theme': 'seaborn',
+				#'theme': 'seaborn',
 			}
 			#OLD
 			for key,value in self.safe_keywords.items():
