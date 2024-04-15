@@ -1686,6 +1686,9 @@ try:
 			else:
 				return {}
 
+		def set_style(self, key, value):
+			self.styler[key] = value
+
 		@property
 		def style_defaults(self):return self.styles
 		def defaults(self, key_lambda=lambda x:True):return self.styles(key_lambda=key_lambda)
