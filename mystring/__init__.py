@@ -1638,10 +1638,10 @@ try:
 			self.styler = styler
 			#OLD
 			self.safe_keywords = {
-				'height':1020,
-				'width':1980,
+				#'height':1020,
+				#'width':1980,
 				'title_text':"General Text",
-				'showlegend':True,
+				#'showlegend':True,
 				'font_size':26,
 				'font_family':"Times New Roman",
 				'title_font_size':26,
