@@ -1634,11 +1634,9 @@ try:
 
 	class framepipeplot(framepipe):
 		#only_safe_keywords=True, update_on_return=False := This seems to be the only valid flags
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True, **kwargs):
-			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
-			self.styler = styler
-			#OLD
-			self.safe_keywords = {
+		@staticmethod
+		def safe_keywords():
+			return {
 				#'height':1020,
 				#'width':1980,
 				'title_text':"General Text",
@@ -1651,8 +1649,10 @@ try:
 				'legend_font_family':"Times New Roman",
 				#'theme': 'seaborn',
 			}
-			#OLD
-			for key,value in self.safe_keywords.items():
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True, **kwargs):
+			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
+			self.styler = styler
+			for key,value in framepipeplot.safe_keywords().items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
 			for key,value in kwargs.items():
@@ -1660,7 +1660,7 @@ try:
 			self.only_safe_keywords = only_safe_keywords
 			if only_safe_keywords:
 				for styler_key in list(self.styler.keys()):
-					if styler_key not in list(self.safe_keywords.keys()) and not styler_key.startswith("subplot"):
+					if styler_key not in list(framepipeplot.safe_keywords().keys()) and not styler_key.startswith("subplot"):
 						del self.styler[styler_key]
 			self.update_on_return = update_on_return
 
@@ -1680,7 +1680,7 @@ try:
 
 		def styles(self, use_main_plot=True, key_lambda=lambda x:True, only_safe=False):
 			if only_safe:
-				return self.safe_keywords
+				return framepipeplot.safe_keywords()
 			elif self.styler:
 				return self.styler.of(use_main_plot=True, key_filter=key_lambda).items()
 			else:
