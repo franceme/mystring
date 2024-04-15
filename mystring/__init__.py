@@ -1671,7 +1671,7 @@ try:
 				return output
 			else:
 				output = super().__call__(frame_or_dataframe=frame_or_dataframe)
-				if self.update_on_return:
+				if self.update_on_return and self.no_subplots != {}:
 					output.update_layout(**self.no_subplots)
 				return output
 
