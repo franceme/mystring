@@ -1546,7 +1546,6 @@ try:
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
-	import pyplotlib
 	class framepipe(ABC):
 		def __init__(self, columns_needed=[], break_flow:bool=False):
 			super().__init__()
@@ -1634,7 +1633,7 @@ try:
 			return self.__etherial
 
 	class framepipeplot(framepipe):
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=pyplotlib.pltstyle.from_env(), update_on_return=True):
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
 			#OLD
