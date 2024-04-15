@@ -1652,16 +1652,20 @@ try:
 		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True, **kwargs):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
+
 			for key,value in framepipeplot.safe_keywords().items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
+
 			for key,value in kwargs.items():
 				self.styler[key] = value
+
 			self.only_safe_keywords = only_safe_keywords
 			if only_safe_keywords:
 				for styler_key in list(self.styler.keys()):
 					if styler_key not in list(framepipeplot.safe_keywords().keys()) and not styler_key.startswith("subplot"):
 						del self.styler[styler_key]
+
 			self.update_on_return = update_on_return
 
 		def __call__(self, frame_or_dataframe):
@@ -1670,12 +1674,18 @@ try:
 					output = super().__call__(frame_or_dataframe=frame_or_dataframe)
 				output = self.styler(output)
 				if self.update_on_return:
-					output.update_layout(**self.no_subplots)
+					try:output.update(**self.no_subplots)
+					except:pass
+					try:output.update_layout(**self.no_subplots)
+					except:pass
 				return output
 			else:
 				output = super().__call__(frame_or_dataframe=frame_or_dataframe)
 				if self.update_on_return and self.no_subplots != {}:
-					output.update_layout(**self.no_subplots)
+					try:output.update(**self.no_subplots)
+					except:pass
+					try:output.update_layout(**self.no_subplots)
+					except:pass
 				return output
 
 		def styles(self, use_main_plot=True, key_lambda=lambda x:True, only_safe=False):
