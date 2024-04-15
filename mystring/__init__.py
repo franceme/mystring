@@ -1633,7 +1633,8 @@ try:
 			return self.__etherial
 
 	class framepipeplot(framepipe):
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True, only_safe_keywords=False):
+		#only_safe_keywords=True, update_on_return=False := This seems to be the only valid flags
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=False, only_safe_keywords=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
 			#OLD
