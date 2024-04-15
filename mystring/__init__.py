@@ -1657,7 +1657,7 @@ try:
 			self.only_safe_keywords = only_safe_keywords
 			if only_safe_keywords:
 				for styler_key in list(self.styler.keys()):
-					if styler_key not in list(self.safe_keywords.keys()):
+					if styler_key not in list(self.safe_keywords.keys()) and not styler_key.startswith("subplot"):
 						del self.styler[styler_key]
 			self.update_on_return = update_on_return
 
