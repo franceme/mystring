@@ -1652,7 +1652,7 @@ try:
 				'theme': 'seaborn',
 			}
 			#OLD
-			for key,value in self.safe_keywords:
+			for key,value in self.safe_keywords.items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
 			self.update_on_return = update_on_return
