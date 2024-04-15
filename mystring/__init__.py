@@ -1637,6 +1637,24 @@ try:
 		def __init__(self, columns_needed=[], break_flow:bool=False, styler=pyplotlib.pltstyle.from_env(), update_on_return=True):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
+			#OLD
+			self.safe_keywords = {
+				'height':1020,
+				'width':1980,
+				'title_text':"General Text",
+				'showlegend':True,
+				'font_size':26,
+				'font_family':"Times New Roman",
+				'title_font_size':26,
+				'title_font_family':"Times New Roman",
+				'legend_font_size':26,
+				'legend_font_family':"Times New Roman",
+				'theme': 'seaborn',
+			}
+			#OLD
+			for key,value in self.safe_keywords:
+				if key not in self.styler.keys():
+					self.styler[key] = value
 			self.update_on_return = update_on_return
 
 		def __call__(self, frame_or_dataframe):
@@ -1653,18 +1671,19 @@ try:
 					output.update_layout(**self.no_subplots)
 				return output
 
-		@property
-		def style_defaults(self):
-			if self.styler:
-				return self.styler.total_items
-			return {}
+		def styles(self, key_lambda=lambda x:True, only_safe=False):
+			if only_safe:
+				return self.safe_keywords
+			elif self.styler:
+				return {key:value for key,value in self.styler.total_items.items() if key_lambda(key)}
+			else:
+				return {}
 
-		def defaults(self, key_lambda=lambda x:True):
-			return {key:value for key,value in self.style_defaults.items() if key_lambda(key)}
-		
 		@property
-		def no_subplots(self):
-			return self.defaults(key_lambda=lambda title:title.startswith("subplots"))
+		def style_defaults(self):return self.styles
+		def defaults(self, key_lambda=lambda x:True):return self.styles(key_lambda=key_lambda)
+		@property
+		def no_subplots(self):return self.styles(key_lambda=lambda title:title.startswith("subplots"))
 except:
 	pass
 
