@@ -1633,7 +1633,7 @@ try:
 			return self.__etherial
 
 	class framepipeplot(framepipe):
-		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True):
+		def __init__(self, columns_needed=[], break_flow:bool=False, styler=None, update_on_return=True, only_safe_keywords=False):
 			super().__init__(columns_needed=columns_needed, break_flow=break_flow)
 			self.styler = styler
 			#OLD
@@ -1654,6 +1654,10 @@ try:
 			for key,value in self.safe_keywords.items():
 				if key not in self.styler.keys():
 					self.styler[key] = value
+			if only_safe_keywords:
+				for styler_key in list(self.styler.keys()):
+					if styler_key not in list(self.safe_keywords.keys()):
+						del self.styler[styler_key]
 			self.update_on_return = update_on_return
 
 		def __call__(self, frame_or_dataframe):
