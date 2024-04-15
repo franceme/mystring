@@ -1671,11 +1671,11 @@ try:
 					output.update_layout(**self.no_subplots)
 				return output
 
-		def styles(self, key_lambda=lambda x:True, only_safe=False):
+		def styles(self, use_main_plot=True, key_lambda=lambda x:True, only_safe=False):
 			if only_safe:
 				return self.safe_keywords
 			elif self.styler:
-				return {key:value for key,value in self.styler.total_items.items() if key_lambda(key)}
+				return self.styler.of(use_main_plot=True, key_filter=key_lambda).items()
 			else:
 				return {}
 
