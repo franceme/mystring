@@ -1622,6 +1622,11 @@ try:
 			return
 
 		@property
+		def clear_backup(self):
+			self.backup_dyct = {}
+			return
+
+		@property
 		def match_columns(self):
 			self.backup
 
