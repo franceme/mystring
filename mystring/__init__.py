@@ -789,6 +789,37 @@ try:
 			try:return frame(super(type(self), self).query(query_string))
 			except:return frame(pd.DataFrame())
 
+		@staticmethod
+		def fromm(input_frame):
+			if isinstances(input_frame, frame, pd.DataFrame):
+				return frame(dc(input_frame))
+			return None
+
+		@staticmethod
+		def match_columns(*frame):
+			frames_to_match = [fromm(x) for x in frame]
+			if len(frames_to_match) == 0:
+				return None
+			elif len(frames_to_match) == 1:
+				return frames_to_match[0]
+
+			total_columns = []
+			for cur_frame in frames_to_match:
+				total_columns += cur_frame.columns
+			total_columns = list(set(total_columns))
+
+			output = []
+			for frame_to_match in frames_to_match:
+
+				frame_columns = list(frame_to_match.columns)
+				for total_column in total_columns:
+					if total_column not in frame_columns
+					frame_to_match[total_column] = None
+
+				output += [frame_to_match]
+
+			return output
+
 		@property
 		def T(self):
 			return frame(super(type(self), self).T)
