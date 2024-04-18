@@ -1594,11 +1594,13 @@ try:
 
 		def copyby(self, key_filter=lambda key:True):
 			nu_copy = framecase(
+				dyct = {},
 				file_out_to=self.file_out_to,
 				base_name=self.base,
 			)
+			nu_copy.dyct = {}
 			for key,value in self.items(key_filter=key_filter):
-				if key_filter is None or key_filter(key):
+				if key_filter(key) == True:
 					nu_copy.add_frame(obj=value, obj_name=key)
 			return nu_copy
 
