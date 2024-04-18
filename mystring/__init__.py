@@ -808,7 +808,7 @@ try:
 
 			total_columns = []
 			for cur_frame in list(frame_dyct.values()):
-				total_columns += cur_frame.columns
+				total_columns += list(cur_frame.columns)
 			total_columns = list(set(total_columns))
 
 			for key in list(frame_dyct.keys()):
