@@ -796,29 +796,27 @@ try:
 			return None
 
 		@staticmethod
-		def match_columns(*frame):
-			frames_to_match = [fromm(x) for x in frame]
-			if len(frames_to_match) == 0:
+		def match_columns(og_frame_dyct):
+			frame_dyct = dc(og_frame_dyct)
+			for key in list(frame_dyct.keys()):
+				frame_dyct[key] = fromm(frame_dyct[key])
+
+			if frame_dyct == {}:
 				return None
-			elif len(frames_to_match) == 1:
-				return frames_to_match[0]
+			elif len(list(frame_dyct.keys())) == 1:
+				return frames_to_match[list(frames_to_match.keys())[0]]
 
 			total_columns = []
-			for cur_frame in frames_to_match:
+			for cur_frame in list(frame_dyct.values()):
 				total_columns += cur_frame.columns
 			total_columns = list(set(total_columns))
 
-			output = []
-			for frame_to_match in frames_to_match:
-
-				frame_columns = list(frame_to_match.columns)
+			for key in list(frame_dyct.keys()):
+				frame_columns = list(frame_dyct[key].columns)
 				for total_column in total_columns:
-					if total_column not in frame_columns
-					frame_to_match[total_column] = None
-
-				output += [frame_to_match]
-
-			return output
+					if total_column not in frame_columns:
+						frame_dyct[key][total_column] = None
+			return frame_dyct
 
 		@property
 		def T(self):
@@ -1427,6 +1425,7 @@ try:
 		#https://rszalski.github.io/magicmethods/
 		def __init__(self, dyct={}, file_out_to=None, base_name="unknown_data"):
 			self.dyct = dyct
+			self.backup_dyct = {}
 			self.base = base_name
 			self.file_out_to = file_out_to
 			if self.dyct != {}:
@@ -1592,6 +1591,32 @@ try:
 		@property
 		def copyof(self):
 			return self.__copy__()
+
+		@property
+		def reset(self):
+			if self.backup_dyct is None or self.backup_dyct == {}:
+				raise Exception("There is no backup")
+
+			self.dyct = {}
+			for key,value in self.backup_dyct.items():
+				self.dyct[key] = frame.fromm(value)
+			return
+
+		@property
+		def backup(self):
+			self.backup_dyct = {}
+			for key,value in self.dyct.items():
+				self.backup_dyct[key] = frame.fromm(value)
+			return
+
+		@property
+		def match_columns(self):
+			self.backup
+
+			matching_columns = frame.match_columns(self.dyct)
+			for key in list(self.keys()):
+				self[key] = matching_columns[key]
+			return
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
