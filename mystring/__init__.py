@@ -1592,6 +1592,15 @@ try:
 		def copyof(self):
 			return self.__copy__()
 
+		def copyby(self, key_lambda=lambda key:True):
+			nu_copy = framecase(
+				file_out_to=self.file_out_to,
+				base_name=self.base,
+			)
+			for key,value in self.items(key_filter=key_filter):
+				nu_copy.add_frame(obj=value, obj_name=key)
+			return nu_copy
+
 		@property
 		def reset(self):
 			if self.backup_dyct is None or self.backup_dyct == {}:
