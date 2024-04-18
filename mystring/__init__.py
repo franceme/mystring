@@ -796,7 +796,7 @@ try:
 			return None
 
 		@staticmethod
-		def match_columns(og_frame_dyct):
+		def custom_match_columns(og_frame_dyct):
 			frame_dyct = dc(og_frame_dyct)
 			for key in list(frame_dyct.keys()):
 				frame_dyct[key] = frame.fromm(frame_dyct[key])
@@ -1643,7 +1643,7 @@ try:
 		def match_columns(self):
 			self.backup
 
-			matching_columns = frame.match_columns(self.dyct)
+			matching_columns = frame.custom_match_columns(self.dyct)
 			for key in list(self.keys()):
 				self[key] = matching_columns[key]
 			return
