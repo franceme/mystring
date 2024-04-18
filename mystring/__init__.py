@@ -1598,7 +1598,8 @@ try:
 				base_name=self.base,
 			)
 			for key,value in self.items(key_filter=key_filter):
-				nu_copy.add_frame(obj=value, obj_name=key)
+				if key_filter is None or key_filter(key):
+					nu_copy.add_frame(obj=value, obj_name=key)
 			return nu_copy
 
 		@property
