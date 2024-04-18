@@ -1430,7 +1430,7 @@ try:
 			self.file_out_to = file_out_to
 			for key,value in self.dyct.items():
 				self.add_frame(obj=value, obj_name=key)
-			if clearout:
+			if clearout or self.dyct == None or self.dyct == {}:
 				self.clear
 
 		def add_frame(self, obj, obj_name=None):
