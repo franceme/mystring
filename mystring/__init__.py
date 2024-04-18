@@ -1592,7 +1592,7 @@ try:
 		def copyof(self):
 			return self.__copy__()
 
-		def copyby(self, key_lambda=lambda key:True):
+		def copyby(self, key_filter=lambda key:True):
 			nu_copy = framecase(
 				file_out_to=self.file_out_to,
 				base_name=self.base,
