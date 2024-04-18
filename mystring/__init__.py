@@ -1423,14 +1423,15 @@ try:
 
 	class framecase(object):
 		#https://rszalski.github.io/magicmethods/
-		def __init__(self, dyct={}, file_out_to=None, base_name="unknown_data"):
+		def __init__(self, dyct={}, file_out_to=None, base_name="unknown_data", clearout = False):
 			self.dyct = dyct
 			self.backup_dyct = {}
 			self.base = base_name
 			self.file_out_to = file_out_to
-			if self.dyct != {}:
-				for key,value in self.dyct.items():
-					self.add_frame(obj=value, obj_name=key)
+			for key,value in self.dyct.items():
+				self.add_frame(obj=value, obj_name=key)
+			if clearout:
+				self.clear
 
 		def add_frame(self, obj, obj_name=None):
 			frame_to_add = None
@@ -1630,6 +1631,12 @@ try:
 		@property
 		def clear_backup(self):
 			self.backup_dyct = {}
+			return
+
+		@property
+		def clear(self):
+			self.clear_backup
+			self.dyct = {}
 			return
 
 		@property
