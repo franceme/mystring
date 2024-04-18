@@ -3,6 +3,28 @@ from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 from abc import ABC, abstractmethod
 
+def generate_subplots_positions(num_plots, max_rows=None, max_cols=None):
+	if max_rows is None and max_cols is None:
+		max_rows = int(num_plots ** 0.5)
+		max_cols = int(num_plots / max_rows) + (num_plots % max_rows > 0)
+	elif max_rows is None:
+		max_rows = int(num_plots / max_cols) + (num_plots % max_cols > 0)
+	elif max_cols is None:
+		max_cols = int(num_plots / max_rows) + (num_plots % max_rows > 0)
+
+	positions = []
+	for i in range(num_plots):
+		row = i // max_cols + 1
+		col = i % max_cols + 1
+		print(f"[{row}, {col}]")
+		positions += [(row,col)]
+
+	return {
+		"positions":positions,
+		"rows":max_rows,
+		"cols":max_cols,
+	}
+
 def update_fig(figure, **kwargs):
 	try:
 		try:figure.update(**kwargs)
