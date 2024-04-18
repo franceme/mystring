@@ -1559,11 +1559,17 @@ try:
 		def __enter__(self):return self
 		def __exit__(self, exception_type=None,exception_value=None,traceback=None):self.arx()
 		def __deepcopy__(self, memodict={}): return dc(self.dyct)
-		def items(self, key_filter=lambda x:True):return [(x,frame(y)) for x,y in self.dyct.items() if key_filter(x)]
-		def keys(self, key_filter=lambda x:True):return [x for x in self.dyct.keys() if key_filter(x)]
-		def values(self, key_filter=lambda x:True):return [self[x] for x in self.dyct.keys() if key_filter(x)]
 		def __getstate__(self):return self.to_raw()
 		def __setstate__(self, state):self._set_from_raw(state)
+		def filter_items(self, key_filter=lambda x:True):
+			output = {}
+			for key_value, frame_value in self.dyct.items():
+				if key_filter(key_value):
+					output[key_value] = frame.fromm(frame_value)
+			return output
+		def items(self, key_filter=lambda x:True):return [(out_key,out_val) for out_key,out_val in self.filter_items(key_filter=key_filter).items()]
+		def keys(self, key_filter=lambda x:True):return list(self.filter_items(key_filter=key_filter).keys())
+		def values(self, key_filter=lambda x:True):return list(self.filter_items(key_filter=key_filter).values())
 
 
 		def equal_cols(self):
