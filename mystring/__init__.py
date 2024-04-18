@@ -566,7 +566,7 @@ def flatten_list(lyst: list) -> list:
 		return [lyst[0]] + (big_list * flatten_list(lyst[1:]))
 
 def string_appliers():
-	return [lambda x:x, lambda x:x.upper(), lambda x:x.lower(), lambda x:x.rstrip(), lambda x:x.lstrip(), lambda x:x.strip()]
+	return [lambda x:x, lambda x:x.upper(), lambda x:x.lower(), lambda x:x.rstrip(), lambda x:x.lstrip(), lambda x:x.strip(), lambda x:x.title()]
 
 def exhaustive_quoted():
 	return [
