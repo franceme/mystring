@@ -1425,10 +1425,13 @@ try:
 
 	class framecase(object):
 		#https://rszalski.github.io/magicmethods/
-		def __init__(self, file_out_to=None, base_name="unknown_data"):
-			self.dyct = {}
+		def __init__(self, dyct={}, file_out_to=None, base_name="unknown_data"):
+			self.dyct = dyct
 			self.base = base_name
 			self.file_out_to = file_out_to
+			if self.dyct != {}:
+				for key,value in self.dyct.items():
+					self.add_frame(obj=value, obj_name=key)
 
 		def add_frame(self, obj, obj_name=None):
 			frame_to_add = None
