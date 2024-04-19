@@ -3,6 +3,24 @@ from datetime import datetime, MINYEAR
 from copy import deepcopy as dc
 from abc import ABC, abstractmethod
 
+def cmt_json(input_foil):
+	contents = None
+	import shutil, json
+	try:
+		from ephfile import ephfile
+		with ephfile(input_foil.replace('.json','_back.json')) as eph:
+			shutil.copyfile(input_foil,eph())
+			from fileinput import FileInput as finput
+			with finput(eph(),inplace=True,backup=None) as foil:
+				for line in foil:
+					if not line.strip().startswith("//"):
+						print(line,end='')
+			with open(eph(),'r') as reader:
+				contents = json.load(reader)
+	except Exception as e:
+		print(e)
+	return contents
+
 def generate_subplots_positions(num_plots, max_rows=None, max_cols=None):
 	if max_rows is None and max_cols is None:
 		max_rows = int(num_plots ** 0.5)
