@@ -1559,6 +1559,7 @@ try:
 			return
 
 		def _set_from_raw(self, dyct:dict):
+			self.try_dict
 			for key,value in dyct.items():
 				self[key] = value
 
@@ -1583,6 +1584,14 @@ try:
 			output = framecase()
 			output._set_from_raw(dyct)
 			return output
+
+		@property
+		def try_dyct(self):
+			if not hasattr(self, 'dyct'):
+				self.dyct = {}
+				self.backup_dyct = {}
+			return self.dyct
+
 		def to_raw(self, b64:bool=False):return {key:(value.to_raw_json() if not b64 else value.tobase64()) for	key,value in self.dyct.items()}
 		#Overridden methods
 		def __str__(self):return json.dumps(self.to_raw())
@@ -1604,7 +1613,7 @@ try:
 		def __setstate__(self, state):self._set_from_raw(state)
 		def filter_items(self, key_filter=lambda x:True):
 			output = {}
-			for key_value, frame_value in self.dyct.items():
+			for key_value, frame_value in self.try_dyct.items():
 				if key_filter(key_value):
 					output[key_value] = frame.fromm(frame_value)
 			return output
