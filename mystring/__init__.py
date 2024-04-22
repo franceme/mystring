@@ -1560,7 +1560,7 @@ try:
 
 		def _set_from_raw(self, dyct:dict):
 			for key,value in dyct.items():
-				output[key] = value
+				self[key] = value
 
 		def case(self, key_includes:str):
 			from copy import deepcopy as dc
