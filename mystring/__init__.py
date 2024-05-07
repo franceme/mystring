@@ -1553,6 +1553,15 @@ try:
 
 			return output
 
+		@staticmethod
+		def of_reg(glob_path, **kwargs):
+			from glob import glob as re
+			output = framecase()
+			if isinstance(glob_path, str) and glob_path.endswith(".pkl"):
+				for foil in re(glob_path):
+					output.add_frame(obj=foil, obj_name=foil.replace('.pkl',''))
+			return output
+
 		def write_to(self, override_writeto:str=None):
 			for key,value in self.items():
 				value.write_to(override_writeto, sheet_name = key)
