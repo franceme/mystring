@@ -1554,10 +1554,10 @@ try:
 			return output
 
 		@staticmethod
-		def of_reg(glob_path, **kwargs):
+		def ofs(glob_path, **kwargs):
 			from glob import glob as re
 			output = framecase()
-			if isinstance(glob_path, str) and glob_path.endswith(".pkl"):
+			if glob_path.endswith(".pkl"):
 				for foil in re(glob_path):
 					output.add_frame(obj=foil, obj_name=foil.replace('.pkl',''))
 			return output
