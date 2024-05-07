@@ -1397,7 +1397,7 @@ try:
 					ext = Path(obj_or_file_path).suffix
 
 					if ext == ".pkl":
-						data = frame(pd.read_pickle(obj_or_file_path, low_memory=False))
+						data = frame(pd.read_pickle(obj_or_file_path)) #, low_memory=False))
 					elif ext == ".csv":
 						data = frame.from_csv(obj_or_file_path)
 					elif ext == ".tsv":
