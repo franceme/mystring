@@ -1245,10 +1245,12 @@ try:
 		def dupof(dataframe):
 			from copy import deepcopy as dc
 			return frame(dc(dataframe))
-		
-		@property
-		def dummies(self):
-			return pd.get_dummies(data = self)
+
+		def dummies(self, columns=[]):
+			if columns == []:
+				return pd.get_dummies(data = self)
+			else:
+				return pd.get_dummies(data = self, columns=columns)
 
 		@property
 		def kolz(self):
