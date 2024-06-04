@@ -821,12 +821,18 @@ try:
 	import pandas as pd
 	import sqlite3
 	from copy import copy, deepcopy
+	from pandasql import sqldf
+	pysqldf = lambda q: sqldf(q, globals())
 	class frame(pd.DataFrame):
 		def __init__(self,*args,**kwargs):
 			super(frame,self).__init__(*args,**kwargs)
 
 		def query(self, query_string):
 			try:return frame(super(type(self), self).query(query_string))
+			except:return frame(pd.DataFrame())
+
+		def sqling(self, query_string):
+			try:return frame(pysqldf(query_string).head())
 			except:return frame(pd.DataFrame())
 
 		@staticmethod
