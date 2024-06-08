@@ -1711,6 +1711,12 @@ try:
 			for key in list(self.keys()):
 				self[key] = matching_columns[key]
 			return
+		
+		def apply(self, functor = None):
+			output = framecase()
+			for key,value in self.items():
+				output[key] = value if functor is None else functor(value)
+			return output
 
 	from abc import ABC, abstractmethod
 	from copy import deepcopy as dc
