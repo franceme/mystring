@@ -1715,7 +1715,11 @@ try:
 		def apply(self, functor = None):
 			output = framecase()
 			for key,value in self.items():
-				output[key] = value if functor is None else functor(value)
+				try:
+					output[key] = value if functor is None else functor(value)
+				except Exception as e:
+					output[key] = value
+					print("Issue applying the functor to frame {0}".format(key))
 			return output
 
 	from abc import ABC, abstractmethod
